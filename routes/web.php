@@ -12,12 +12,13 @@
 */
 
 Route::get('/', function () {
-    $path = \Illuminate\Support\Facades\URL::asset('/');
-    echo $path;
-    die;
     return view('welcome');
 });
 
 Route::get('/mqtt', function () {
     return view('mqtt');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
