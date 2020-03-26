@@ -14,14 +14,14 @@ class rabbitMqConsumer extends Command
      *
      * @var string
      */
-    protected $signature = 'consumer';
+    protected $signature = 'mq:consumer';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'rabbitmq消费者';
 
     /**
      * Create a new command instance.

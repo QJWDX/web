@@ -22,7 +22,7 @@ class ConnectionDiagnostics extends Command
      *
      * @var string
      */
-    protected $description = '路段网关配置诊断功能';
+    protected $description = '诊断功能';
 
     /**
      * Execute the console command.

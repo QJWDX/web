@@ -19,7 +19,7 @@ class simpleWebsocket extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = '简易版webscoket客服端';
 
     /**
      * Create a new command instance.

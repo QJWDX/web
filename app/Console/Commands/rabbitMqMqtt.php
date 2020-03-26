@@ -15,14 +15,14 @@ class rabbitMqMqtt extends Command
      *
      * @var string
      */
-    protected $signature = 'mqtt';
+    protected $signature = 'mq:mqtt';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'rabbitmq mqtt 服务端';
 
     /**
      * Create a new command instance.

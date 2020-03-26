@@ -16,14 +16,14 @@ class rabbitMqProducer extends Command
      *
      * @var string
      */
-    protected $signature = 'producer';
+    protected $signature = 'mq:producer';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'rabbitmq生产者';
 
     /**
      * Create a new command instance.
