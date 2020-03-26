@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Service\AmqpConsumer;
+use App\Service\RabbitMq\AmqpConsumer;
 use Illuminate\Console\Command;
 
-class consumer extends Command
+class rabbitMqConsumer extends Command
 {
     private $consumer;
     private $config;
@@ -30,7 +30,7 @@ class consumer extends Command
      */
     public function __construct()
     {
-        $this->config = config('mq');
+        $this->config = config('rabbitmq');
         parent::__construct();
     }
 
@@ -56,8 +56,8 @@ class consumer extends Command
             $this->config['user'],
             $this->config['password'],
             $this->config['vhost'],
-            $this->config['exchange'],
-            $this->config['queue']
+            $this->config['queue'],
+            $this->config['exchange']
         );
     }
 }

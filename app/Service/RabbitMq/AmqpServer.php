@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\RabbitMq;
 
 use Illuminate\Support\Facades\Log;
 use PhpAmqpLib\Channel\AMQPChannel;

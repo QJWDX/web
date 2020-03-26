@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Service\AmqpServer;
+use App\Service\RabbitMq\AmqpServer;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class producer extends Command
+class rabbitMqProducer extends Command
 {
     private $rabbit;
 

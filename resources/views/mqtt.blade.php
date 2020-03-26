@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>WebWorker Example Using STOMP Over WebSocket</title>
+    <title>web MQTT WebSockets Example</title>
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -12,17 +12,14 @@
         body { padding-top: 40px; }
     </style>
 </head>
-
 <body>
-
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <a class="brand" href="#">WebWorker Example Using STOMP Over WebSockets</a>
+            <a class="brand" href="#">web MQTT WebSockets</a>
         </div>
     </div>
 </div>
-
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12">
@@ -53,7 +50,7 @@
                         <div class="control-group">
                             <label>Password</label>
                             <div class="controls">
-                                <input id='connect_passcode' placeholder="User Password" value="123456" type="password">
+                                <input id='connect_passcode' placeholder="User Password" value="admin123456" type="password">
                             </div>
                         </div>
                         <div class="control-group">
@@ -94,7 +91,6 @@
                 var passcode = $("#connect_passcode").val();
                 var destination = $("#destination").val();
                 var text = $("#text").val();
-
                 // Create a client instance
                 var client = new Paho.MQTT.Client(host_name, Number(port),"/ws",
                     "myclientid_" + parseInt(Math.random() * 100, 10));

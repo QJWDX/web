@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use WebSocket\Client;
 
-class socket extends Command
+class simpleWebsocket extends Command
 {
     /**
      * The name and signature of the console command.
@@ -32,9 +32,7 @@ class socket extends Command
     }
 
     /**
-     * Execute the console command.
-     *
-     * @return mixed
+     * @throws \WebSocket\BadOpcodeException
      */
     public function handle()
     {

@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Service\AmqpServer;
+use App\Service\RabbitMq\AmqpServer;
 use Illuminate\Console\Command;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
 
-class mqttServer extends Command
+class rabbitMqMqtt extends Command
 {
     private $config;
     private $connection;
@@ -31,7 +31,7 @@ class mqttServer extends Command
      */
     public function __construct()
     {
-        $this->config = config('mqtt');
+        $this->config = config('rabbitmq_mqtt');
         parent::__construct();
     }
 
@@ -47,12 +47,12 @@ class mqttServer extends Command
         }
         $n = 1;
         while (true){
-            $msg = array(
-                'id' => $n,
-                'name' => '123'
-            );
+            $data = '这是第'.$n.'条消息'."\n";
+            echo $data;
+            $message = json_encode([
+                'data' => $data
+            ]);
             $n += 1;
-            $message = json_encode($msg);
             $this->connection->sendMessageToServer($message, $this->config['routing_key']);
             sleep(2);
         }

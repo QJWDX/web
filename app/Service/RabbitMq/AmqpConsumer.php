@@ -1,7 +1,6 @@
 <?php
 
-namespace App\Service;
-
+namespace App\Service\RabbitMq;
 use App\Models\Base\Line;
 use App\Models\Base\LinePlatform;
 use App\Models\Base\Vehicle;
@@ -90,7 +89,7 @@ class AmqpConsumer
 
         $this->channel->basic_qos(null, 200, null);
 
-        $this->channel->basic_consume($this->queue, "subway_consumer", false, false, false, false, ['App\Http\Controllers\rabbit\consumerController', 'process_message']);
+        $this->channel->basic_consume($this->queue, "subway_consumer", false, false, false, false, ['App\Http\Controllers\Mq\consumerController', 'process_message']);
 
         while ($this->channel->is_consuming()) {
             try {
