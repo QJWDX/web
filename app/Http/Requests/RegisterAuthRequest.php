@@ -12,7 +12,7 @@ class RegisterAuthRequest extends ApiBaseRequest
     public function rules()
     {
         return [
-            'username' => 'required|string',
+            'username' => 'required|string|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|max:10'
         ];

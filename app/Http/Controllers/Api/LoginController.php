@@ -7,9 +7,11 @@ use App\Http\Requests\RegisterAuthRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\JWT;
 
 class LoginController extends Controller
 {
+    // 注册后是否登录
     public $loginAfterSignUp = true;
 
     // 注册用户
@@ -19,7 +21,7 @@ class LoginController extends Controller
         $result = $user->newQuery()->create([
             'username' => $request->get('username'),
             'email' => $request->get('email'),
-            'password' => $request->get('password')
+            'password' => bcrypt($request->get('password'))
         ]);
         if(!$result){
             return $this->error(500, 'registration failed');
