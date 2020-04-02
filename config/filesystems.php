@@ -64,6 +64,11 @@ return [
             'url' => env('AWS_URL'),
         ],
 
+        'excel' => [
+            'driver' => 'local',
+            'root' => storage_path("export/excel")
+        ],
+
     ],
 
 ];

@@ -1,5 +1,6 @@
 <?php
-
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,3 +23,10 @@ Route::get('/mqtt', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+// 示例接口
+Route::group(['prefix' => 'example', 'namespace' => 'Example'], function (){
+    Route::get('excel', 'ExampleController@excel');
+    Route::get('pdf', 'ExampleController@pdf');
+});
