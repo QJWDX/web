@@ -6,13 +6,16 @@ namespace App\Http\Controllers\Example;
 
 use App\Exports\ExampleExport;
 use App\Http\Controllers\Controller;
+use App\Jobs\sendEmail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redis;
 use Maatwebsite\Excel\Facades\Excel;
+use function foo\func;
 
 class ExampleController extends Controller
 {
@@ -51,9 +54,11 @@ class ExampleController extends Controller
     public function pdf(){
         $content = '文档名称: 测试文件'."\n"
             . "==========================================\n"
-            . "用户名称: " . "小李子" . "\n"
-            . "联系电话: " . "18070574566" . "\n"
-            . "邮箱地址: " . "1234@qq.com" . "\n";
+            . "用户名称: " . "Mr.H" . "\n"
+            . "联系电话: " . "18370847427" . "\n"
+            . "邮箱地址: " . "1363550295@qq.com" . "\n"
+            . "用户性别: " . "男" . "\n"
+            . "用户年龄: " . "25" . "\n";
 
         $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $file_name = "TEST".date('Ymd').".pdf";
@@ -100,7 +105,14 @@ class ExampleController extends Controller
         $pdf->Write(0, $content, '', 0, 'L', true, 0, false, false, 0);
 //        $html = '<h1>测试pdf文档</h1>';
 //        $pdf->writeHTML($html, true, false, true, false, '');
-        $pdf->Output($file_name, 'D');
+        $save_path = storage_path("export/pdf");;
+        if (file_exists($save_path) == false){
+            mkdir($save_path, 0777, true);
+        }
+        // 存储到本地中
+        $pdf->Output(storage_path('export/pdf/'.$file_name), 'F');
+        // 输出到浏览器
+//        $pdf->Output($file_name, 'D');
     }
 
 
@@ -134,6 +146,33 @@ class ExampleController extends Controller
             return $this->error(500, '验证码错误');
         }
         return $this->success('验证成功');
+    }
+
+
+    /**
+     * 发送邮件示例 使用前需开启队列
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function mail(){
+        try{
+            $data = ['username' => 'Mr.H', 'tel' => '18370847427'];
+            $emailData = array(
+                'from' => "",
+                'to' => "1131941061@qq.com",
+                'cc' => [],
+                'subject' => "欢迎关注本网站",
+                'attach' => [
+                    storage_path("export/pdf/TEST20200403.pdf"),
+                    storage_path("export/excel/20200402085309.xlsx")
+                ],
+                'view' => "email",
+                'data' => $data
+            );
+            $this->dispatch(new sendEmail($emailData));
+            return $this->success('邮件发送成功');
+        }catch (\Exception $e){
+            return $this->error(500, '邮件发送失败：'.$e->getMessage());
+        }
     }
 
 }

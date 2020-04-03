@@ -89,6 +89,13 @@ return [
             'name' => 'mq',
             'path' => storage_path('logs/mq.log'),
             'level' => 'debug'
+        ],
+
+        'email' => [
+            'driver' => 'single',
+            'name' => 'email',
+            'path' => storage_path('logs/email.log'),
+            'level' => 'debug'
         ]
     ],
 
