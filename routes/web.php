@@ -27,6 +27,12 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // 示例接口
 Route::group(['prefix' => 'example', 'namespace' => 'Example'], function (){
+    // excel导出
     Route::get('excel', 'ExampleController@excel');
+    // pdf导出
     Route::get('pdf', 'ExampleController@pdf');
+    // 获取图形验证码
+    Route::post('captcha', 'ExampleController@captcha');
+    // 验证图形验证码
+    Route::get('checkCaptcha', 'ExampleController@checkCaptcha');
 });

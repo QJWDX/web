@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Example;
 use App\Exports\ExampleExport;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -16,8 +17,8 @@ use Maatwebsite\Excel\Facades\Excel;
 class ExampleController extends Controller
 {
     public function redis(){
-        Redis::connection('default')->set('key', 'username');
-        echo Redis::connection('default')->get('key');
+        Redis::connection()->set('key', 'username');
+        echo Redis::connection()->get('key');
     }
 
     public function cache(){
@@ -100,6 +101,39 @@ class ExampleController extends Controller
 //        $html = '<h1>测试pdf文档</h1>';
 //        $pdf->writeHTML($html, true, false, true, false, '');
         $pdf->Output($file_name, 'D');
+    }
+
+
+    /**
+     * 获取图形验证码
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function captcha(){
+        $captcha = app('captcha')->create('flat', true);
+        $key = 'captcha_'.$captcha['key'];
+        Redis::connection()->setex($key, config('login.captcha_ttl', 60*5), $captcha['key']);
+        return $this->success($captcha);
+    }
+
+
+    /**
+     * 验证图形验证码
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkCaptcha(Request $request){
+        $captcha = $request->get('captcha', false);
+        $key = $request->get('key', false);
+        if(!$captcha || !$key){
+            return $this->error(500, '参数错误');
+        }
+        if(!Redis::connection()->get('captcha_'.$key)){
+            return $this->error(500, '验证码过期，请重新获取');
+        }
+        if(!captcha_api_check($captcha, $key)){
+            return $this->error(500, '验证码错误');
+        }
+        return $this->success('验证成功');
     }
 
 }
