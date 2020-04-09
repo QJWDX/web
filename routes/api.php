@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::options('/{all}', function (\Illuminate\Http\Request $request) {
+    return response('Ok');
+})->where(['all' => '([a-zA-Z0-9-]|/)+'])->middleware("cross");
 
 // jwt权限认证
 Route::group(['prefix' => 'auth', 'namespace' => 'Api'], function () {
@@ -33,4 +36,18 @@ Route::group(['prefix' => 'example', 'namespace' => 'Example'], function (){
     Route::get('redis', 'ExampleController@redis');
     // 缓存示例
     Route::get('cache', 'ExampleController@cache');
+    // excel导出
+    Route::get('excel', 'ExampleController@excel');
+    // pdf导出
+    Route::get('pdf', 'ExampleController@pdf');
+    // 获取图形验证码
+    Route::post('captcha', 'ExampleController@captcha');
+    // 验证图形验证码
+    Route::get('checkCaptcha', 'ExampleController@checkCaptcha');
+    // 邮件发送
+    Route::get('mail', 'ExampleController@mail');
+    // baseTable
+    Route::get('baseTable', 'ExampleController@baseTable');
+    // 角色列表
+    Route::get('getRoleList', 'ExampleController@getRoleList');
 });

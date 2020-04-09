@@ -175,4 +175,40 @@ class ExampleController extends Controller
         }
     }
 
+
+    public function baseTable(){
+        $data = [
+            'list' => [
+                [
+                    "id" => 4,
+                    "name"=> "赵六",
+                    "money"=> 1011,
+                    "address"=> "福建省厦门市鼓浪屿",
+                    "state"=> "成功",
+                    "date"=> "2019-10-20",
+                    "thumb"=> "https://lin-xin.gitee.io/images/post/notice.png"
+                ],
+                [
+                    "id" => 4,
+                    "name"=> "赵六",
+                    "money"=> 1011,
+                    "address"=> "福建省厦门市鼓浪屿11",
+                    "state"=> "成功",
+                    "date"=> "2019-10-20",
+                    "thumb"=> "https://lin-xin.gitee.io/images/post/notice.png"
+                ],
+            ],
+            "pageTotal"=> 4
+        ];
+        return $this->success($data);
+    }
+
+    public function getRoleList(){
+        $data = [
+            ['id' => 1, 'name' => '普通管理员', 'created_at' => '2020-4-9 11:00:00'],
+            ['id' => 2, 'name' => '超级管理员', 'created_at' => '2020-4-9 11:00:00'],
+        ];
+        return $this->success($data);
+    }
+
 }

@@ -51,7 +51,7 @@ class LoginController extends Controller
         }
         return $this->success([
             'token' => $jwt_token
-        ]);
+        ], 200, '登录成功');
     }
 }
 
