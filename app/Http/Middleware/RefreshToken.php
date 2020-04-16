@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Middleware;
-use App\Http\Controllers\Api\LoginController;
+use App\Http\Controllers\Authorize\LoginController;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use App\Exceptions\InvalidUserException;

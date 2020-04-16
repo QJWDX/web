@@ -1,8 +1,10 @@
 <?php
 
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Authorize;
 use App\Http\Controllers\Controller;
+use App\Models\Base\Role;
+use App\Models\Base\UserRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -26,13 +28,15 @@ class AuthController extends Controller
     }
 
     /**
-     * 获取授权用户信息
      * @param Request $request
+     * @param UserRole $userRole
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAuthUser(Request $request)
+    public function getAuthUser(Request $request, UserRole $userRole)
     {
         $user = JWTAuth::authenticate($request);
+        $role_ids = $userRole->newQuery()->where('user_id', $user['id'])->pluck('role_id')->toArray();
+        $user['role'] = implode(',',$role_ids);
         return $this->success(['user' => $user]);
     }
 

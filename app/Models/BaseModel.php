@@ -15,24 +15,24 @@ class BaseModel extends Model
     public function modifyPaginateForApi(Builder $builder)
     {
         $request = request();
-        $perpage = 10;
-        if ($request->has("perpage")) {
-            $perpage = $request->get("perpage");
+        $perPage = 10;
+        if ($request->has("perPage")) {
+            $perPage = $request->get("perPage");
         }
-        $paginate = $builder->paginate($perpage);
+        $paginate = $builder->paginate($perPage);
         $api = [
-            'current_page' => 0,
-            'total' => 0,
-            'last_page' => 0,
-            'per_page' => 0,
+            'currentPage' => 0,
+            'totalPage' => 0,
+            'lastPage' => 0,
+            'perPage' => 0,
             'items' => []
         ];
 
-        $api['current_page'] = $paginate->currentPage();
-        $api['total'] = $paginate->total();
-        $api['last_page'] = $paginate->lastPage();
+        $api['currentPage'] = $paginate->currentPage();
+        $api['totalPage'] = $paginate->total();
+        $api['lastPage'] = $paginate->lastPage();
         $api['items'] = $paginate->items();
-        $api['per_page'] = $paginate->perPage();
+        $api['perPage'] = $paginate->perPage();
 
         return $api;
     }

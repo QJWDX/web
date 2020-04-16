@@ -17,7 +17,7 @@ Route::options('/{all}', function (\Illuminate\Http\Request $request) {
 })->where(['all' => '([a-zA-Z0-9-]|/)+'])->middleware("cross");
 
 // jwt权限认证
-Route::group(['prefix' => 'auth', 'namespace' => 'Api'], function () {
+Route::group(['prefix' => 'auth', 'namespace' => 'Authorize'], function () {
     // 登录
     Route::post('login', 'LoginController@login');
     // 注册
@@ -26,6 +26,15 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Api'], function () {
     Route::get('logout', 'AuthController@logout');
     // 获取认证用户信息
     Route::get('user', 'AuthController@getAuthUser');
+});
+
+Route::group(['prefix' => 'role', 'namespace' => 'Role'], function (){
+    Route::get('getMenus', 'RoleController@getMenus');
+    Route::get('getRoleList', 'RoleController@getRoleList');
+    Route::post('addRole', 'RoleController@addRole');
+    Route::get('getRoleInfo', 'RoleController@getRoleInfo');
+    Route::put('modRole/{id}', 'RoleController@modRole');
+    Route::delete('delRole', 'RoleController@delRole');
 });
 
 // 示例接口
