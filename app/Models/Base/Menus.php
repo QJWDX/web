@@ -18,13 +18,13 @@ class Menus extends BaseModel
      * @param array $menu_ids
      * @return array
      */
-    public function permissionMenus($isSuper = 0, $menu_ids = array()){
+    public function permissionMenusAndRoute($isSuper = 0, $menu_ids = array()){
         if($isSuper){
             $menuData = $this->newQuery()->where('is_show', 1)->orderBy('sort_field')->get();
-            $routeData = $this->newQuery()->where('is_show', 1)->where('is_auth', 1)->orderBy('sort_field')->get();
+            $routeData = $this->newQuery()->where('is_show', 1)->where('is_related_route', 1)->orderBy('sort_field')->get();
         }else{
             $menuData = $this->newQuery()->where('is_show', 1)->whereIn('id', $menu_ids)->orderBy('sort_field')->get();
-            $routeData = $this->newQuery()->where('is_show', 1)->where('is_auth', 1)->orderBy('sort_field')->get();
+            $routeData = $this->newQuery()->where('is_show', 1)->where('is_related_route', 1)->whereIn('id', $menu_ids)->orderBy('sort_field')->get();
         }
         return [
             'menus' => $this->vueMenuTree($menuData, 0, 1),

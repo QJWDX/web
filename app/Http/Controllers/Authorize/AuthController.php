@@ -37,7 +37,7 @@ class AuthController extends Controller
         $user = JWTAuth::authenticate($request);
         $role_ids = $userRole->newQuery()->where('user_id', $user['id'])->pluck('role_id')->toArray();
         $user['role'] = implode(',',$role_ids);
-        return $this->success(['user' => $user]);
+        return $this->success(['user' => $user], 200, '获取授权用户信息成功');
     }
 
 

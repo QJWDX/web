@@ -19,7 +19,12 @@ class Role extends BaseModel
      * @return array
      */
     public function roleList(Request $request){
-        $builder = $this->newQuery()->select(['*', 'parent_id as parent_name']);
+        $builder = $this->newQuery();
+        $roleName =  $request->get('role_name', false);
+        if($roleName){
+            $builder = $builder->where('role_name', 'like', '%'.$roleName.'%');
+        }
+        $builder = $builder->select(['*', 'parent_id as parent_name']);
         return $this->modifyPaginateForApi($builder);
     }
 

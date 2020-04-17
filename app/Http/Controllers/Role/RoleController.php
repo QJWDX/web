@@ -13,13 +13,13 @@ use Illuminate\Http\Request;
 class RoleController extends Controller
 {
     /**
-     * 获取角色菜单
+     * 获取角色权限菜单和路由
      * @param Request $request
      * @param Role $role
      * @param Menus $menus
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getMenus(Request $request, Role $role, Menus $menus){
+    public function getMenusAndRoute(Request $request, Role $role, Menus $menus){
         $role_id = $request->get('role');
         $ids = explode(',', $role_id);
         $isSuper = $role->newQuery()->where('is_super', 1)->whereIn('id', $ids)->exists();
@@ -27,8 +27,8 @@ class RoleController extends Controller
         if(!$isSuper){
             $menu_ids = (new RoleMenus())->newQuery()->where('role_id', $role_id)->pluck('menus_id');
         }
-        $permissionMenus = $menus->permissionMenus($isSuper, $menu_ids);
-        return $this->success($permissionMenus);
+        $permissionData = $menus->permissionMenusAndRoute($isSuper, $menu_ids);
+        return $this->success($permissionData);
     }
 
     /**

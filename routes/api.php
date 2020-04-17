@@ -29,7 +29,7 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Authorize'], function () {
 });
 
 Route::group(['prefix' => 'role', 'namespace' => 'Role'], function (){
-    Route::get('getMenus', 'RoleController@getMenus');
+    Route::get('getMenusAndRoute', 'RoleController@getMenusAndRoute');
     Route::get('getRoleList', 'RoleController@getRoleList');
     Route::post('addRole', 'RoleController@addRole');
     Route::get('getRoleInfo', 'RoleController@getRoleInfo');
