@@ -23,3 +23,10 @@ Route::get('/mqtt', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+// 示例接口
+Route::group(['prefix' => 'notifications', 'namespace' => 'Notifications'], function (){
+    // 中文转拼音
+    Route::get('createNotifications', 'NotificationsController@createNotifications');
+});

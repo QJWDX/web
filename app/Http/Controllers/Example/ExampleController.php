@@ -7,12 +7,15 @@ namespace App\Http\Controllers\Example;
 use App\Exports\ExampleExport;
 use App\Http\Controllers\Controller;
 use App\Jobs\sendEmail;
+use App\Models\Base\SystemConfig;
 use App\Models\User;
+use App\Notifications\systemNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redis;
 use Maatwebsite\Excel\Facades\Excel;
 use function foo\func;
@@ -211,4 +214,33 @@ class ExampleController extends Controller
         return $this->success($data);
     }
 
+
+    public function system(Request $request, SystemConfig $systemConfig){
+        $config = $systemConfig->newQuery()->find(1);
+        Notification::send($config, new systemNotification($config));
+        return $this->success('设置成功');
+//        $config->unreadNotifications->markAsRead();
+//        return $this->success([
+//            'unreadNotifications' => $config->unreadNotifications,
+//            'readNotifications' => $config->readNotifications,
+//            'notifications' => $config->notifications,
+//        ]);
+        $variable = $request->get('variable');
+        $value = $request->get('value');
+//        $id = $systemConfig->newQuery()->insertGetId([
+//            'variable' => $variable,
+//            'value' => $value
+//        ]);
+        $data = [
+            'variable' => $variable,
+            'value' => $value
+        ];
+        $systemConfig->notify(new systemNotification(collect($data)));
+        return $this->success('设置成功');
+//        if($id){
+//            $config = $systemConfig->newQuery()->find($id);
+//            $config->notify(new systemNotification($config));
+//            return $this->success('设置成功');
+//        }
+    }
 }

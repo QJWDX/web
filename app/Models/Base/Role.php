@@ -28,6 +28,7 @@ class Role extends BaseModel
         return $this->modifyPaginateForApi($builder);
     }
 
+
     /**
      * 修改is_super属性值
      * @param $isSuper
