@@ -7,8 +7,11 @@ namespace App\Http\Controllers\Notifications;
 use App\Http\Controllers\Controller;
 use App\Models\Base\Notifications;
 use App\Models\Base\systemNotifications;
+use App\Models\User;
+use App\Notifications\systemNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class NotificationsController extends Controller
 {
@@ -19,13 +22,19 @@ class NotificationsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function getNotifications(Request $request, Notifications $notifications){
-        $type = $request->get('type', false);
-        if(!array_key_exists(intval($type), $notifications->type)){
-            return $this->error(500, '参数失败');
+        $type = 0;
+        if($request->has('type')){
+            $type = intval($request->get('type'));
+            if(!array_key_exists($type, $notifications->type)){
+                return $this->error(500, '参数失败');
+            }
         }
-        $res = $notifications->allNotifications($request);
+        $res = $notifications->allNotifications($request, $type);
         if(!$res){
             return $this->error(500, '获取失败');
+        }
+        foreach ($res['items'] as $key => &$v){
+            $v['data'] = json_decode($v['data'], true);
         }
         return $this->success($res);
     }
@@ -35,18 +44,22 @@ class NotificationsController extends Controller
      * 创建系统通知
      * @param Request $request
      * @param systemNotifications $systemNotifications
+     * @param User $user
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createNotifications(Request $request, systemNotifications $systemNotifications){
+    public function createNotifications(Request $request, systemNotifications $systemNotifications, User $user){
         $title = $request->get('title', false);
         $content = $request->get('content', false);
         if($title == false || $content == false){
             return $this->error(500, '参数错误');
         }
-        $res = $systemNotifications->addNotifications([$title, $content]);
-        if(!$res){
+        $sysNotifications = $systemNotifications->addSystemNotifications([$title, $content]);
+        if(!$sysNotifications){
             return $this->error(500, '创建失败');
         }
+        // 向所有用户发送系统消息通知
+        $users = $user->newQuery()->get();
+        Notification::send($users, new systemNotification($sysNotifications));
         return $this->success('创建成功');
     }
 

@@ -96,6 +96,13 @@ return [
             'name' => 'email',
             'path' => storage_path('logs/email.log'),
             'level' => 'debug'
+        ],
+
+        'news' => [
+            'driver' => 'single',
+            'name' => 'alarm',
+            'path' => storage_path('logs/news.log'),
+            'level' => 'debug'
         ]
     ],
 

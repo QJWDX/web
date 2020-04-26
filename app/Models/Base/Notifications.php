@@ -5,6 +5,7 @@ namespace App\Models\Base;
 
 
 use App\Models\BaseModel;
+use Illuminate\Http\Request;
 
 class Notifications extends BaseModel
 {
@@ -15,12 +16,11 @@ class Notifications extends BaseModel
         1 => 'App\Models\Base\SystemNotifications'
     ];
 
-    public function allNotifications($request){
-        $type = $request->get('type', false);
+    public function allNotifications(Request $request, $type = 0){
         $builder = $this->newQuery();
         if($type){
-            $builder = $builder->where('notifications_type', $type);
+            $builder = $builder->where('notifiable_type', $this->type[$type]);
         }
-        $this->modifyPaginateForApi($builder);
+        return $this->modifyPaginateForApi($builder);
     }
 }

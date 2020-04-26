@@ -11,6 +11,18 @@
 |
 */
 
+use Illuminate\Support\Facades\Log;
+
 Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+Broadcast::channel('news', function ($user) {
+        Log::channel('news')->info($user->name);
+        return true;
+        }, ['guards' => 'api']);
+
+
+Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+}, ['guards' => 'api']);
