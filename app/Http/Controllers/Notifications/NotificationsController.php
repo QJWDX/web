@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Notifications;
 
 
+use App\Events\sendNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Base\Notifications;
 use App\Models\Base\systemNotifications;
@@ -44,10 +45,9 @@ class NotificationsController extends Controller
      * 创建系统通知
      * @param Request $request
      * @param systemNotifications $systemNotifications
-     * @param User $user
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createNotifications(Request $request, systemNotifications $systemNotifications, User $user){
+    public function createNotifications(Request $request, systemNotifications $systemNotifications){
         $title = $request->get('title', false);
         $content = $request->get('content', false);
         if($title == false || $content == false){
@@ -58,8 +58,7 @@ class NotificationsController extends Controller
             return $this->error(500, '创建失败');
         }
         // 向所有用户发送系统消息通知
-        $users = $user->newQuery()->get();
-        Notification::send($users, new systemNotification($sysNotifications));
+        event(new sendNotification($sysNotifications));
         return $this->success('创建成功');
     }
 

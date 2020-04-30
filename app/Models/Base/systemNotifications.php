@@ -18,10 +18,10 @@ class systemNotifications extends BaseModel
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
      */
     public function addSystemNotifications($data){
-        $notifications = $this->newQuery()->create([
+        $instance = $this->newQuery()->create([
              'title' => $data[0],
              'content' => $data[1],
          ]);
-         return $notifications;
+         return $instance;
     }
 }

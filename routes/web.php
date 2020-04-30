@@ -23,12 +23,3 @@ Route::get('/mqtt', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
-
-Route::group(['prefix' => 'notifications', 'namespace' => 'Notifications'], function (){
-    Route::get('createNotifications', 'NotificationsController@createNotifications');
-    Route::get('getNotifications', 'NotificationsController@getNotifications');
-});
-//
-//// 广播消息接收
-Route::view('news', 'news');

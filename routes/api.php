@@ -60,3 +60,8 @@ Route::group(['prefix' => 'example', 'namespace' => 'Example'], function (){
     // 角色列表
     Route::get('getRoleList', 'ExampleController@getRoleList');
 });
+
+Route::group(['prefix' => 'notifications', 'namespace' => 'Notifications'], function (){
+    Route::get('createNotifications', 'NotificationsController@createNotifications');
+    Route::get('getNotifications', 'NotificationsController@getNotifications');
+});
