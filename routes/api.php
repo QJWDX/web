@@ -64,4 +64,5 @@ Route::group(['prefix' => 'example', 'namespace' => 'Example'], function (){
 Route::group(['prefix' => 'notifications', 'namespace' => 'Notifications'], function (){
     Route::get('createNotifications', 'NotificationsController@createNotifications');
     Route::get('getNotifications', 'NotificationsController@getNotifications');
+    Route::get('makeRead', 'NotificationsController@makeRead');
 });

@@ -16,28 +16,50 @@ use Illuminate\Support\Facades\Notification;
 
 class NotificationsController extends Controller
 {
+    public $notifiable_type = [
+        1 => 'App\Notifications\systemNotification',
+        2 => 'App\Notifications\otherNotification'
+    ];
+
     /**
      * 消息通知列表
      * @param Request $request
-     * @param Notifications $notifications
+     * @param User $userModel
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getNotifications(Request $request, Notifications $notifications){
-        $type = 0;
-        if($request->has('type')){
-            $type = intval($request->get('type'));
-            if(!array_key_exists($type, $notifications->type)){
+    public function getNotifications(Request $request, User $userModel){
+        $uid = $request->get('uid', false);
+        if(!$uid){
+            return $this->error(500, '参数失败');
+        }
+        $type = $request->get('type', 0);
+        $exists = $userModel->newQuery()->where('id', $uid)->exists();
+        if(!$exists){
+            return $this->error(500, '用户不存在');
+        }
+        $user = $userModel->newQuery()->find($uid);
+        switch ((int)$type){
+            case 0:
+                $data = $user->notifications;
+                break;
+            case 1:
+                $data = $user->readNotifications;
+                break;
+            case 2:
+                $data = $user->unreadNotifications;
+                break;
+        }
+        if($request->has('notifiable_type')){
+            $notifiable_type = $request->get('notifiable_type');
+            if(!array_key_exists($notifiable_type, $this->notifiable_type)){
                 return $this->error(500, '参数失败');
             }
+            $data  = $data->where('type', $this->notifiable_type[$notifiable_type])->all();
         }
-        $res = $notifications->allNotifications($request, $type);
-        if(!$res){
+        if(!$data){
             return $this->error(500, '获取失败');
         }
-        foreach ($res['items'] as $key => &$v){
-            $v['data'] = json_decode($v['data'], true);
-        }
-        return $this->success($res);
+        return $this->success($data);
     }
 
 
@@ -63,21 +85,28 @@ class NotificationsController extends Controller
     }
 
     /**
-     * 一键标记已读
+     * 一键标记为已读
      * @param Request $request
+     * @param User $userModel
      * @param Notifications $notifications
      * @return \Illuminate\Http\JsonResponse
      */
-    public function makeRead(Request $request, Notifications $notifications){
-        $ids = $request->get('ids');
-        $ids = explode(',', $ids);
-        if(empty($ids)){
-            return $this->error(500, '参数错误');
+    public function makeRead(Request $request, User $userModel, Notifications $notifications){
+        $id = $request->get('id', false);
+        $uid = $request->get('uid', false);
+        if(!$uid){
+            return $this->error(500, '参数失败');
         }
-        $res = $notifications->newQuery()->whereIn('id', $ids)->update(['read_at', Carbon::now()]);
-        if($res){
-            return $this->success('标记已读成功');
+        $exists = $userModel->newQuery()->where('id', $uid)->exists();
+        if(!$exists){
+            return $this->error(500, '用户不存在');
         }
-        return $this->error(500, '标记已读失败');
+        $user = $userModel->newQuery()->find($uid);
+        if($id){
+            $user->unreadNotifications->where('id', $id)->markAsRead();
+        }else{
+            $user->unreadNotifications->markAsRead();
+        }
+        return $this->success('标记已读成功');
     }
 }

@@ -213,34 +213,4 @@ class ExampleController extends Controller
         ];
         return $this->success($data);
     }
-
-
-    public function system(Request $request, SystemConfig $systemConfig){
-        $config = $systemConfig->newQuery()->find(1);
-        Notification::send($config, new systemNotification($config));
-        return $this->success('设置成功');
-//        $config->unreadNotifications->markAsRead();
-//        return $this->success([
-//            'unreadNotifications' => $config->unreadNotifications,
-//            'readNotifications' => $config->readNotifications,
-//            'notifications' => $config->notifications,
-//        ]);
-        $variable = $request->get('variable');
-        $value = $request->get('value');
-//        $id = $systemConfig->newQuery()->insertGetId([
-//            'variable' => $variable,
-//            'value' => $value
-//        ]);
-        $data = [
-            'variable' => $variable,
-            'value' => $value
-        ];
-        $systemConfig->notify(new systemNotification(collect($data)));
-        return $this->success('设置成功');
-//        if($id){
-//            $config = $systemConfig->newQuery()->find($id);
-//            $config->notify(new systemNotification($config));
-//            return $this->success('设置成功');
-//        }
-    }
 }
