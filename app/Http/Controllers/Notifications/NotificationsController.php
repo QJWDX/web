@@ -109,4 +109,52 @@ class NotificationsController extends Controller
         }
         return $this->success('标记已读成功');
     }
+
+    /**
+     * 删除消息通知
+     * @param Request $request
+     * @param User $userModel
+     * @param Notifications $notifications
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delNotifications(Request $request, User $userModel, Notifications $notifications){
+        $id = $request->get('id', false);
+        $uid = $request->get('uid', false);
+        if(!$uid){
+            return $this->error(500, '参数错误');
+        }
+        $exists = $userModel->newQuery()->where('id', $uid)->exists();
+        if(!$exists){
+            return $this->error(500, '用户不存在');
+        }
+        $user = $userModel->newQuery()->find($uid);
+        if($id){
+            $res = $user->notifications()->where('id', $id)->delete();
+        }else{
+            $res = $user->notifications()->whereNotNull('read_at')->delete();
+        }
+        if($res){
+            return $this->success('删除消息通知成功');
+        }
+    }
+
+    /**
+     * 未读通知数量
+     * @param Request $request
+     * @param User $userModel
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUnreadNumber(Request $request, User $userModel){
+        $uid = $request->get('uid', false);
+        if(!$uid){
+            return $this->error(500, '参数错误');
+        }
+        $exists = $userModel->newQuery()->where('id', $uid)->exists();
+        if(!$exists){
+            return $this->error(500, '用户不存在');
+        }
+        $user = $userModel->newQuery()->find($uid);
+        $count = $user->unreadNotifications()->count();
+        return $this->success(['unreadNumber' => $count]);
+    }
 }

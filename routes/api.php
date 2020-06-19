@@ -65,4 +65,6 @@ Route::group(['prefix' => 'notifications', 'namespace' => 'Notifications'], func
     Route::get('createNotifications', 'NotificationsController@createNotifications');
     Route::get('getNotifications', 'NotificationsController@getNotifications');
     Route::get('makeRead', 'NotificationsController@makeRead');
+    Route::delete('delNotifications', 'NotificationsController@delNotifications');
+    Route::get('getUnreadNumber', 'NotificationsController@getUnreadNumber');
 });

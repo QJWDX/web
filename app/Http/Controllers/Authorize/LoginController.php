@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Authorize;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterAuthRequest;
+use App\Models\Base\UserRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -33,7 +34,7 @@ class LoginController extends Controller
     }
 
     // 登录
-    public function login(Request $request)
+    public function login(Request $request, UserRole $userRole)
     {
         $user = new User();
         $input = $request->only('username', 'password');
@@ -49,8 +50,12 @@ class LoginController extends Controller
         if (!$jwt_token = JWTAuth::attempt($input)) {
             return $this->error(401, 'Invalid username or Password');
         }
+        $user = auth()->user();
+        $role_ids = $userRole->newQuery()->where('user_id', $user['id'])->pluck('role_id')->toArray();
+        $user['role'] = implode(',',$role_ids);
         return $this->success([
-            'token' => $jwt_token
+            'token' => $jwt_token,
+            'user' => $user
         ], 200, '登录成功');
     }
 }
