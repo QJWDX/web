@@ -114,6 +114,9 @@ return [
             'port' => env('REDIS_PORT', 6379),
             'database' => 0,
         ],
+        'options' => [
+            'prefix' => 'self_redis_'
+        ]
 
     ],
 
