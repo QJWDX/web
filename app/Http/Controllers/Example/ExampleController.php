@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Example;
 
 use App\Exports\ExampleExport;
 use App\Http\Controllers\Controller;
+use App\Jobs\GatewaySendEmail;
 use App\Jobs\sendEmail;
 use App\Models\Base\SystemConfig;
 use App\Models\User;
@@ -157,6 +158,8 @@ class ExampleController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function mail(){
+        $this->dispatch(new GatewaySendEmail([]));
+        dd(1111);
         try{
             $data = ['username' => 'Mr.H', 'tel' => '18370847427'];
             $emailData = array(

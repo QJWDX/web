@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Console\Commands;
-
-use App\Service\RabbitMq\AmqpConsumer;
+use App\Service\AMQP\AMQPConsumer;
 use Illuminate\Console\Command;
 
-class rabbitMqConsumer extends Command
+class mqConsumer extends Command
 {
     private $consumer;
     private $config;
@@ -30,7 +29,7 @@ class rabbitMqConsumer extends Command
      */
     public function __construct()
     {
-        $this->config = config('rabbitmq');
+        $this->config = config('amqp');
         parent::__construct();
     }
 
@@ -50,7 +49,7 @@ class rabbitMqConsumer extends Command
      * rabbitMQ消费者
      */
     public function consumerConnect(){
-        $this->consumer = new AmqpConsumer(
+        $this->consumer = new AMQPConsumer(
             $this->config['host'],
             $this->config['port'],
             $this->config['user'],

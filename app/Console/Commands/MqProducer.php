@@ -1,12 +1,11 @@
 <?php
 
 namespace App\Console\Commands;
-
-use App\Service\RabbitMq\AmqpServer;
+use App\Service\AMQP\AMQPServer;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class rabbitMqProducer extends Command
+class mqProducer extends Command
 {
     private $rabbit;
 
@@ -32,7 +31,7 @@ class rabbitMqProducer extends Command
      */
     public function __construct()
     {
-        $this->config = config('mq');
+        $this->config = config('amqp');
         parent::__construct();
     }
 
@@ -46,10 +45,7 @@ class rabbitMqProducer extends Command
         $this->connect();
         $data = array(
             'username' => '小狐仙',
-            'password' => md5('123456'),
-            'email' => '1131941069@qq.com',
-            'tel' => '18070573141',
-            'status' => 1
+            'password' => md5('123456')
         );
         $message = json_encode($data);
         try {
@@ -66,7 +62,7 @@ class rabbitMqProducer extends Command
     }
 
     public function connect(){
-        $this->rabbit = new AmqpServer(
+        $this->rabbit = new AMQPServer(
             $this->config['host'],
             $this->config['port'],
             $this->config['user'],
