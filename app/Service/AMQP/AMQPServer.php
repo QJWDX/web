@@ -1,7 +1,6 @@
 <?php
 
-namespace App\Service\RabbitMq;
-
+namespace App\Service\AMQP;
 use Illuminate\Support\Facades\Log;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AbstractConnection;
@@ -11,7 +10,7 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Exception\AMQPConnectionClosedException;
 
-class AmqpServer
+class AMQPServer
 {
     /**
      * @var AMQPStreamConnection $connect
@@ -86,12 +85,9 @@ class AmqpServer
     }
 
     //反序列化的类
-    public function sendMessageToServer($msg, $routing_key = '')
+    public function sendMessageToServer($msg)
     {
         $message = new AMQPMessage($msg, array('content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT));
-        if($routing_key){
-            $this->routing_key = $routing_key;
-        }
         try {
             $this->channel->basic_publish($message, $this->exchange_name, $this->routing_key);
         } catch (\Exception $exception) {

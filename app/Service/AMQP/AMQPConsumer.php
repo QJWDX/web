@@ -1,11 +1,6 @@
 <?php
 
-namespace App\Service\RabbitMq;
-use App\Models\Base\Line;
-use App\Models\Base\LinePlatform;
-use App\Models\Base\Vehicle;
-use App\Models\Base\VehicleOperational;
-use App\Models\Base\VehicleRealtimeData;
+namespace App\Service\AMQP;
 use PhpAmqpLib\Channel\AbstractChannel;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -13,7 +8,7 @@ use PhpAmqpLib\Exchange\AMQPExchangeType;
 use PhpAmqpLib\Exception\AMQPNoDataException;
 use PhpAmqpLib\Exception\AMQPRuntimeException;
 
-class AmqpConsumer
+class AMQPConsumer
 {
     protected $connect;
     protected $channel;
