@@ -65,9 +65,9 @@ class RoleController extends Controller
     public function addRole(Request $request, Role $role){
         $roleName = $request->get('role_name', false);
         $description = $request->get('description');
-        $is_super = $request->get('is_super', false);
-        $parent_id = $request->get('parent_id', false);
-        if($roleName == false || $is_super == false || $parent_id == false){
+        $is_super = $request->get('is_super', 0);
+        $parent_id = $request->get('parent_id', 0);
+        if($roleName == false){
             return $this->error(500, '参数错误');
         }
         $res = $role->newQuery()->insert([
@@ -111,11 +111,15 @@ class RoleController extends Controller
     public function delRole(Request $request, Role $role){
         $ids = $request->get('ids', false);
         if(!$ids){
-            return $this->error(500, '参数错误');
+            return $this->error(500, '');
         }
         $ids = explode(',', $ids);
         if(empty($ids)){
             return $this->error(500, '参数错误');
+        }
+        $has_super = $role->newQuery()->whereIn('id', $ids)->where('is_super', 1)->exists();
+        if($has_super){
+            return $this->error(500, '选中项有超级管理员不允许删除，请重新选择');
         }
         $res = $role->newQuery()->whereIn('id', $ids)->delete();
         if($res){

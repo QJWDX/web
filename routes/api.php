@@ -32,7 +32,7 @@ Route::group(['prefix' => 'role', 'namespace' => 'Role'], function (){
     Route::get('getMenusAndRoute', 'RoleController@getMenusAndRoute');
     Route::get('getRoleList', 'RoleController@getRoleList');
     Route::post('addRole', 'RoleController@addRole');
-    Route::get('getRoleInfo', 'RoleController@getRoleInfo');
+    Route::get('getRoleInfo/{id}', 'RoleController@getRoleInfo');
     Route::put('modRole/{id}', 'RoleController@modRole');
     Route::delete('delRole', 'RoleController@delRole');
 });
