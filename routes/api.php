@@ -28,8 +28,14 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Authorize'], function () {
     Route::get('user', 'AuthController@getAuthUser');
 });
 
-Route::group(['prefix' => 'role', 'namespace' => 'Role'], function (){
-    Route::get('getMenusAndRoute', 'RoleController@getMenusAndRoute');
+Route::group(['prefix' => 'menus', 'namespace' => 'Admin'], function (){
+    Route::get('getVueRoute', 'MenusController@getVueRoute');
+    Route::get('getMenuTree', 'MenusController@getMenuTree');
+    Route::get('getRoleMenus', 'MenusController@getRoleMenus');
+    Route::post('setRoleMenus', 'MenusController@setRoleMenus');
+});
+
+Route::group(['prefix' => 'role', 'namespace' => 'Admin'], function (){
     Route::get('getRoleList', 'RoleController@getRoleList');
     Route::post('addRole', 'RoleController@addRole');
     Route::get('getRoleInfo/{id}', 'RoleController@getRoleInfo');

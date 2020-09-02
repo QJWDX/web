@@ -53,4 +53,43 @@ class Menus extends BaseModel
         }
         return $list;
     }
+
+
+    /**
+     * 获取权限表树形菜单
+     * @param int $is_super
+     * @return array
+     */
+    public function getElTree($is_super = 0){
+        $data = $this->newQuery()->orderBy('sort_field')->get();
+        return $this->elTree($data, 0, $is_super);
+    }
+
+    /**
+     * el-tree树形控件
+     * @param $item
+     * @param $parent_id
+     * @param $is_super
+     * @return array
+     */
+    public function elTree(&$item, $parent_id, $is_super){
+        $list = array();
+        if(!empty($item)){
+            foreach ($item as $k => $v) {
+                if ($v['parent_id'] == $parent_id) {
+                    $subs = $this->elTree($item, $v['id'], $is_super);
+                    $list_item['id'] = $v['id'];
+                    $list_item['label'] = $v['name'];
+                    if($is_super){
+                        $list_item['disabled'] = true;
+                    }
+                    if(!empty($subs)){
+                        $list_item['children'] = $subs;
+                    }
+                    array_push($list, $list_item);
+                }
+            }
+        }
+        return $list;
+    }
 }

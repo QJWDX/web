@@ -1,36 +1,13 @@
 <?php
 
 
-namespace App\Http\Controllers\Role;
-
-
+namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\Models\Base\Menus;
 use App\Models\Base\Role;
-use App\Models\Base\RoleMenus;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    /**
-     * 获取角色权限菜单和路由
-     * @param Request $request
-     * @param Role $role
-     * @param Menus $menus
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getMenusAndRoute(Request $request, Role $role, Menus $menus){
-        $role_id = $request->get('role');
-        $ids = explode(',', $role_id);
-        $isSuper = $role->newQuery()->where('is_super', 1)->whereIn('id', $ids)->exists();
-        $menu_ids = array();
-        if(!$isSuper){
-            $menu_ids = (new RoleMenus())->newQuery()->where('role_id', $role_id)->pluck('menus_id');
-        }
-        $permissionData = $menus->permissionMenusAndRoute($isSuper, $menu_ids);
-        return $this->success($permissionData);
-    }
-
     /**
      * 角色列表
      * @param Request $request
@@ -51,7 +28,9 @@ class RoleController extends Controller
     public function getRoleInfo($id, Role $role){
         $result = $role->newQuery()->find($id);
         if($result){
-            return $this->success($result);
+            $data = $result->toArray();
+            $data['is_super'] = $data['is_super'] == '是' ? 1 : 0;
+            return $this->success($data);
         }
         return $this->error(500, '获取失败');
     }
@@ -92,9 +71,11 @@ class RoleController extends Controller
     public function modRole(Request $request, $id, Role $role){
         $roleName = $request->get('role_name');
         $description = $request->get('description');
+        $is_super = $request->get('is_super');
         $res = $role->newQuery()->where('id', $id)->update([
             'role_name' => $roleName,
-            'description' => $description
+            'description' => $description,
+            'is_super' => $is_super
         ]);
         if($res){
             return $this->success('编辑成功');
