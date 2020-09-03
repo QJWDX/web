@@ -6,13 +6,10 @@ namespace App\Http\Controllers\Notifications;
 
 use App\Events\sendNotification;
 use App\Http\Controllers\Controller;
-use App\Models\Base\Notifications;
-use App\Models\Base\systemNotifications;
+use App\Models\Common\Notifications;
+use App\Models\Common\systemNotifications;
 use App\Models\User;
-use App\Notifications\systemNotification;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
 
 class NotificationsController extends Controller
 {

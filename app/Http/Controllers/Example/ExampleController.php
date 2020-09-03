@@ -6,20 +6,14 @@ namespace App\Http\Controllers\Example;
 
 use App\Exports\ExampleExport;
 use App\Http\Controllers\Controller;
-use App\Jobs\GatewaySendEmail;
 use App\Jobs\sendEmail;
-use App\Models\Base\SystemConfig;
 use App\Models\User;
-use App\Notifications\systemNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redis;
 use Maatwebsite\Excel\Facades\Excel;
-use function foo\func;
 
 class ExampleController extends Controller
 {

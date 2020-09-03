@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Example;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Overtrue\Pinyin\Pinyin;
 
 class PyController extends Controller

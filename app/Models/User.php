@@ -60,7 +60,7 @@ class User extends Authenticate implements JWTSubject
 
 
     public function getSexAttribute($sex){
-        $sexType = ['女', '男'];
+        $sexType = [-1 => '未知', 0 => '女', 1 => '男'];
         return $sexType[$sex];
     }
 

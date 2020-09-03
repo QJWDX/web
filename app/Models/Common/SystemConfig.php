@@ -1,11 +1,8 @@
 <?php
 
 
-namespace App\Models\Base;
-
-
+namespace App\Models\Common;
 use App\Models\BaseModel;
-use Illuminate\Notifications\Notifiable;
 
 class SystemConfig extends BaseModel
 {

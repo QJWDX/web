@@ -1,9 +1,7 @@
 <?php
 
 
-namespace App\Models\Base;
-
-
+namespace App\Models\Common;
 use App\Models\BaseModel;
 
 class systemNotifications extends BaseModel

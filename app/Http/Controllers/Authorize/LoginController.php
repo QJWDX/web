@@ -4,7 +4,7 @@
 namespace App\Http\Controllers\Authorize;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterAuthRequest;
-use App\Models\Base\UserRole;
+use App\Models\Common\UserRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;

@@ -28,6 +28,6 @@ class BaseRequest extends FormRequest
             'code' => 500,
             'message' => $validator->errors()->first(),
             'server_time' => time(),
-        ], 500)));
+        ], 200)));
     }
 }

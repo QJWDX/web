@@ -41,6 +41,7 @@ Route::group(['prefix' => 'role', 'namespace' => 'Admin'], function (){
     Route::get('getRoleInfo/{id}', 'RoleController@getRoleInfo');
     Route::put('modRole/{id}', 'RoleController@modRole');
     Route::delete('delRole', 'RoleController@delRole');
+    Route::get('getRoleTree', 'RoleController@getRoleTree');
 });
 
 Route::group(['prefix' => 'notifications', 'namespace' => 'Notifications'], function (){
@@ -50,3 +51,14 @@ Route::group(['prefix' => 'notifications', 'namespace' => 'Notifications'], func
     Route::delete('delNotifications', 'NotificationsController@delNotifications');
     Route::get('getUnreadNumber', 'NotificationsController@getUnreadNumber');
 });
+
+Route::group(['namespace' => 'Admin'], function (){
+    Route::resource('user', 'UserController')->only(['index', 'store', 'show', 'update', 'destroy']);
+});
+
+Route::group(['prefix' => 'user', 'namespace' => 'Admin'], function (){
+    Route::get('getUserRole/{id}', 'UserController@getUserRole');
+    Route::post('setUserRole/{id}', 'UserController@setUserRole');
+});
+
+

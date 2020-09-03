@@ -3,7 +3,7 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\Models\Base\Role;
+use App\Models\Common\Role;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
@@ -88,6 +88,7 @@ class RoleController extends Controller
      * @param Request $request
      * @param Role $role
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function delRole(Request $request, Role $role){
         $ids = $request->get('ids', false);
@@ -102,10 +103,24 @@ class RoleController extends Controller
         if($has_super){
             return $this->error(500, '选中项有超级管理员不允许删除，请重新选择');
         }
-        $res = $role->newQuery()->whereIn('id', $ids)->delete();
-        if($res){
-            return $this->success('删除成功');
+        for($i=0; $i<count($ids); $i++){
+            $Obj = $role->newQuery()->find($ids[$i]);
+            $Obj->delete();
         }
-        return $this->error(500, '删除失败');
+        return $this->success('删除成功');
+    }
+
+    /**
+     * 获取角色树形列表
+     * @param Role $role
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRoleTree(Role $role){
+        $list = $role->newQuery()->select(['id', 'role_name', 'is_super'])->get();
+        $treeData = [];
+        foreach ($list as $value){
+            array_push($treeData, ['id' => $value['id'], 'label' => $value['role_name'] .'['. ($value->is_super == '是' ? 'super' : 'other') . ']']);
+        }
+        return $this->success($treeData);
     }
 }
