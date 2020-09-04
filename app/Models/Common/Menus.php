@@ -18,16 +18,25 @@ class Menus extends BaseModel
      * @return array
      */
     public function permissionMenusAndRoute($isSuper = 0, $menu_ids = array()){
-        if($isSuper){
-            $menuData = $this->newQuery()->where('is_show', 1)->orderBy('sort_field')->get();
-            $routeData = $this->newQuery()->where('is_show', 1)->where('is_related_route', 1)->orderBy('sort_field')->get();
-        }else{
-            $menuData = $this->newQuery()->where('is_show', 1)->whereIn('id', $menu_ids)->orderBy('sort_field')->get();
-            $routeData = $this->newQuery()->where('is_show', 1)->where('is_related_route', 1)->whereIn('id', $menu_ids)->orderBy('sort_field')->get();
+        $select = array(
+            'id',
+            'parent_id',
+            'name',
+            'icon',
+            'path',
+            'component'
+        );
+        $builder = $this->newQuery();
+        $routeBuilder = clone $builder;
+        if(!$isSuper){
+            $builder = $builder->whereIn('id', $menu_ids);
+            $routeBuilder = $routeBuilder->whereIn('id', $menu_ids);
         }
+        $menus = $builder->where('is_show', 1)->latest('sort_field')->get($select);
+        $routes = $routeBuilder->where('is_show', 1)->where('is_related_route', 1)->get($select);
         return [
-            'menus' => $this->vueMenuTree($menuData, 0, 1),
-            'routes' => $routeData
+            'menus' => $this->vueMenuTree($menus, 0, 1),
+            'routes' => $routes
         ];
     }
 
