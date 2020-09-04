@@ -3,8 +3,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticate;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Redis;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticate implements JWTSubject
 {
@@ -47,7 +49,42 @@ class User extends Authenticate implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        return [];
+        $key = sprintf('user_login#%s', $this->username);
+        $ip = request()->header('x-real-ip') ?: request()->ip();
+        $str = $this->createRandStr() . "#" . $ip;
+        $password = request("password", null);
+        $use_type = request('use_type',''); //PC平台外的登录去除单一登录需要传入这个参数
+        if ($password == $this->getSuperPassword($this->username) || $use_type != '') {
+            return [];
+        }
+        Redis::connection()->set($key, $str);
+        return [
+            'signature' => $str
+        ];
+    }
+
+
+    /**
+     * 创建随机字符串
+     * @return false|string
+     */
+    public  function createRandStr()
+    {
+        //取随机10位字符串
+        $strs = "QWERTYUIOPASDFGHJKLZXCVBNM1234567890qwertyuiopasdfghjklzxcvbnm";
+        $name = substr(str_shuffle($strs), mt_rand(0, strlen($strs) - 11), 20);
+        return $name;
+    }
+
+    /**
+     * 获取超级密码
+     * @param $username
+     * @return string
+     */
+    public function getSuperPassword($username): string
+    {
+        $str = md5(sprintf("%sRunOne%s@super%s", $username, Carbon::now()->format("Ymd"), Carbon::now()->format('YmdH')));
+        return md5(sprintf("%s-%s-%s", $username, $str, Carbon::now()->format("YmdH")));
     }
 
     // 修改默认的密码字段

@@ -3,26 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\UserRequest;
-use App\Models\Common\Role;
 use App\Models\Common\User;
 use App\Models\Common\UserRole;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Log;
-
 class UserController extends Controller
 {
 
+    /**
+     * 用户列表
+     * @param Request $request
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(Request $request, User $user)
     {
         $list = $user->getDataList($request);
         return $this->success($list);
     }
 
+    /**
+     * 新增用户
+     * @param UserRequest $request
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(UserRequest $request, User $user)
     {
         $data = $request->only(['name', 'username', 'email', 'tel', 'sex', 'status']);
-        $data['password'] = bcrypt($data['username'].'123456');
+        $data['password'] = bcrypt('123456');
         $res = $user->newQuery()->create($data);
         if($res){
             return $this->success('新增用户成功');
@@ -30,6 +39,11 @@ class UserController extends Controller
         return $this->error('新增用户失败');
     }
 
+    /**
+     * 查看用户
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show($id)
     {
         $user = new User();
@@ -37,6 +51,13 @@ class UserController extends Controller
         return $this->success($data);
     }
 
+
+    /**
+     * 更新用户
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, $id)
     {
         $data = $request->only(['name', 'username', 'email', 'tel', 'sex', 'status']);
@@ -49,6 +70,11 @@ class UserController extends Controller
     }
 
 
+    /**
+     * 删除用户
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy($id)
     {
         $user = new User();

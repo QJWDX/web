@@ -8,7 +8,6 @@ use App\Models\Common\UserRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\JWT;
 
 class LoginController extends Controller
 {
@@ -45,12 +44,15 @@ class LoginController extends Controller
             ->where('username', $input['username'])
             ->exists();
         if(!$is_exists){
-            return $this->error(500, 'User does not exist');
+            return $this->error(500, '用户不存在');
         }
         if (!$jwt_token = JWTAuth::attempt($input)) {
-            return $this->error(401, 'Invalid username or Password');
+            return $this->error(401, '密码错误');
         }
         $user = auth()->user();
+        if(!$user['status']){
+            return $this->error(500, '该用户已禁用，请联系管理员');
+        }
         $role_ids = $userRole->newQuery()->where('user_id', $user['id'])->pluck('role_id')->toArray();
         $user['role'] = implode(',',$role_ids);
         return $this->success([
