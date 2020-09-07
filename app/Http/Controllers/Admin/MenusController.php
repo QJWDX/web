@@ -12,6 +12,12 @@ use Illuminate\Http\Request;
 
 class MenusController extends Controller
 {
+//    private $menu;
+//    public function __construct(Menus $menus)
+//    {
+//        $this->menu = $menus;
+//    }
+
     /**
      * 权限菜单树
      * @param Request $request
@@ -100,5 +106,72 @@ class MenusController extends Controller
             return $this->error('权限菜单配置失败');
         }
         return $this->error('参数错误');
+    }
+
+
+    // 菜单列表
+    public function index(Request $request, Menus $menus){
+        $list = $menus->getList($request);
+        return $this->success($list);
+    }
+
+
+    // 新增菜单
+    public function store(Request $request, Menus $menus){
+        $data = $request->only([
+            'name',
+            'parent_id',
+            'icon',
+            'path',
+            'component',
+            'is_related_route',
+            'is_show',
+            'is_default',
+            'sort_field'
+        ]);
+        $res = $menus->newQuery()->create($data);
+        if($res){
+            return $this->success('新增菜单成功');
+        }
+        return $this->error('新增菜单失败');
+    }
+
+
+    // 菜单详情
+    public function show($id){
+        $menus = new Menus();
+        $menu = $menus->newQuery()->find($id);
+        return $this->success($menu);
+    }
+
+
+    // 更新菜单
+    public function update(Request $request, $id){
+        $data = $request->only([
+            'name',
+            'parent_id',
+            'icon',
+            'path',
+            'component',
+            'is_related_route',
+            'is_show',
+            'is_default',
+            'sort_field'
+        ]);
+        $menus = new Menus();
+        $res = $menus->newQuery()->where('id', $id)->update($data);
+        if($res){
+            return $this->success('编辑菜单成功');
+        }
+        return $this->error('编辑菜单失败');
+    }
+
+    // 删除菜单
+    public function destroy($id){
+        $res = $this->menu->newQuery()->where('id', $id)->delete();
+        if($res){
+            return $this->success('删除菜单成功');
+        }
+        return $this->error('删除菜单失败');
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterAuthRequest;
 use App\Models\Common\UserRole;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LoginController extends Controller

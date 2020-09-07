@@ -4,6 +4,7 @@
 namespace App\Models\Common;
 
 use App\Models\BaseModel;
+use Illuminate\Http\Request;
 
 class Menus extends BaseModel
 {
@@ -99,5 +100,16 @@ class Menus extends BaseModel
             }
         }
         return $list;
+    }
+
+
+    /**
+     * 菜单列表
+     * @param Request $request
+     * @return array
+     */
+    public function getList(Request $request){
+        $builder = $this->newQuery()->latest('sort_field');
+        return $this->modifyPaginateForApi($builder);
     }
 }

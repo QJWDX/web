@@ -54,6 +54,7 @@ Route::group(['prefix' => 'notifications', 'namespace' => 'Notifications'], func
 
 Route::group(['namespace' => 'Admin'], function (){
     Route::resource('user', 'UserController')->only(['index', 'store', 'show', 'update', 'destroy']);
+    Route::resource('menus', 'MenusController')->only(['index', 'store', 'show', 'update', 'destroy']);
 });
 
 Route::group(['prefix' => 'user', 'namespace' => 'Admin'], function (){
