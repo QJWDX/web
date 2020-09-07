@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\Http\Controllers\Mq;
+namespace App\Http\Controllers\Queue;
 
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 
-class consumerController extends Controller
+class Callback extends Controller
 {
 
     /**

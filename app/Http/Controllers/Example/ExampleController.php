@@ -152,8 +152,7 @@ class ExampleController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function mail(){
-        $this->dispatch(new GatewaySendEmail([]));
-        dd(1111);
+        $this->dispatch(new sendEmail([]));
         try{
             $data = ['username' => 'Mr.H', 'tel' => '18370847427'];
             $emailData = array(

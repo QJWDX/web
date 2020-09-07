@@ -67,7 +67,7 @@ class MenusController extends Controller
         $isSuper = $role->newQuery()->where('is_super', 1)->whereIn('id', $ids)->exists();
         $menu_ids = array();
         if(!$isSuper){
-            $menu_ids = (new RoleMenus())->newQuery()->whereIn('role_id', $role_id)->distinct()->pluck('menus_id');
+            $menu_ids = (new RoleMenus())->newQuery()->whereIn('role_id', $ids)->distinct()->pluck('menus_id')->toArray();
         }
         $permissionData = $menus->permissionMenusAndRoute($isSuper, $menu_ids);
         return $this->success($permissionData);

@@ -20,7 +20,8 @@ class AMQPConsumer
     private $vhost;
     private $host;
     const WAIT_BEFORE_RECONNECT_uS = 1000000;
-
+    // 消费后处理消息的回调函数
+    private $callback = ['App\Http\Controllers\Queue\Callback', 'process_message'];
     public function __construct($host, $port, $user, $password, $vhost = '/', $queue, $exchange)
     {
         $this->host = $host;
@@ -84,7 +85,7 @@ class AMQPConsumer
 
         $this->channel->basic_qos(null, 200, null);
 
-        $this->channel->basic_consume($this->queue, "subway_consumer", false, false, false, false, ['App\Http\Controllers\Mq\consumerController', 'process_message']);
+        $this->channel->basic_consume($this->queue, "subway_consumer", false, false, false, false, $this->callback);
 
         while ($this->channel->is_consuming()) {
             try {
