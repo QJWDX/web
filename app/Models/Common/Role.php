@@ -3,7 +3,6 @@
 
 namespace App\Models\Common;
 use App\Models\BaseModel;
-use Illuminate\Http\Request;
 
 class Role extends BaseModel
 {
@@ -12,42 +11,86 @@ class Role extends BaseModel
 
 
     /**
-     * 角色列表
-     * @param Request $request
+     * 获取列表数据
+     * @param array $field
      * @return array
      */
-    public function roleList(Request $request){
+    public function getList($field = array()){
+        return $this->modifyPaginateForApi($this->builderQuery($field));
+    }
+
+
+    /**
+     * 获取单条数据
+     * @param array $where
+     * @param array $field
+     * @return bool|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     */
+    public function getRow($where = array(), $field = array()){
         $builder = $this->newQuery();
-        $roleName =  $request->get('role_name', false);
-        if($roleName){
-            $builder = $builder->where('role_name', 'like', '%'.$roleName.'%');
+        if(!$where){
+            return false;
         }
-        $builder = $builder->select(['*', 'parent_id as parent_name']);
-        return $this->modifyPaginateForApi($builder);
+        if($field){
+            $builder = $builder->select($field);
+        }
+        return $builder->where($where)->first();
+    }
+
+
+    public function builderQuery($field = array()){
+        $role_name = request('role_name', false);
+        $builder = $this->newQuery();
+        if($field){
+            $builder = $builder->select($field);
+        }
+        $builder = $builder->when($role_name, function ($query) use($role_name){
+            $query->where('role_name', 'like', '%'. $role_name. '%');
+        });
+        return $builder;
     }
 
 
     /**
-     * 修改is_super属性值
-     * @param $isSuper
-     * @return mixed
+     * 是否超级角色
+     * @param $id
+     * @return bool
      */
-    public function getIsSuperAttribute($isSuper){
-        $super_zh = ['否', '是'];
-        return $super_zh[$isSuper];
+    public function isSuperRole($id){
+        return $this->newQuery()->where('id', $id)->where('is_super', 1)->exists();
     }
 
+
     /**
-     * 父级角色属性值
-     * @param $parentId
-     * @return \Illuminate\Support\Collection|string
+     * 是否含有超级角色
+     * @param $ids
+     * @return bool
      */
-    public function getParentNameAttribute($parentId){
-        if($parentId == 0){
-            $parentName = '顶级角色';
-        }else{
-            $parentName = $this->newQuery()->where('id', $parentId)->first()->pluck('role_name');
+    public function hasSuperRole($ids = array()){
+        return $this->newQuery()->whereIn('id', $ids)->where('is_super', 1)->exists();
+    }
+
+
+
+    /**
+     * 删除
+     * @param array $ids
+     */
+    public function del($ids = array()){
+        $roles = $this->newQuery()->whereIn('id', $ids)->get();
+        foreach ($roles as $role){
+            $role->delete();
         }
-        return $parentName;
+    }
+
+
+    /**
+     * 获取全部数据
+     * @param array $field
+     * @param array $where
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getAll($field = array(), $where = array()){
+        return $this->newQuery()->where($where)->select($field)->get();
     }
 }

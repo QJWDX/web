@@ -13,10 +13,10 @@ use Illuminate\Http\Request;
 
 class MenusController extends Controller
 {
-    private $menu;
+    private $model;
     public function __construct(Menus $menus)
     {
-        $this->menu = $menus;
+        $this->model = $menus;
     }
 
     /**
@@ -140,7 +140,7 @@ class MenusController extends Controller
 
     // 菜单详情
     public function show($id){
-        $menu = $this->menu->newQuery()->find($id);
+        $menu = $this->model->newQuery()->find($id);
         return $this->success($menu);
     }
 
@@ -158,7 +158,7 @@ class MenusController extends Controller
             'is_default',
             'sort_field'
         ]);
-        $res = $this->menu->newQuery()->where('id', $id)->update($data);
+        $res = $this->model->newQuery()->where('id', $id)->update($data);
         if($res){
             return $this->success('编辑菜单成功');
         }
@@ -167,10 +167,10 @@ class MenusController extends Controller
 
     // 删除菜单
     public function destroy($id){
-        if($this->menu->hasSubMenu($id)){
+        if($this->model->hasSubMenu($id)){
             return $this->success('含有子菜单,不允许删除');
         }
-        $res = $this->menu->newQuery()->where('id', $id)->delete();
+        $res = $this->model->newQuery()->where('id', $id)->delete();
         if($res){
             return $this->success('删除菜单成功');
         }
@@ -184,7 +184,7 @@ class MenusController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function menuSelect(CategoryHandler $categoryHandler){
-        $menus = $this->menu->newQuery()->select(['id', 'parent_id', 'name'])->get();
+        $menus = $this->model->newQuery()->select(['id', 'parent_id', 'name'])->get();
         return $this->success($categoryHandler->select($menus, 0));
     }
 }

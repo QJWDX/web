@@ -1,10 +1,8 @@
 <?php
 
 namespace App\Observers;
-
-use App\Models\Base\Role;
+use App\Models\Common\Role;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class RoleObserver
 {

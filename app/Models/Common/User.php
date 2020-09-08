@@ -33,4 +33,16 @@ class User extends BaseModel
         });
         return $builder;
     }
+
+
+//    public function getSexAttribute($sex){
+//        switch ($sex){
+//            case 0:
+//                return '女';
+//            case 1:
+//                return '男';
+//            default:
+//                return '未知';
+//        }
+//    }
 }

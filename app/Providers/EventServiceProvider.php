@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\sendNotification' => [
             'App\Listeners\sendNotificationListener',
         ],
+        'App\Events\UserLogin' => [
+            'App\Listeners\UserLoginListener',
+        ],
     ];
 
     /**

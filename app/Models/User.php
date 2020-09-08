@@ -94,15 +94,4 @@ class User extends Authenticate implements JWTSubject
 //        return $this->attributes['password'];
         return $this->password;
     }
-
-
-    public function getSexAttribute($sex){
-        $sexType = [-1 => '未知', 0 => '女', 1 => '男'];
-        return $sexType[$sex];
-    }
-
-    public function getAgeAttribute($age){
-        if($age == 0)
-            return 100;
-    }
 }

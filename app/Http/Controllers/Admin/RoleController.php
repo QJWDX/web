@@ -3,110 +3,77 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BatchDeleteRequest;
 use App\Models\Common\Role;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    /**
-     * 角色列表
-     * @param Request $request
-     * @param Role $role
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getRoleList(Request $request, Role $role){
-        $data = $role->roleList($request);
-        return $this->success($data);
+    private $model;
+    public function __construct(Role $role)
+    {
+        $this->model = $role;
     }
 
-    /**
-     * 获取角色信息
-     * @param $id
-     * @param Role $role
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getRoleInfo($id, Role $role){
-        $result = $role->newQuery()->find($id);
-        if($result){
-            $data = $result->toArray();
-            $data['is_super'] = $data['is_super'] == '是' ? 1 : 0;
-            return $this->success($data);
-        }
-        return $this->error(500, '获取失败');
+    public function index(){
+        $list = $this->model->getList();
+        return $this->success($list);
     }
 
-    /**
-     * 新增角色
-     * @param Request $request
-     * @param Role $role
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function addRole(Request $request, Role $role){
-        $roleName = $request->get('role_name', false);
-        $description = $request->get('description');
-        $is_super = $request->get('is_super', 0);
-        $parent_id = $request->get('parent_id', 0);
-        if($roleName == false){
-            return $this->error(500, '参数错误');
-        }
-        $res = $role->newQuery()->insert([
-            'role_name' => $roleName,
-            'description' => $description,
-            'is_super' => $is_super,
-            'parent_id' => $parent_id,
+
+    public function store(Request $request){
+        $data = $request->only([
+            'role_name',
+            'description',
+            'is_super'
         ]);
+        $res = $this->model->newQuery()->create($data);
         if($res){
-            return $this->success('新增成功');
+            return $this->success('新增菜单成功');
         }
-        return $this->error(500, '新增失败');
+        return $this->error('新增菜单失败');
     }
 
-    /**
-     * 编辑角色
-     * @param Request $request
-     * @param $id
-     * @param Role $role
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function modRole(Request $request, $id, Role $role){
-        $roleName = $request->get('role_name');
-        $description = $request->get('description');
-        $is_super = $request->get('is_super');
-        $res = $role->newQuery()->where('id', $id)->update([
-            'role_name' => $roleName,
-            'description' => $description,
-            'is_super' => $is_super
+
+    public function show($id){
+        $menu = $this->model->getRow(['id' => $id]);
+        return $this->success($menu);
+    }
+
+
+    public function update(Request $request, $id){
+        $data = $request->only([
+            'role_name',
+            'description',
+            'is_super'
         ]);
+        $res = $this->model->newQuery()->where('id', $id)->update($data);
         if($res){
             return $this->success('编辑成功');
         }
-        return $this->error(500, '编辑失败');
+        return $this->error('编辑失败');
+    }
+
+
+    public function destroy($id){
+        if($this->model->isSuperRole($id)){
+            return $this->success('含有子菜单,不允许删除');
+        }
+        $this->model->del([$id]);
+        return $this->success('删除菜单成功');
     }
 
     /**
-     * 删除角色
-     * @param Request $request
-     * @param Role $role
+     * 批量删除角色
+     * @param BatchDeleteRequest $request
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
      */
-    public function delRole(Request $request, Role $role){
-        $ids = $request->get('ids', false);
-        if(!$ids){
-            return $this->error(500, '');
-        }
-        $ids = explode(',', $ids);
-        if(empty($ids)){
-            return $this->error(500, '参数错误');
-        }
-        $has_super = $role->newQuery()->whereIn('id', $ids)->where('is_super', 1)->exists();
-        if($has_super){
+    public function deleteAll(BatchDeleteRequest $request){
+        $ids = $request->get('ids');
+        if($this->model->hasSuperRole($ids)){
             return $this->error(500, '选中项有超级管理员不允许删除，请重新选择');
         }
-        for($i=0; $i<count($ids); $i++){
-            $Obj = $role->newQuery()->find($ids[$i]);
-            $Obj->delete();
-        }
+        $this->model->del($ids);
         return $this->success('删除成功');
     }
 
@@ -115,11 +82,11 @@ class RoleController extends Controller
      * @param Role $role
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getRoleTree(Role $role){
-        $list = $role->newQuery()->select(['id', 'role_name', 'is_super'])->get();
+    public function getRoleTree(){
+        $list = $this->model->getAll(['id', 'role_name', 'is_super']);
         $treeData = [];
         foreach ($list as $value){
-            array_push($treeData, ['id' => $value['id'], 'label' => $value['role_name'] .'['. ($value->is_super == '是' ? 'super' : 'other') . ']']);
+            array_push($treeData, ['id' => $value['id'], 'label' => $value['role_name'] .'['. ($value->is_super ? 'super' : 'other') . ']']);
         }
         return $this->success($treeData);
     }
