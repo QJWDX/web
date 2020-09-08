@@ -33,6 +33,7 @@ Route::group(['prefix' => 'menus', 'namespace' => 'Admin'], function (){
     Route::get('getMenuTree', 'MenusController@getMenuTree');
     Route::get('getRoleMenus', 'MenusController@getRoleMenus');
     Route::post('setRoleMenus', 'MenusController@setRoleMenus');
+    Route::get('menuSelect', 'MenusController@menuSelect');
 });
 
 Route::group(['prefix' => 'role', 'namespace' => 'Admin'], function (){

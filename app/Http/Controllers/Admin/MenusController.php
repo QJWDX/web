@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Handlers\CategoryHandler;
 use App\Http\Controllers\Controller;
 use App\Models\Common\Menus;
 use App\Models\Common\Role;
@@ -12,11 +13,11 @@ use Illuminate\Http\Request;
 
 class MenusController extends Controller
 {
-//    private $menu;
-//    public function __construct(Menus $menus)
-//    {
-//        $this->menu = $menus;
-//    }
+    private $menu;
+    public function __construct(Menus $menus)
+    {
+        $this->menu = $menus;
+    }
 
     /**
      * 权限菜单树
@@ -110,8 +111,8 @@ class MenusController extends Controller
 
 
     // 菜单列表
-    public function index(Request $request, Menus $menus){
-        $list = $menus->getList($request);
+    public function index(Menus $menus){
+        $list = $menus->getList();
         return $this->success($list);
     }
 
@@ -139,8 +140,7 @@ class MenusController extends Controller
 
     // 菜单详情
     public function show($id){
-        $menus = new Menus();
-        $menu = $menus->newQuery()->find($id);
+        $menu = $this->menu->newQuery()->find($id);
         return $this->success($menu);
     }
 
@@ -158,8 +158,7 @@ class MenusController extends Controller
             'is_default',
             'sort_field'
         ]);
-        $menus = new Menus();
-        $res = $menus->newQuery()->where('id', $id)->update($data);
+        $res = $this->menu->newQuery()->where('id', $id)->update($data);
         if($res){
             return $this->success('编辑菜单成功');
         }
@@ -168,10 +167,24 @@ class MenusController extends Controller
 
     // 删除菜单
     public function destroy($id){
+        if($this->menu->hasSubMenu($id)){
+            return $this->success('含有子菜单,不允许删除');
+        }
         $res = $this->menu->newQuery()->where('id', $id)->delete();
         if($res){
             return $this->success('删除菜单成功');
         }
         return $this->error('删除菜单失败');
+    }
+
+
+    /**
+     * 父级菜单下拉框
+     * @param CategoryHandler $categoryHandler
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function menuSelect(CategoryHandler $categoryHandler){
+        $menus = $this->menu->newQuery()->select(['id', 'parent_id', 'name'])->get();
+        return $this->success($categoryHandler->select($menus, 0));
     }
 }

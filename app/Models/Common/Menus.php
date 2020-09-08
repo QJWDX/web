@@ -105,11 +105,30 @@ class Menus extends BaseModel
 
     /**
      * 菜单列表
-     * @param Request $request
      * @return array
      */
-    public function getList(Request $request){
-        $builder = $this->newQuery()->latest('sort_field');
+    public function getList(){
+        $builder = $this->builderQuery()->orderBy('parent_id')->orderByDesc('sort_field');
         return $this->modifyPaginateForApi($builder);
+    }
+
+
+    public function builderQuery(){
+        $name = request('name', false);
+        $builder = $this->newQuery();
+        $builder = $builder->when($name, function ($query) use($name){
+            $query->where('name', 'like', '%'. $name. '%');
+        });
+        return $builder;
+    }
+
+
+    /**
+     * 是否含有子菜单
+     * @param $id
+     * @return bool
+     */
+    public function hasSubMenu($id){
+        return $this->newQuery()->where('parent_id', $id)->exists();
     }
 }
