@@ -1,20 +1,22 @@
 <?php
 
 namespace App\Http\Middleware;
+use App\Exceptions\InvalidUserException;
+use App\Http\Controllers\Authorize\CaptchaController;
 use App\Http\Controllers\Authorize\LoginController;
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use App\Exceptions\InvalidUserException;
 use Illuminate\Support\Facades\Redis;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
-use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-use Illuminate\Support\Facades\Log;
+use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
+
 class RefreshToken extends BaseMiddleware
 {
     protected $exceptedClass = [
-        LoginController::class
+        LoginController::class,
+        CaptchaController::class
     ];
 
     protected $exceptedActions = [];

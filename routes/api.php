@@ -26,6 +26,8 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Authorize'], function () {
     Route::get('logout', 'AuthController@logout');
     // 获取认证用户信息
     Route::get('user', 'AuthController@getAuthUser');
+    // 获取图形验证码
+    Route::post('getCaptcha', 'CaptchaController@getCaptcha');
 });
 
 Route::group(['prefix' => 'menus', 'namespace' => 'Admin'], function (){

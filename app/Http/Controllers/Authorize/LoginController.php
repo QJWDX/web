@@ -8,7 +8,7 @@ use App\Http\Requests\RegisterAuthRequest;
 use App\Models\Common\UserRole;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LoginController extends Controller
@@ -37,6 +37,17 @@ class LoginController extends Controller
     // 登录
     public function login(Request $request, UserRole $userRole)
     {
+        $captcha = $request->get('captcha_code', false);
+        $key = $request->get('captcha_key', false);
+        if(!$captcha || !$key){
+            return $this->error(500, '参数错误');
+        }
+        if(!Redis::connection()->get('captcha_'.$key)){
+            return $this->error(500, '验证码过期，请重新获取');
+        }
+        if(!captcha_api_check($captcha, $key)){
+            return $this->error(500, '验证码错误');
+        }
         $user = new User();
         $input = $request->only('username', 'password');
         if(array_keys($input) !== ['username', 'password']){
