@@ -28,6 +28,8 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Authorize'], function () {
     Route::get('user', 'AuthController@getAuthUser');
     // 获取图形验证码
     Route::post('getCaptcha', 'CaptchaController@getCaptcha');
+    // 获取rsa加密key
+    Route::post('getPrivateKey', 'LoginController@getPrivateKey');
 });
 
 Route::group(['prefix' => 'menus', 'namespace' => 'Admin'], function (){
