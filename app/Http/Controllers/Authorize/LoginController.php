@@ -9,6 +9,7 @@ use App\Models\Common\UserRole;
 use App\Models\User;
 use App\Service\Rsa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -78,10 +79,10 @@ class LoginController extends Controller
 
 
     /**
-     * 获取rsa密钥
+     * 获取rsa公钥
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getPrivateKey()
+    public function getRsaPublicKey()
     {
         $keys = Rsa::rsaCreateKey();
         //生成一个key储存到redis中。

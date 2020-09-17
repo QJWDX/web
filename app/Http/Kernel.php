@@ -20,6 +20,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
         \App\Http\Middleware\EnableCrossRequestMiddleware::class,
+        \App\Http\Middleware\RsaBeforeMiddleware::class
     ];
 
     /**
@@ -41,7 +42,8 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             'bindings',
-            'jwt.refresh.token'
+            'jwt.refresh.token',
+            'rsa'
         ],
     ];
 
@@ -64,5 +66,6 @@ class Kernel extends HttpKernel
 //        'auth.jwt' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
         'cross' => \App\Http\Middleware\EnableCrossRequestMiddleware::class,
         'jwt.refresh.token' => \App\Http\Middleware\RefreshToken::class,
+        'rsa' => \App\Http\Middleware\RsaBeforeMiddleware::class
     ];
 }

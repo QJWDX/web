@@ -11,7 +11,7 @@ class RedisRsa
     {
         $private_key = Redis::get($key);
         if (!$private_key) throw new ApiRequestExcept('encrypt_key不存在', 500);
-        Redis::del($key);
+//        Redis::del($key);
         return $private_key;
     }
 }
