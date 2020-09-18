@@ -9,7 +9,6 @@ use App\Models\Common\UserRole;
 use App\Models\User;
 use App\Service\Rsa;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -86,10 +85,11 @@ class LoginController extends Controller
     {
         $keys = Rsa::rsaCreateKey();
         //生成一个key储存到redis中。
-        $redis_key = config("rsa.redis_prefix") . $this->uuid();
+        $redis_key = trim(config("rsa.redis_prefix") . $this->uuid());
         Redis::connection()->setex($redis_key, config('rsa.ttl'), $keys['private_key']);
         return $this->success([
-            'public_key' => $keys['public_key'], "key" => $redis_key
+            'public_key' => $keys['public_key'],
+            "key" => $redis_key
         ]);
     }
 }

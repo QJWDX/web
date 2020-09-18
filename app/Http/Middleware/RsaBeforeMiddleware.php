@@ -5,9 +5,9 @@ namespace App\Http\Middleware;
 
 
 use App\Exceptions\ApiRequestExcept;
-use Illuminate\Http\Request;
-use App\Service\Rsa;
 use App\Service\RedisRsa;
+use App\Service\Rsa;
+use Illuminate\Http\Request;
 
 class RsaBeforeMiddleware
 {
@@ -22,10 +22,10 @@ class RsaBeforeMiddleware
         if ($request->method() == 'OPTIONS') {
             return $next($request);
         }
-        //判断是否有一个叫RsaKey
+        // 判断是否有一个叫encryptKey
         if ($request->hasHeader("encryptKey")) {
-            //拿到Private_key
-            $encrypt_key = $request->header("encryptKey");
+            // 拿到Private_key
+            $encrypt_key = trim($request->header("encryptKey"));
 
             $key = RedisRsa::getFlashRsaKey($encrypt_key);
 

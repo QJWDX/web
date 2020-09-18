@@ -9,9 +9,11 @@ class RedisRsa
 {
     public static function getFlashRsaKey($key)
     {
-        $private_key = Redis::get($key);
-        if (!$private_key) throw new ApiRequestExcept('encrypt_key不存在', 500);
-//        Redis::del($key);
+        $private_key = Redis::connection()->get($key);
+        if (!$private_key) {
+            throw new ApiRequestExcept('encrypt_key不存在', 500);
+        }
+        Redis::connection()->del($key);
         return $private_key;
     }
 }

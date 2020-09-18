@@ -20,7 +20,7 @@ class Rsa
     public static function rsaCreateKey()
     {
         $rsa = static::instance();
-        $keyPair =  $rsa->createKey(config('rsa.length'));
+        $keyPair = $rsa->createKey(config("rsa.length"));
         return [
             'private_key' => $keyPair['privatekey'],
             'public_key' => $keyPair['publickey'],
