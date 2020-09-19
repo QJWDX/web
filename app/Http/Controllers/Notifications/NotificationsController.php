@@ -8,54 +8,101 @@ use App\Events\sendNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Common\Notifications;
 use App\Models\Common\systemNotifications;
-use App\Models\User;
+use App\Models\Common\User;
 use Illuminate\Http\Request;
 
 class NotificationsController extends Controller
 {
-    public $notifiable_type = [
-        1 => 'App\Notifications\systemNotification',
-        2 => 'App\Notifications\otherNotification'
-    ];
 
     /**
-     * 消息通知列表
+     * 获取通知列表
      * @param Request $request
-     * @param User $userModel
+     * @param Notifications $notifications
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getNotifications(Request $request, User $userModel){
-        $uid = $request->get('uid', false);
-        if(!$uid){
-            return $this->error(500, '参数失败');
-        }
+    public function getNotifications(Request $request, Notifications $notifications){
+        $notifiable_id = $request->get('notifiable_id', 0);
         $type = $request->get('type', 0);
-        $exists = $userModel->newQuery()->where('id', $uid)->exists();
-        if(!$exists){
-            return $this->error(500, '用户不存在');
+        $notifiable_type = $request->get('notifiable_type', 0);
+        $read_at = $request->get('read_at', 0);
+        if(!array_key_exists($type, $notifications->type)){
+            return $this->error(500, '通知所属类型参数错误');
         }
-        $user = $userModel->newQuery()->find($uid);
-        switch ((int)$type){
-            case 0:
-                $data = $user->notifications;
-                break;
-            case 1:
-                $data = $user->readNotifications;
-                break;
-            case 2:
-                $data = $user->unreadNotifications;
-                break;
+        if(!array_key_exists($notifiable_type, $notifications->notifiable_type)){
+            return $this->error(500, '通知对象类型错误');
         }
-        if($request->has('notifiable_type')){
-            $notifiable_type = $request->get('notifiable_type');
-            if(!array_key_exists($notifiable_type, $this->notifiable_type)){
-                return $this->error(500, '参数失败');
-            }
-            $data  = $data->where('type', $this->notifiable_type[$notifiable_type])->all();
+        if(!$notifiable_id){
+            return $this->error(500, '通知对象id参数错误');
         }
+        $notice = new $notifications->notifiable_type[$notifiable_type]();
+        if(!$notice->newQuery()->find($notifiable_id)){
+            return $this->error(500, '通知对象不存在');
+        }
+        $data = $notifications->getNotifications($notifiable_id, $type, $notifiable_type, $read_at);
         if(!$data){
-            return $this->error(500, '获取失败');
+            return $this->error(500, '获取通知列表失败');
         }
+        return $this->success($data);
+    }
+
+    /**
+     * 标记为已读
+     * @param Request $request
+     * @param Notifications $notifications
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function makeRead(Request $request, Notifications $notifications){
+        $id = $request->get('id', 0);
+        if(!$id || !$notifications->isExits($id)) {
+            return $this->error(500, '通知id错误');
+        }
+        if($notifications->makeRead($id)){
+            return $this->success('标记已读成功');
+        }
+        return $this->error(500, '标记已读失败');
+    }
+
+    /**
+     * 删除消息通知
+     * @param Request $request
+     * @param Notifications $notifications
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delNotifications(Request $request, Notifications $notifications){
+        $id = $request->get('id', 0);
+        if(!$id || !$notifications->isExits($id)) {
+            return $this->error(500, '通知id错误');
+        }
+        if($notifications->del($id)){
+            return $this->success('删除消息通知成功');
+        }
+        return $this->error(500, '删除消息通知失败');
+    }
+
+    /**
+     * 未读已读数
+     * @param Request $request
+     * @param Notifications $notifications
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getNotificationCountStatistics(Request $request, Notifications $notifications){
+        $notifiable_id = $request->get('notifiable_id', 0);
+        $type = $request->get('type', 0);
+        $notifiable_type = $request->get('notifiable_type', 0);
+        if(!array_key_exists($type, $notifications->type)){
+            return $this->error(500, '通知所属类型参数错误');
+        }
+        if(!array_key_exists($notifiable_type, $notifications->notifiable_type)){
+            return $this->error(500, '通知对象类型错误');
+        }
+        if(!$notifiable_id){
+            return $this->error(500, '通知对象id参数错误');
+        }
+        $notice = new $notifications->notifiable_type[$notifiable_type]();
+        if(!$notice->newQuery()->find($notifiable_id)){
+            return $this->error(500, '通知对象不存在');
+        }
+        $data = $notifications->notificationCountStatistics($notifiable_id, $type, $notifiable_type);
         return $this->success($data);
     }
 
@@ -79,79 +126,5 @@ class NotificationsController extends Controller
         // 向所有用户发送系统消息通知
         event(new sendNotification($sysNotifications));
         return $this->success('创建成功');
-    }
-
-    /**
-     * 一键标记为已读
-     * @param Request $request
-     * @param User $userModel
-     * @param Notifications $notifications
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function makeRead(Request $request, User $userModel, Notifications $notifications){
-        $id = $request->get('id', false);
-        $uid = $request->get('uid', false);
-        if(!$uid){
-            return $this->error(500, '参数失败');
-        }
-        $exists = $userModel->newQuery()->where('id', $uid)->exists();
-        if(!$exists){
-            return $this->error(500, '用户不存在');
-        }
-        $user = $userModel->newQuery()->find($uid);
-        if($id){
-            $user->unreadNotifications->where('id', $id)->markAsRead();
-        }else{
-            $user->unreadNotifications->markAsRead();
-        }
-        return $this->success('标记已读成功');
-    }
-
-    /**
-     * 删除消息通知
-     * @param Request $request
-     * @param User $userModel
-     * @param Notifications $notifications
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function delNotifications(Request $request, User $userModel, Notifications $notifications){
-        $id = $request->get('id', false);
-        $uid = $request->get('uid', false);
-        if(!$uid){
-            return $this->error(500, '参数错误');
-        }
-        $exists = $userModel->newQuery()->where('id', $uid)->exists();
-        if(!$exists){
-            return $this->error(500, '用户不存在');
-        }
-        $user = $userModel->newQuery()->find($uid);
-        if($id){
-            $res = $user->notifications()->where('id', $id)->delete();
-        }else{
-            $res = $user->notifications()->whereNotNull('read_at')->delete();
-        }
-        if($res){
-            return $this->success('删除消息通知成功');
-        }
-    }
-
-    /**
-     * 未读通知数量
-     * @param Request $request
-     * @param User $userModel
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getUnreadNumber(Request $request, User $userModel){
-        $uid = $request->get('uid', false);
-        if(!$uid){
-            return $this->error(500, '参数错误');
-        }
-        $exists = $userModel->newQuery()->where('id', $uid)->exists();
-        if(!$exists){
-            return $this->error(500, '用户不存在');
-        }
-        $user = $userModel->newQuery()->find($uid);
-        $count = $user->unreadNotifications()->count();
-        return $this->success(['unreadNumber' => $count]);
     }
 }

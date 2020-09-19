@@ -6,12 +6,12 @@ namespace App\Models\Common;
 
 use App\Models\BaseModel;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Notifiable;
 
 class User extends BaseModel
 {
     protected $table = 'user';
     protected $guarded = [];
-
 
     /**
      * 数据列表
@@ -23,7 +23,6 @@ class User extends BaseModel
         return $this->modifyPaginateForApi($builder);
     }
 
-
     // 构造查询
     public function builderQuery(Request $request){
         $username = $request->get('username', false);
@@ -34,15 +33,17 @@ class User extends BaseModel
         return $builder;
     }
 
+    // 单个用户信息
+    public function getUser($id){
+        return $this->newQuery()->find($id);
+    }
 
-//    public function getSexAttribute($sex){
-//        switch ($sex){
-//            case 0:
-//                return '女';
-//            case 1:
-//                return '男';
-//            default:
-//                return '未知';
-//        }
-//    }
+    /**
+     * 是否存在用户
+     * @param $id
+     * @return bool
+     */
+    public function hasUser($id){
+        return $this->newQuery()->where('id', $id)->exists();
+    }
 }

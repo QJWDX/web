@@ -32,7 +32,7 @@ class BaseModel extends Model
         $api['totalPage'] = $paginate->total();
         $api['lastPage'] = $paginate->lastPage();
         $api['items'] = $paginate->items();
-        $api['perPage'] = $paginate->perPage();
+        $api['perPage'] = intval($paginate->perPage());
 
         return $api;
     }

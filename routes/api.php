@@ -32,6 +32,7 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Authorize'], function () {
     Route::post('getRsaPublicKey', 'LoginController@getRsaPublicKey');
 });
 
+// 菜单
 Route::group(['prefix' => 'menus', 'namespace' => 'Admin'], function (){
     Route::get('getVueRoute', 'MenusController@getVueRoute');
     Route::get('getMenuTree', 'MenusController@getMenuTree');
@@ -40,24 +41,29 @@ Route::group(['prefix' => 'menus', 'namespace' => 'Admin'], function (){
     Route::get('menuSelect', 'MenusController@menuSelect');
 });
 
+// 角色
 Route::group(['prefix' => 'role', 'namespace' => 'Admin'], function (){
     Route::delete('deleteAll', 'RoleController@deleteAll');
     Route::get('getRoleTree', 'RoleController@getRoleTree');
 });
 
+
+// 消息通知
 Route::group(['prefix' => 'notifications', 'namespace' => 'Notifications'], function (){
     Route::get('createNotifications', 'NotificationsController@createNotifications');
     Route::get('getNotifications', 'NotificationsController@getNotifications');
     Route::get('makeRead', 'NotificationsController@makeRead');
-    Route::delete('delNotifications', 'NotificationsController@delNotifications');
-    Route::get('getUnreadNumber', 'NotificationsController@getUnreadNumber');
+    Route::delete('del/{id}', 'NotificationsController@delNotifications');
+    Route::get('getNotificationCountStatistics', 'NotificationsController@getNotificationCountStatistics');
 });
 
+// 资源路由
 Route::group(['namespace' => 'Admin'], function (){
     Route::resource('user', 'UserController')->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::resource('menus', 'MenusController')->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::resource('role', 'RoleController')->only(['index', 'store', 'show', 'update', 'destroy']);
 });
+
 
 Route::group(['prefix' => 'user', 'namespace' => 'Admin'], function (){
     Route::get('getUserRole/{id}', 'UserController@getUserRole');
