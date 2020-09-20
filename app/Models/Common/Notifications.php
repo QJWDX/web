@@ -107,8 +107,8 @@ class Notifications extends BaseModel
         );
         $count = $this->builderQuery($where)->count();
         $where['read_at'] = 1;
-        $read_count = $this->builderQuery($where)->count();
-        $unread_count = $count - $read_count;
+        $unread_count = $this->builderQuery($where)->count();
+        $read_count = $count - $unread_count;
         return compact('count', 'read_count', 'unread_count');
     }
 }
