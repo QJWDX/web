@@ -25,19 +25,10 @@ class Notifications extends BaseModel
 
     /**
      * 获取通知列表
-     * @param $notifiable_id
-     * @param int $type
-     * @param int $notifiable_type
-     * @param int $read_at
+     * @param array $where
      * @return array
      */
-    public function getNotifications($notifiable_id, $type = 0, $notifiable_type = 0, $read_at = 0){
-        $where = array(
-            'type' => $this->type[$type],
-            'notifiable_id' => $notifiable_id,
-            'notifiable_type' => $this->notifiable_type[$notifiable_type],
-            'read_at' => $read_at
-        );
+    public function getNotifications($where = array()){
         return $this->modifyPaginateForApi($this->builderQuery($where));
     }
 
@@ -52,6 +43,10 @@ class Notifications extends BaseModel
             $query->where('notifiable_type', $where['notifiable_type']);
         })->when($where['notifiable_id'], function ($query) use ($where){
             $query->where('notifiable_id', $where['notifiable_id']);
+        })->when(isset($where['startTime']) && $where['startTime'], function ($query) use ($where){
+            $query->where('created_at', '>', $where['startTime']);
+        })->when(isset($where['endTime']) && $where['endTime'], function ($query) use ($where){
+            $query->where('created_at', '<', $where['endTime']);
         })->when($where['read_at'], function ($query) use ($where){
             if($where['read_at'] == 1){
                 $query->whereNull('read_at');
@@ -65,13 +60,21 @@ class Notifications extends BaseModel
 
 
     /**
-     * 删除消息通知
-     * @param $id
+     * 删除
+     * @param $ids
      * @return mixed
      */
-    public function del($id){
-        return $this->newQuery()->where('id', $id)->delete();
+    public function del($ids = array()){
+        if(empty($ids)){
+            return false;
+        }
+        $instances = $this->newQuery()->whereIn('id', $ids)->get('id');
+        foreach ($instances as $instance){
+            $instance->delete();
+        }
+        return true;
     }
+
     /**
      * 是否存在
      * @param $id

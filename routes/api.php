@@ -43,7 +43,7 @@ Route::group(['prefix' => 'menus', 'namespace' => 'Admin'], function (){
 
 // 角色
 Route::group(['prefix' => 'role', 'namespace' => 'Admin'], function (){
-    Route::delete('deleteAll', 'RoleController@deleteAll');
+    Route::delete('delRole', 'RoleController@delRole');
     Route::get('getRoleTree', 'RoleController@getRoleTree');
 });
 
@@ -53,7 +53,7 @@ Route::group(['prefix' => 'notifications', 'namespace' => 'Notifications'], func
     Route::get('createNotifications', 'NotificationsController@createNotifications');
     Route::get('getNotifications', 'NotificationsController@getNotifications');
     Route::get('makeRead', 'NotificationsController@makeRead');
-    Route::delete('del/{id}', 'NotificationsController@delNotifications');
+    Route::delete('delNotifications', 'NotificationsController@delNotifications');
     Route::get('getNotificationCountStatistics', 'NotificationsController@getNotificationCountStatistics');
 });
 
@@ -61,7 +61,7 @@ Route::group(['prefix' => 'notifications', 'namespace' => 'Notifications'], func
 Route::group(['namespace' => 'Admin'], function (){
     Route::resource('user', 'UserController')->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::resource('menus', 'MenusController')->only(['index', 'store', 'show', 'update', 'destroy']);
-    Route::resource('role', 'RoleController')->only(['index', 'store', 'show', 'update', 'destroy']);
+    Route::resource('role', 'RoleController')->only(['index', 'store', 'show', 'update']);
 });
 
 

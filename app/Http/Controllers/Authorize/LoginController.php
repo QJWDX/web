@@ -4,7 +4,7 @@
 namespace App\Http\Controllers\Authorize;
 use App\Events\UserLogin;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterAuthRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\Common\UserRole;
 use App\Models\User;
 use App\Service\Rsa;
@@ -14,11 +14,18 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LoginController extends Controller
 {
-    // 注册后是否登录
+    /**
+     * 注册后是否登录
+     * @var bool
+     */
     public $loginAfterSignUp = true;
 
-    // 注册用户
-    public function register(RegisterAuthRequest $request)
+    /**
+     * 注册用户
+     * @param RegisterRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function register(RegisterRequest $request)
     {
         $user = new User();
         $result = $user->newQuery()->create([
@@ -35,7 +42,12 @@ class LoginController extends Controller
         return $this->success($result);
     }
 
-    // 登录
+    /**
+     * 登录
+     * @param Request $request
+     * @param UserRole $userRole
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request, UserRole $userRole)
     {
         $captcha = $request->get('captcha_code', false);

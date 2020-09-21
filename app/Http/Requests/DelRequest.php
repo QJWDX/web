@@ -3,16 +3,13 @@
 
 namespace App\Http\Requests;
 
-
-use Illuminate\Validation\Rule;
-
-class BatchDeleteRequest extends BaseRequest
+class DelRequest extends BaseRequest
 {
     public function rules()
     {
         return [
             'ids' => 'required|array|min:1',
-            'ids.*' => 'required|integer'
+            'ids.*' => 'required'
         ];
     }
 
@@ -23,7 +20,6 @@ class BatchDeleteRequest extends BaseRequest
             'ids.array' => '选择项必须为数组',
             'ids.min' => '选择项至少要含有一项元素',
             'ids.*.required' => '选择项必填',
-            'ids.*.integer' => '选择项必须为数字类型',
         ];
     }
 }

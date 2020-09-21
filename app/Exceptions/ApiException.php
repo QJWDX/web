@@ -5,7 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Http\Request;
 
-class ApiRequestExcept extends Exception
+class ApiException extends Exception
 {
     /**
      * @var int http status code

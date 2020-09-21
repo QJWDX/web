@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-class RegisterAuthRequest extends ApiBaseRequest
+class RegisterRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.

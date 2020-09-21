@@ -4,7 +4,7 @@
 namespace App\Http\Middleware;
 
 
-use App\Exceptions\ApiRequestExcept;
+use App\Exceptions\ApiException;
 use App\Service\RedisRsa;
 use App\Service\Rsa;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ class RsaBeforeMiddleware
      * @param Request $request
      * @param \Closure $next
      * @return mixed
-     * @throws ApiRequestExcept
+     * @throws ApiException
      */
     public function handle(Request $request, \Closure $next)
     {
@@ -29,13 +29,13 @@ class RsaBeforeMiddleware
 
             $key = RedisRsa::getFlashRsaKey($encrypt_key);
 
-            if (!$key) throw new ApiRequestExcept('encrypt_key错误', 500);
+            if (!$key) throw new ApiException('encrypt_key错误', 500);
 
             //解密Post请求中的数据
             $encrypt_data = $request->input("encrypt_data");
-            if (!$encrypt_data) throw new  ApiRequestExcept('密文不存在', 500);
+            if (!$encrypt_data) throw new  ApiException('密文不存在', 500);
             $dataJson = Rsa::rsaDecrypt($encrypt_data, $key);
-            if (!$dataJson) throw new  ApiRequestExcept('密文错误', 500);
+            if (!$dataJson) throw new  ApiException('密文错误', 500);
             $data = json_decode($dataJson, true);
             foreach ($data as $key => $val) {
                 $request->request->set($key, $val);

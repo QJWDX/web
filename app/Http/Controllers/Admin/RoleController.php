@@ -3,7 +3,7 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BatchDeleteRequest;
+use App\Http\Requests\DelRequest;
 use App\Models\Common\Role;
 use Illuminate\Http\Request;
 
@@ -54,21 +54,12 @@ class RoleController extends Controller
         return $this->error('编辑失败');
     }
 
-
-    public function destroy($id){
-        if($this->model->isSuperRole($id)){
-            return $this->success('含有子菜单,不允许删除');
-        }
-        $this->model->del([$id]);
-        return $this->success('删除菜单成功');
-    }
-
     /**
      * 批量删除角色
-     * @param BatchDeleteRequest $request
+     * @param DelRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteAll(BatchDeleteRequest $request){
+    public function delRole(DelRequest $request){
         $ids = $request->get('ids');
         if($this->model->hasSuperRole($ids)){
             return $this->error(500, '选中项有超级管理员不允许删除，请重新选择');

@@ -71,16 +71,20 @@ class Role extends BaseModel
     }
 
 
-
     /**
      * 删除
      * @param array $ids
+     * @return bool
      */
     public function del($ids = array()){
-        $roles = $this->newQuery()->whereIn('id', $ids)->get();
-        foreach ($roles as $role){
-            $role->delete();
+        if(empty($ids)){
+            return false;
         }
+        $instances = $this->newQuery()->whereIn('id', $ids)->get('id');
+        foreach ($instances as $instance){
+            $instance->delete();
+        }
+        return true;
     }
 
 

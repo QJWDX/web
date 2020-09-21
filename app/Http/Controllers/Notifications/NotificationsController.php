@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Notifications;
 
 use App\Events\sendNotification;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DelRequest;
 use App\Models\Common\Notifications;
 use App\Models\Common\systemNotifications;
 use App\Models\Common\User;
@@ -38,7 +39,12 @@ class NotificationsController extends Controller
         if(!$notice->newQuery()->find($notifiable_id)){
             return $this->error(500, '通知对象不存在');
         }
-        $data = $notifications->getNotifications($notifiable_id, $type, $notifiable_type, $read_at);
+        $type = $notifications->type[$type];
+        $notifiable_type = $notifications->notifiable_type[$notifiable_type];
+        $startTime = $request->get('startTime', false);
+        $endTime = $request->get('endTime', false);
+        $where = compact('type', 'notifiable_id', 'notifiable_type', 'read_at', 'startTime', 'endTime');
+        $data = $notifications->getNotifications($where);
         if(!$data){
             return $this->error(500, '获取通知列表失败');
         }
@@ -62,18 +68,16 @@ class NotificationsController extends Controller
         return $this->error(500, '标记已读失败');
     }
 
+
     /**
-     * 删除消息通知
-     * @param Request $request
+     * 删除通知
+     * @param DelRequest $request
      * @param Notifications $notifications
      * @return \Illuminate\Http\JsonResponse
      */
-    public function delNotifications(Request $request, Notifications $notifications){
-        $id = $request->get('id', 0);
-        if(!$id || !$notifications->isExits($id)) {
-            return $this->error(500, '通知id错误');
-        }
-        if($notifications->del($id)){
+    public function delNotifications(DelRequest $request, Notifications $notifications){
+        $ids = $request->get('ids');
+        if($notifications->del($ids)){
             return $this->success('删除消息通知成功');
         }
         return $this->error(500, '删除消息通知失败');
