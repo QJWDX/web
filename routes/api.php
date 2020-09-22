@@ -16,7 +16,7 @@ Route::options('/{all}', function (\Illuminate\Http\Request $request) {
     return response('Ok');
 })->where(['all' => '([a-zA-Z0-9-]|/)+'])->middleware("cross");
 
-// jwt权限认证
+// auth 登录认证
 Route::group(['prefix' => 'auth', 'namespace' => 'Authorize'], function () {
     // 登录
     Route::post('login', 'LoginController@login');
@@ -32,7 +32,7 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Authorize'], function () {
     Route::post('getRsaPublicKey', 'LoginController@getRsaPublicKey');
 });
 
-// 菜单
+// 菜单管理
 Route::group(['prefix' => 'menus', 'namespace' => 'Admin'], function (){
     Route::get('getVueRoute', 'MenusController@getVueRoute');
     Route::get('getMenuTree', 'MenusController@getMenuTree');
@@ -41,7 +41,7 @@ Route::group(['prefix' => 'menus', 'namespace' => 'Admin'], function (){
     Route::get('menuSelect', 'MenusController@menuSelect');
 });
 
-// 角色
+// 角色管理
 Route::group(['prefix' => 'role', 'namespace' => 'Admin'], function (){
     Route::delete('delRole', 'RoleController@delRole');
     Route::get('getRoleTree', 'RoleController@getRoleTree');
@@ -64,10 +64,15 @@ Route::group(['namespace' => 'Admin'], function (){
     Route::resource('role', 'RoleController')->only(['index', 'store', 'show', 'update']);
 });
 
-
+// 用户管理
 Route::group(['prefix' => 'user', 'namespace' => 'Admin'], function (){
     Route::get('getUserRole/{id}', 'UserController@getUserRole');
     Route::post('setUserRole/{id}', 'UserController@setUserRole');
 });
 
+// 系统参数配置
+Route::group(['prefix' => 'system', 'namespace' => 'Admin'], function (){
+    Route::get('getSystemConfig', 'SystemConfigController@getSystemConfig');
+    Route::put('setSystemConfig', 'SystemConfigController@setSystemConfig');
+});
 
