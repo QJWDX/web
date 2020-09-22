@@ -8,4 +8,5 @@ class SystemConfig extends BaseModel
 {
     protected $table = 'system_config';
     protected $guarded = [];
+    public $timestamps = false;
 }

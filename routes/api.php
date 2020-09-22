@@ -68,6 +68,7 @@ Route::group(['namespace' => 'Admin'], function (){
 Route::group(['prefix' => 'user', 'namespace' => 'Admin'], function (){
     Route::get('getUserRole/{id}', 'UserController@getUserRole');
     Route::post('setUserRole/{id}', 'UserController@setUserRole');
+    Route::post('uploadImg', 'UserController@uploadImg');
 });
 
 // 系统参数配置

@@ -119,4 +119,17 @@ class UserController extends Controller
         }
         return $this->success('角色设置成功');
     }
+
+    /**
+     * 头像上传
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadImg(Request $request){
+        $file = $request->file('file');
+        $fileName = $file->getClientOriginalName();
+        $extension = $file->extension();
+        $res = $file->store('public');
+        return $this->success($fileName);
+    }
 }
