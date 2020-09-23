@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Handlers\UploadHandler;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Models\Common\User;
 use App\Models\Common\UserRole;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -128,12 +127,21 @@ class UserController extends Controller
      * 头像上传
      * @param Request $request
      * @param UploadHandler $uploadHandler
+     * @param User $user
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Exceptions\ApiException
      */
-    public function uploadImg(Request $request, UploadHandler $uploadHandler){
+    public function uploadAvatar(Request $request, UploadHandler $uploadHandler, User $user){
+        $id = $request->route('id');
+        if(!$user->hasUser($id)){
+            return $this->error('用户不存在');
+        }
         $file = $request->file('file');
-        $url = $uploadHandler->storeFile($file, 'image', 'avatar');
-        return $this->success($url);
+        $data = $uploadHandler->storeFile($file, 'image', 'avatar');
+        $res = $user->newQuery()->where('id', $id)->update(['avatar' => $data['path']]);
+        if($res){
+            return $this->success($data);
+        }
+        return $this->error('头像更新失败');
     }
 }

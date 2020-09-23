@@ -6,7 +6,6 @@ namespace App\Handlers;
 
 use App\Exceptions\ApiException;
 use App\Models\Common\Files;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
@@ -25,11 +24,10 @@ class UploadHandler
      * @param $type
      * @param $folder
      * @param string $disks
-     * @return string
+     * @return array
      * @throws ApiException
      */
     public function storeFile($file, $type, $folder, $disks = 'upload'){
-        Log::channel('api')->info($disks);
         $folder_name = $type."s/$folder/" . date("Ym", time()) . '/'.date("d", time());
 
         // 获取文件的后缀名，因图片从剪贴板里黏贴时后缀名为空，所以此处确保后缀一直存在
@@ -53,7 +51,10 @@ class UploadHandler
 
         // 检查文件是否已上传过
         if($fileModel = $this->checkFile($md5, $type, $folder)){
-            return config('export.EXPORT_URL'). $disks . '/' . $fileModel->path;
+            return [
+                'url' => config('export.EXPORT_URL'). $disks . '/' . $fileModel->path,
+                'path' => $fileModel->path
+            ];
         }
 
         // 实例化 Image 对象
@@ -75,11 +76,13 @@ class UploadHandler
         if(!($path = $file->storeAs($folder_name, $fileName, $disks))){
             throw new ApiException('文件存储失败', 500);
         }
-        chmod($dir.'/'.$fileName, 0777);
         $uid = $this->FileModel->uuid();
-        $result = $this->saveFile($uid, $type, $path, $mimeType, $md5, $title, $folder, $size, $width, $height, $editor = 0, $status = 1, $disks);
-        if($result){
-            return config('export.EXPORT_URL') . $disks . DIRECTORY_SEPARATOR . $result->path;
+        $fileModel = $this->saveFile($uid, $type, $path, $mimeType, $md5, $title, $folder, $size, $width, $height, $editor = 0, $status = 1, $disks);
+        if($fileModel){
+            return [
+                'url' => config('export.EXPORT_URL'). $disks . '/' . $fileModel->path,
+                'path' => $fileModel->path
+            ];
         }else{
             Storage::delete($path);
             throw new ApiException('文件信息存储数据库失败', 500);

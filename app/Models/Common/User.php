@@ -6,7 +6,6 @@ namespace App\Models\Common;
 
 use App\Models\BaseModel;
 use Illuminate\Http\Request;
-use Illuminate\Notifications\Notifiable;
 
 class User extends BaseModel
 {
@@ -45,5 +44,15 @@ class User extends BaseModel
      */
     public function hasUser($id){
         return $this->newQuery()->where('id', $id)->exists();
+    }
+
+    /**
+     * 设置头像
+     * @param $val
+     * @return string
+     */
+    public function getAvatarAttribute($val)
+    {
+        return config('export.EXPORT_URL').'/upload/'.$val;
     }
 }

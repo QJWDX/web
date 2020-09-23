@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticate;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Redis;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+
 class User extends Authenticate implements JWTSubject
 {
     use Notifiable;
@@ -93,5 +94,11 @@ class User extends Authenticate implements JWTSubject
         //或其它名称，以上两种写法都OK
 //        return $this->attributes['password'];
         return $this->password;
+    }
+
+    // 头像
+    public function getAvatarAttribute($val)
+    {
+        return config('export.EXPORT_URL').'/upload/'.$val;
     }
 }
