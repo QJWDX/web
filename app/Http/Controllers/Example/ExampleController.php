@@ -4,7 +4,7 @@
 namespace App\Http\Controllers\Example;
 
 
-use App\Exports\ExampleExport;
+use App\Exports\DataExport;
 use App\Http\Controllers\Controller;
 use App\Jobs\sendEmail;
 use App\Models\User;
@@ -44,7 +44,7 @@ class ExampleController extends Controller
 //            return $this->success('存储导出成功');
 //        }
 //        return $this->error(500, '存储导出失败');
-        return Excel::download(new ExampleExport($data, $columns), $fileName);
+        return Excel::download(new DataExport($data, $columns), $fileName);
     }
 
 

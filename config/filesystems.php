@@ -79,6 +79,42 @@ return [
             'root' => public_path('upload')
         ],
 
+        'uploader' => [
+
+            'folder' => [
+                'avatar'
+            ],
+
+            // 图片
+            'image' => [
+                'size_limit' => 5242880, // 单位：字节，默认：5MB
+                'allowed_ext' => ["png", "jpg", "gif", 'jpeg', 'bmp'],
+            ],
+
+            // 附件
+            'annex' => [
+                'size_limit' => 204857600000, // 单位：字节，默认：5MB (5242880 B)  // 104857600
+                'allowed_ext' => ['zip','rar','7z','gz'],
+            ],
+
+            // 文件
+            'file' => [
+                'size_limit' => 5242880, // 单位：字节，默认：5MB
+                'allowed_ext' => ['pdf','doc','docx','xls','xlsx','ppt','pptx'],
+            ],
+
+            // 音频
+            'audio' => [
+                'size_limit' => 1048576*200, // 单位：字节，默认：5MB
+                'allowed_ext' => ['mp3','wma', 'ogg', 'wav','amr','m4a'],
+            ],
+
+            // 视频
+            'video' => [
+                'size_limit' => 5242880, // 单位：字节，默认：5MB
+                'allowed_ext' => ['mp4'],
+            ],
+        ]
     ],
 
 ];

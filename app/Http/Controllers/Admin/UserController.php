@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Handlers\UploadHandler;
 use App\Http\Requests\UserRequest;
 use App\Models\Common\User;
 use App\Models\Common\UserRole;
@@ -123,13 +124,15 @@ class UserController extends Controller
     /**
      * 头像上传
      * @param Request $request
+     * @param UploadHandler $uploadHandler
      * @return \Illuminate\Http\JsonResponse
      */
-    public function uploadImg(Request $request){
+    public function uploadImg(Request $request, UploadHandler $uploadHandler){
         $file = $request->file('file');
-        $fileName = $file->getClientOriginalName();
-        $extension = $file->extension();
-        $res = $file->store('public');
-        return $this->success($fileName);
+        $url = $uploadHandler->storeFile($file, 'image', 'avatar');
+        if(!$url){
+            return $this->error(500, '上传失败');
+        }
+        return $this->success($url);
     }
 }

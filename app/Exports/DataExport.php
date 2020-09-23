@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class ExampleExport implements FromCollection, WithHeadings, WithEvents
+class DataExport implements FromCollection, WithHeadings, WithEvents
 {
     private $dataList;
 
