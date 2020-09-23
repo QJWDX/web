@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-//    return redirect('/view/index.html');
+    return redirect('/view/index.html');
 });
 
 Route::get('/mqtt', function () {
@@ -22,7 +22,9 @@ Route::get('/mqtt', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home',function () {
+    return view('home');
+});
 
 
 // 示例接口
