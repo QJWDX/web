@@ -13,15 +13,12 @@ class Files extends BaseModel
 
 
     /**
-     * 文件按是否存在
+     * 获取文件信息
      * @param array $where
-     * @return bool
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
-    public function fileIsExists($where = array()){
-        if($where){
-            return $this->newQuery()->where($where)->exists();
-        }
-        return false;
+    public function getFile($where = array()){
+        return $this->newQuery()->where($where)->first();
     }
 
     /**

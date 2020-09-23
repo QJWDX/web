@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return redirect('/view/index.html');
+//    return redirect('/view/index.html');
 });
 
 Route::get('/mqtt', function () {

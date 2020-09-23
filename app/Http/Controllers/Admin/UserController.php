@@ -8,6 +8,9 @@ use App\Models\Common\User;
 use App\Models\Common\UserRole;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
 class UserController extends Controller
 {
 
@@ -126,13 +129,11 @@ class UserController extends Controller
      * @param Request $request
      * @param UploadHandler $uploadHandler
      * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\ApiException
      */
     public function uploadImg(Request $request, UploadHandler $uploadHandler){
         $file = $request->file('file');
         $url = $uploadHandler->storeFile($file, 'image', 'avatar');
-        if(!$url){
-            return $this->error(500, '上传失败');
-        }
         return $this->success($url);
     }
 }

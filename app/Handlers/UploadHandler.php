@@ -4,7 +4,9 @@
 namespace App\Handlers;
 
 
+use App\Exceptions\ApiException;
 use App\Models\Common\Files;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
@@ -22,20 +24,21 @@ class UploadHandler
      * @param $file
      * @param $type
      * @param $folder
-     * @return bool|string
+     * @param string $disks
+     * @return string
+     * @throws ApiException
      */
-    public function storeFile($file, $type, $folder){
-
+    public function storeFile($file, $type, $folder, $disks = 'upload'){
+        Log::channel('api')->info($disks);
         $folder_name = $type."s/$folder/" . date("Ym", time()) . '/'.date("d", time());
 
         // 获取文件的后缀名，因图片从剪贴板里黏贴时后缀名为空，所以此处确保后缀一直存在
-        $extension = strtolower($file->getClientOriginalName()) ? : 'png';
+        $extension = strtolower($file->extension()) ? : 'png';
 
         // 检查文件后缀是否是规则允许后缀
-        if ( ! in_array($extension, config('filesystems.uploader.'.$type.'.allowed_ext')) ) {
-            return false;
+        if (!in_array($extension, config('filesystems.uploader.'.$type.'.allowed_ext'))){
+            throw new ApiException('请检查文件后缀是否正确', 500);
         }
-
         // 原始文件名
         $title = $file->getClientOriginalName();
 
@@ -50,7 +53,7 @@ class UploadHandler
 
         // 检查文件是否已上传过
         if($fileModel = $this->checkFile($md5, $type, $folder)){
-            return config('EXPORT_URL') . $fileModel->path;
+            return config('export.EXPORT_URL'). $disks . '/' . $fileModel->path;
         }
 
         // 实例化 Image 对象
@@ -63,16 +66,21 @@ class UploadHandler
             $width = 0;
             $height = 0;
         }
-        // 将图片移动到我们的目标存储路径中 或 云存储中
-        if( ! ( $path = $file->store($folder_name)) ) {
-            return false;
+        $dir = config('filesystems.disks.'.$disks.'.root').DIRECTORY_SEPARATOR.$folder_name;
+        if(!is_dir($dir)){
+            mkdir($dir, 0777, true);
+        }
+         // 将图片移动到我们的目标存储路径中 或 云存储中
+        if(!($path = $file->storeAs($folder_name, $this->getRandomFileName(24, $extension), $disks))){
+            throw new ApiException('文件存储失败', 500);
         }
         $uid = $this->FileModel->uuid();
-        $result = $this->saveFile($uid, $type, $path, $mimeType, $md5, $title, $folder, $size, $width, $height, $editor = 0, $status = 1, $disks = null);
+        $result = $this->saveFile($uid, $type, $path, $mimeType, $md5, $title, $folder, $size, $width, $height, $editor = 0, $status = 1, $disks);
         if($result){
-            return config('EXPORT_URL') . $result->path;
+            return config('export.EXPORT_URL') . $disks . DIRECTORY_SEPARATOR . $result->path;
         }else{
             Storage::delete($path);
+            throw new ApiException('文件信息存储数据库失败', 500);
         }
     }
 
@@ -82,14 +90,15 @@ class UploadHandler
      * @param $md5
      * @param $type
      * @param $folder
-     * @return bool
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
     public function checkFile($md5, $type, $folder){
-        return $this->FileModel->fileIsExists([
+        $where = [
             ['md5', '=', $md5],
             ['type','=',$type],
             ['folder', '=', $folder]
-        ]);
+        ];
+        return $this->FileModel->getFile($where);
     }
 
 
@@ -126,6 +135,24 @@ class UploadHandler
             'editor' => (string)$editor,
             'status' => (string)$status,
         ];
+
         return $this->FileModel->add($params);
+    }
+
+
+    /**
+     * 生成随机文件名
+     * @param $length
+     * @param $extension
+     * @return string
+     */
+    function getRandomFileName($length, $extension){
+        $file_name = "";
+        $randomStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        $randomStr .= mt_srand(time());
+        for($i=0; $i<$length; $i++){
+            $file_name .= $randomStr[mt_rand(0,strlen($randomStr)-1)];
+        }
+        return $file_name.'.'.$extension;
     }
 }
