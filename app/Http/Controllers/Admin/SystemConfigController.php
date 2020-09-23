@@ -10,6 +10,11 @@ use Illuminate\Http\Request;
 
 class SystemConfigController extends Controller
 {
+    /**
+     * 获取网站设置
+     * @param SystemConfig $systemConfig
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getSystemConfig(SystemConfig $systemConfig){
         $config = $systemConfig->newQuery()->pluck('value', 'key')->toArray();
         return $this->success($config);

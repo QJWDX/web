@@ -69,6 +69,16 @@ return [
             'root' => storage_path("export/excel")
         ],
 
+        'xlsx' => [
+            'driver' => 'local',
+            'root' => public_path('export/xlsx')
+        ],
+
+        'upload' => [
+            'driver' => 'local',
+            'root' => public_path('upload')
+        ],
+
     ],
 
 ];
