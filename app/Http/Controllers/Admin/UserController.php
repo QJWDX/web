@@ -8,7 +8,6 @@ use App\Http\Requests\UserRequest;
 use App\Models\Common\User;
 use App\Models\Common\UserRole;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
