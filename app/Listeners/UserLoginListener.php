@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\UserLogin;
+use App\Models\Common\LoginLog;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -26,9 +27,12 @@ class UserLoginListener
      */
     public function handle(UserLogin $event)
     {
-        $event->user->login_time = date('Y-m-d H:i:s');
-        $event->user->login_ip = request()->getClientIp();
+        $user_id = $event->user->id;
+        $login_time = date('Y-m-d H:i:s');
+        $ip = request()->getClientIp();
+        $login_address = '';
+        $is_success = 1;
         $event->user->increment('login_count');
-        $event->user->save();
+        LoginLog::query()->create(compact('user_id', 'ip', 'login_address', 'login_time', 'is_success'));
     }
 }

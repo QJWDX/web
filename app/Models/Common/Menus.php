@@ -34,7 +34,7 @@ class Menus extends BaseModel
             $routeBuilder = $routeBuilder->whereIn('id', $menu_ids);
         }
         $menus = $builder->where('is_show', 1)->latest('sort_field')->get($select);
-        $routes = $routeBuilder->where('is_show', 1)->where('is_related_route', 1)->get($select);
+        $routes = $routeBuilder->where('is_related_route', 1)->get($select);
         return [
             'menus' => $this->vueMenuTree($menus, 0, 1),
             'routes' => $routes

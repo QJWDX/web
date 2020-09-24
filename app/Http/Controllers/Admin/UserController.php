@@ -62,7 +62,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = $request->only(['name', 'username', 'email', 'tel', 'sex', 'status']);
+        $data = $request->only(['name', 'username', 'email', 'tel', 'sex', 'status', 'id_card', 'address']);
         $user = new User();
         $res = $user->newQuery()->where('id', $id)->update($data);
         if($res){
@@ -109,7 +109,7 @@ class UserController extends Controller
     public function setUserRole($id, Request $request, UserRole $userRole){
         $role = $request->get('role');
         if(!is_array($role)){
-            return $this->error('参数错误');
+            return $this->error(500,'参数错误');
         }
         $userRole->newQuery()->where('user_id', $id)->delete();
         $insertData = [];
@@ -120,6 +120,31 @@ class UserController extends Controller
             $userRole->newQuery()->insert($insertData);
         }
         return $this->success('角色设置成功');
+    }
+
+
+    /**
+     * 修改密码
+     * @param $id
+     * @param Request $request
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     */
+    function modPassword($id, Request $request, User $user){
+        $userInfo = $user->newQuery()->select('password')->find($id);
+        if(!$userInfo){
+            return $this->error(500, '用户不存在');
+        }
+        $params = $request->all();
+        $params['password'] = bcrypt($params['password']);
+        if($userInfo['password'] != $params['password'])
+        $res = $user->newQuery()->where('id', $id)->update([
+            'password' => bcrypt($params['new_password'])
+        ]);
+        if($res){
+            return $this->success('密码修改成功');
+        }
+        return $this->error(500, '密码修改失败');
     }
 
     /**

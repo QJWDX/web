@@ -62,6 +62,7 @@ Route::group(['namespace' => 'Admin'], function (){
     Route::resource('user', 'UserController')->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::resource('menus', 'MenusController')->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::resource('role', 'RoleController')->only(['index', 'store', 'show', 'update']);
+    Route::resource('loginLog', 'loginLogController')->only(['index', 'show']);
 });
 
 // 用户管理
@@ -69,6 +70,7 @@ Route::group(['prefix' => 'user', 'namespace' => 'Admin'], function (){
     Route::get('getUserRole/{id}', 'UserController@getUserRole');
     Route::post('setUserRole/{id}', 'UserController@setUserRole');
     Route::post('uploadAvatar/{id}', 'UserController@uploadAvatar');
+    Route::post('modPassword/{id}', 'UserController@modPassword');
 });
 
 // 系统参数配置
@@ -76,4 +78,10 @@ Route::group(['prefix' => 'system', 'namespace' => 'Admin'], function (){
     Route::get('getSystemConfig', 'SystemConfigController@getSystemConfig');
     Route::put('setSystemConfig', 'SystemConfigController@setSystemConfig');
 });
+
+// 登录日志
+Route::group(['prefix' => 'loginLog', 'namespace' => 'Admin'], function (){
+    Route::delete('delLoginLog', 'LoginLogController@delLoginLog');
+});
+
 
