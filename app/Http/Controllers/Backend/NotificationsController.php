@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\Notifications;
+namespace App\Http\Controllers\Backend;
 
 
 use App\Events\sendNotification;
@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DelRequest;
 use App\Models\Common\Notifications;
 use App\Models\Common\systemNotifications;
-use App\Models\Common\User;
 use Illuminate\Http\Request;
 
 class NotificationsController extends Controller

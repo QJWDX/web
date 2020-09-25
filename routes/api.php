@@ -17,7 +17,7 @@ Route::options('/{all}', function (\Illuminate\Http\Request $request) {
 })->where(['all' => '([a-zA-Z0-9-]|/)+'])->middleware("cross");
 
 // auth 登录认证
-Route::group(['prefix' => 'auth', 'namespace' => 'Authorize'], function () {
+Route::group(['prefix' => 'auth', 'namespace' => 'Backend\Auth'], function () {
     // 登录
     Route::post('login', 'LoginController@login');
     // 注册
@@ -33,7 +33,13 @@ Route::group(['prefix' => 'auth', 'namespace' => 'Authorize'], function () {
 });
 
 // 菜单管理
-Route::group(['prefix' => 'menus', 'namespace' => 'Admin'], function (){
+Route::group(['prefix' => 'menus', 'namespace' => 'Backend'], function (){
+    Route::get('list', 'MenusController@index');
+    Route::get('show/{id}', 'MenusController@show');
+    Route::post('store', 'MenusController@store');
+    Route::put('update/{id}', 'MenusController@update');
+    Route::delete('destroy/{id}', 'MenusController@destroy');
+    Route::get('getVueRoute', 'MenusController@getVueRoute');
     Route::get('getVueRoute', 'MenusController@getVueRoute');
     Route::get('getMenuTree', 'MenusController@getMenuTree');
     Route::get('getRoleMenus', 'MenusController@getRoleMenus');
@@ -41,32 +47,24 @@ Route::group(['prefix' => 'menus', 'namespace' => 'Admin'], function (){
     Route::get('menuSelect', 'MenusController@menuSelect');
 });
 
+
 // 角色管理
-Route::group(['prefix' => 'role', 'namespace' => 'Admin'], function (){
+Route::group(['prefix' => 'role', 'namespace' => 'Backend'], function (){
+    Route::get('list', 'RoleController@index');
+    Route::get('show/{id}', 'RoleController@show');
+    Route::post('store', 'RoleController@store');
+    Route::put('update/{id}', 'RoleController@update');
     Route::delete('delRole', 'RoleController@delRole');
     Route::get('getRoleTree', 'RoleController@getRoleTree');
 });
 
-
-// 消息通知
-Route::group(['prefix' => 'notifications', 'namespace' => 'Notifications'], function (){
-    Route::get('createNotifications', 'NotificationsController@createNotifications');
-    Route::get('getNotifications', 'NotificationsController@getNotifications');
-    Route::get('makeRead', 'NotificationsController@makeRead');
-    Route::delete('delNotifications', 'NotificationsController@delNotifications');
-    Route::get('getNotificationCountStatistics', 'NotificationsController@getNotificationCountStatistics');
-});
-
-// 资源路由
-Route::group(['namespace' => 'Admin'], function (){
-    Route::resource('user', 'UserController')->only(['index', 'store', 'show', 'update', 'destroy']);
-    Route::resource('menus', 'MenusController')->only(['index', 'store', 'show', 'update', 'destroy']);
-    Route::resource('role', 'RoleController')->only(['index', 'store', 'show', 'update']);
-    Route::resource('loginLog', 'loginLogController')->only(['index', 'show']);
-});
-
 // 用户管理
-Route::group(['prefix' => 'user', 'namespace' => 'Admin'], function (){
+Route::group(['prefix' => 'user', 'namespace' => 'Backend'], function (){
+    Route::get('list', 'UserController@index');
+    Route::get('show/{id}', 'UserController@show');
+    Route::post('store', 'UserController@store');
+    Route::put('update/{id}', 'UserController@update');
+    Route::delete('destroy/{id}', 'UserController@destroy');
     Route::get('getUserRole/{id}', 'UserController@getUserRole');
     Route::post('setUserRole/{id}', 'UserController@setUserRole');
     Route::post('uploadAvatar/{id}', 'UserController@uploadAvatar');
@@ -74,14 +72,24 @@ Route::group(['prefix' => 'user', 'namespace' => 'Admin'], function (){
 });
 
 // 系统参数配置
-Route::group(['prefix' => 'system', 'namespace' => 'Admin'], function (){
+Route::group(['prefix' => 'system', 'namespace' => 'Backend'], function (){
     Route::get('getSystemConfig', 'SystemConfigController@getSystemConfig');
     Route::put('setSystemConfig', 'SystemConfigController@setSystemConfig');
 });
 
 // 登录日志
-Route::group(['prefix' => 'loginLog', 'namespace' => 'Admin'], function (){
+Route::group(['prefix' => 'loginLog', 'namespace' => 'Backend'], function (){
+    Route::get('list', 'LoginLogController@index');
+    Route::get('show/{id}', 'LoginLogController@show');
     Route::delete('delLoginLog', 'LoginLogController@delLoginLog');
 });
 
+// 消息通知
+Route::group(['prefix' => 'notifications', 'namespace' => 'Backend'], function (){
+    Route::get('createNotifications', 'NotificationsController@createNotifications');
+    Route::get('getNotifications', 'NotificationsController@getNotifications');
+    Route::get('makeRead', 'NotificationsController@makeRead');
+    Route::delete('delNotifications', 'NotificationsController@delNotifications');
+    Route::get('getNotificationCountStatistics', 'NotificationsController@getNotificationCountStatistics');
+});
 

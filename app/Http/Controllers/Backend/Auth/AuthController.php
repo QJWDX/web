@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\Authorize;
+namespace App\Http\Controllers\Backend\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Common\UserRole;
 use App\Models\User;

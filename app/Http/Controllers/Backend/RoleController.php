@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DelRequest;
 use App\Models\Common\Role;

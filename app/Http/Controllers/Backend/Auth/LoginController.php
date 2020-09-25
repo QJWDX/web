@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\Authorize;
+namespace App\Http\Controllers\Backend\Auth;
 use App\Events\UserLogin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;

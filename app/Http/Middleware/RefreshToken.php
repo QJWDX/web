@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 use App\Exceptions\InvalidUserException;
-use App\Http\Controllers\Authorize\CaptchaController;
-use App\Http\Controllers\Authorize\LoginController;
+use App\Http\Controllers\Backend\Auth\CaptchaController;
+use App\Http\Controllers\Backend\Auth\LoginController;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
