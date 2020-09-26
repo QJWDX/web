@@ -99,6 +99,6 @@ class User extends Authenticate implements JWTSubject
     // 头像
     public function getAvatarAttribute($val)
     {
-        return config('export.EXPORT_URL').'/upload/'.$val;
+        return config('app.url').'/upload/'.$val;
     }
 }

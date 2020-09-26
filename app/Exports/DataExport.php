@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
@@ -12,13 +13,19 @@ class DataExport implements FromCollection, WithHeadings, WithEvents
 {
     private $dataList;
 
+    // 表格头
     public $header = [];
 
+    // 单元格宽度
+    protected $cellWidth = [];
+
     protected $columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+
     public function __construct($data, $header = array())
     {
         $this->dataList = $data;
-        $this->header = $header;
+        $this->header = isset($header['title']) ? $header['title'] : [];
+        $this->cellWidth = isset($header['width']) ? $header['width'] : [];
     }
 
     public function headings() : array
@@ -44,22 +51,22 @@ class DataExport implements FromCollection, WithHeadings, WithEvents
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $columnLength =  count($this->header)-1;
+                $len =  count($this->header)-1;
                 //设置列宽
-                for ($i=0; $i<$columnLength; $i++){
-                    $event->sheet->getDelegate()->getColumnDimension($this->columns[$i])->setWidth(28);
+                for ($i=0; $i<count($this->cellWidth); $i++){
+                    $event->sheet->getDelegate()->getColumnDimension($this->columns[$i])->setWidth($this->cellWidth[$i]);
                 }
                 //设置行高，$i为数据行数
                 for ($i = 0; $i<=1265; $i++) {
                     $event->sheet->getDelegate()->getRowDimension($i)->setRowHeight(28);
                 }
                 //设置区域单元格垂直居中
-                $event->sheet->getDelegate()->getStyle('A1:I1265')->getAlignment()->setVertical('center');
+                $event->sheet->getDelegate()->getStyle('A1:'.$this->columns[$len].'1265')->getAlignment()->setVertical('center');
                 //设置区域单元格水平居中
-                $event->sheet->getDelegate()->getStyle('A1:I1265')->getAlignment()->setHorizontal('center');
+                $event->sheet->getDelegate()->getStyle('A1:'.$this->columns[$len].'1265')->getAlignment()->setHorizontal('center');
                 //设置区域单元格字体、颜色、背景等，其他设置请查看 applyFromArray 方法，提供了注释
                 // 'A1:I1'
-                $event->sheet->getDelegate()->getStyle($this->columns[0].'1:'.$this->columns[$columnLength].'1')->applyFromArray([
+                $event->sheet->getDelegate()->getStyle('A1:'.$this->columns[$len].'1')->applyFromArray([
                     'font' => [
                         'name' => 'Arial',
                         'bold' => true,

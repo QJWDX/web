@@ -6,6 +6,7 @@ namespace App\Handlers;
 
 use App\Exceptions\ApiException;
 use App\Models\Common\Files;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
@@ -52,7 +53,7 @@ class UploadHandler
         // 检查文件是否已上传过
         if($fileModel = $this->checkFile($md5, $type, $folder)){
             return [
-                'url' => config('export.EXPORT_URL'). $disks . '/' . $fileModel->path,
+                'url' => $this->url($disks, $fileModel->path),
                 'path' => $fileModel->path
             ];
         }
@@ -80,13 +81,17 @@ class UploadHandler
         $fileModel = $this->saveFile($uid, $type, $path, $mimeType, $md5, $title, $folder, $size, $width, $height, $editor = 0, $status = 1, $disks);
         if($fileModel){
             return [
-                'url' => config('export.EXPORT_URL'). $disks . '/' . $fileModel->path,
+                'url' => $this->url($disks, $fileModel->path),
                 'path' => $fileModel->path
             ];
         }else{
             Storage::delete($path);
             throw new ApiException('文件信息存储数据库失败', 500);
         }
+    }
+
+    public function url($disks, $path){
+        return config('app.url').'/'. $disks . '/' . $path;
     }
 
 

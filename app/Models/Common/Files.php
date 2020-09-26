@@ -11,8 +11,25 @@ class Files extends BaseModel
     protected $table = 'files';
     protected $guarded = [];
 
-    public function getList($field = array()){
-        return $this->modifyPaginateForApi($this->builderQuery($field));
+    public function getList($where = array()){
+        $builder = $this->builderQuery($where);
+        if($where['export'] == 1){
+            return $builder->select([
+                'uid',
+                'title',
+                'type',
+                'disks',
+                'folder',
+                'path',
+                'mime_type',
+                'size',
+                'width',
+                'height',
+                'created_at',
+                'downloads'
+            ])->get();
+        }
+        return $this->modifyPaginateForApi($builder);
     }
 
 

@@ -64,19 +64,16 @@ return [
             'url' => env('AWS_URL'),
         ],
 
-        'excel' => [
-            'driver' => 'local',
-            'root' => storage_path("export/excel")
-        ],
-
         'xlsx' => [
             'driver' => 'local',
-            'root' => public_path('export/xlsx')
+            'root' => public_path('export/xlsx'),
+            'url' => env('APP_URL'). '/export/xlsx/'
         ],
 
         'upload' => [
             'driver' => 'local',
-            'root' => public_path('upload')
+            'root' => public_path('upload'),
+            'url' => env('APP_URL'). '/upload/'
         ]
     ],
 

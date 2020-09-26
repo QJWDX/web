@@ -22,7 +22,7 @@ class EnableCrossRequestMiddleware
         $origin = $request->server('HTTP_ORIGIN') ? $request->server('HTTP_ORIGIN') : '';
         $schema = $request->getScheme();
         if (config('app.env') == "production") {
-            $appUrl = config('app.url');
+            $appUrl = config('app.front_url');
             $host = substr($appUrl, strpos($appUrl, '://') + 3);
             $host = $schema . "://" . $host;
             $allow_origin = [

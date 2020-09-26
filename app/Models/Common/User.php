@@ -53,6 +53,6 @@ class User extends BaseModel
      */
     public function getAvatarAttribute($val)
     {
-        return config('export.EXPORT_URL').'/upload/'.$val;
+        return config('app.url').'/upload/'.$val;
     }
 }

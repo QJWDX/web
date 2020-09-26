@@ -4,9 +4,11 @@
 namespace App\Http\Controllers\Backend;
 
 
+use App\Handlers\ExportHandler;
 use App\Http\Controllers\Controller;
 use App\Models\Common\Files;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FilesController extends Controller
 {
@@ -16,27 +18,24 @@ class FilesController extends Controller
         $this->M = $files;
     }
 
-    public function index(Request $request){
+    public function index(Request $request, ExportHandler $exportHandler){
         $type = $request->get('type');
         $title = $request->get('title');
         $startTime = $request->get('startTime');
         $endTime = $request->get('endTime');
-        $list = $this->M->getList(compact('type', 'title', 'startTime', 'endTime'));
-        return $this->success($list);
-    }
-
-
-    public function store(Request $request){
-        $data = $request->only([
-            'role_name',
-            'description',
-            'is_super'
-        ]);
-        $res = $this->M->newQuery()->create($data);
-        if($res){
-            return $this->success('上传文件成功');
+        $export = $request->get('export', 0);
+        $list = $this->M->getList(compact('type', 'title', 'startTime', 'endTime', 'export'));
+        $data = $export ? $list : $list['items'];
+        $data = collect($data)->transform(function ($item){
+            $item['download_url'] = config('filesystems.disks.'.$item['disks'].'.url').$item['path'];
+            return $item;
+        });
+        if($export){
+            $url = $exportHandler->filesDataExport($data->toArray());
+            return $this->success(['download_url' => $url]);
         }
-        return $this->error('上传文件失败');
+        $list['items'] = $data;
+        return $this->success($list);
     }
 
 
@@ -46,18 +45,6 @@ class FilesController extends Controller
         return $this->success($menu);
     }
 
-
-    public function update(Request $request, $id){
-        $data = $request->only([
-            'title',
-        ]);
-        $res = $this->M->newQuery()->where('id', $id)->update($data);
-        if($res){
-            return $this->success('编辑成功');
-        }
-        return $this->error('编辑失败');
-    }
-
     /**
      * 文件类型
      * @return \Illuminate\Http\JsonResponse
@@ -65,5 +52,19 @@ class FilesController extends Controller
     public function typeSelect(){
         $types = config('filesystems.uploader.type');
         return $this->success($types);
+    }
+
+    /**
+     * 下载文件
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function download($id){
+        $file = $this->M->newQuery()->find($id);
+        if(!Storage::disk($file['disks'])->exists($file['path'])){
+            return $this->error(500, '文件不存在');
+        }
+        $path = public_path($file['disks'].'/'.$file['path']);
+        return response()->download($path);
     }
 }
