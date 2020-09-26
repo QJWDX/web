@@ -9,14 +9,14 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    private $model;
+    private $M;
     public function __construct(Role $role)
     {
-        $this->model = $role;
+        $this->M = $role;
     }
 
     public function index(){
-        $list = $this->model->getList();
+        $list = $this->M->getList();
         return $this->success($list);
     }
 
@@ -27,7 +27,7 @@ class RoleController extends Controller
             'description',
             'is_super'
         ]);
-        $res = $this->model->newQuery()->create($data);
+        $res = $this->M->newQuery()->create($data);
         if($res){
             return $this->success('新增菜单成功');
         }
@@ -36,7 +36,7 @@ class RoleController extends Controller
 
 
     public function show($id){
-        $menu = $this->model->getRow(['id' => $id]);
+        $menu = $this->M->getRow(['id' => $id]);
         return $this->success($menu);
     }
 
@@ -47,7 +47,7 @@ class RoleController extends Controller
             'description',
             'is_super'
         ]);
-        $res = $this->model->newQuery()->where('id', $id)->update($data);
+        $res = $this->M->newQuery()->where('id', $id)->update($data);
         if($res){
             return $this->success('编辑成功');
         }
@@ -61,10 +61,10 @@ class RoleController extends Controller
      */
     public function delRole(DelRequest $request){
         $ids = $request->get('ids');
-        if($this->model->hasSuperRole($ids)){
+        if($this->M->hasSuperRole($ids)){
             return $this->error(500, '选中项有超级管理员不允许删除，请重新选择');
         }
-        $this->model->del($ids);
+        $this->M->del($ids);
         return $this->success('删除成功');
     }
 
@@ -74,7 +74,7 @@ class RoleController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function getRoleTree(){
-        $list = $this->model->getAll(['id', 'role_name', 'is_super']);
+        $list = $this->M->getAll(['id', 'role_name', 'is_super']);
         $treeData = [];
         foreach ($list as $value){
             array_push($treeData, ['id' => $value['id'], 'label' => $value['role_name'] .'['. ($value->is_super ? 'super' : 'other') . ']']);

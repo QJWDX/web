@@ -13,27 +13,26 @@ use Illuminate\Http\Request;
 
 class MenusController extends Controller
 {
-    private $model;
+    private $M;
     public function __construct(Menus $menus)
     {
-        $this->model = $menus;
+        $this->M = $menus;
     }
 
     /**
      * 权限菜单树
      * @param Request $request
      * @param Role $role
-     * @param Menus $menus
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getMenuTree(Request $request, Role $role, Menus $menus){
+    public function getMenuTree(Request $request, Role $role){
         $role_id = $request->get('role', false);
         if(!$role_id) return $this->error('参数错误');
         $role = $role->newQuery()->find($role_id);
         if($role){
-            return $this->success($menus->getElTree($role->getOriginal('is_super')));
+            return $this->success($this->M->getElTree($role->getOriginal('is_super')));
         }
-        return $this->error('角色不存在');
+        return $this->error(500, '角色不存在');
     }
 
 
@@ -41,23 +40,22 @@ class MenusController extends Controller
      * 获取角色已选中的菜单
      * @param Request $request
      * @param Role $role
-     * @param Menus $menus
      * @param RoleMenus $roleMenus
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getRoleMenus(Request $request, Role $role, Menus $menus, RoleMenus $roleMenus){
+    public function getRoleMenus(Request $request, Role $role, RoleMenus $roleMenus){
         $role_id = $request->get('role', false);
-        if(!$role_id) return $this->error('参数错误');
+        if(!$role_id) return $this->error(500, '参数错误');
         $role = $role->newQuery()->find($role_id);
         if($role){
             if($role->getOriginal('is_super') == 1){
-                $checkMenus = $menus->newQuery()->pluck('id');
+                $checkMenus = $this->M->newQuery()->pluck('id');
             }else{
                 $checkMenus = $roleMenus->newQuery()->where('role_id', $role_id)->distinct()->pluck('menus_id');
             }
             return $this->success($checkMenus);
         }
-        return $this->error('角色不存在');
+        return $this->error(500, '角色不存在');
     }
 
 
@@ -65,18 +63,18 @@ class MenusController extends Controller
      * 获取角色权限菜单和路由
      * @param Request $request
      * @param Role $role
-     * @param Menus $menus
+     * @param RoleMenus $roleMenus
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getVueRoute(Request $request, Role $role, Menus $menus){
+    public function getVueRoute(Request $request, Role $role, RoleMenus $roleMenus){
         $role_id = $request->get('role');
         $ids = explode(',', $role_id);
         $isSuper = $role->newQuery()->where('is_super', 1)->whereIn('id', $ids)->exists();
         $menu_ids = array();
         if(!$isSuper){
-            $menu_ids = (new RoleMenus())->newQuery()->whereIn('role_id', $ids)->distinct()->pluck('menus_id')->toArray();
+            $menu_ids = $roleMenus->newQuery()->whereIn('role_id', $ids)->distinct()->pluck('menus_id')->toArray();
         }
-        $permissionData = $menus->permissionMenusAndRoute($isSuper, $menu_ids);
+        $permissionData = $this->M->permissionMenusAndRoute($isSuper, $menu_ids);
         return $this->success($permissionData);
     }
 
@@ -104,21 +102,21 @@ class MenusController extends Controller
             if($res){
                 return $this->success('权限菜单配置成功');
             }
-            return $this->error('权限菜单配置失败');
+            return $this->error(500, '权限菜单配置失败');
         }
-        return $this->error('参数错误');
+        return $this->error(500, '参数错误');
     }
 
 
     // 菜单列表
-    public function index(Menus $menus){
-        $list = $menus->getList();
+    public function index(){
+        $list = $this->M->getList();
         return $this->success($list);
     }
 
 
     // 新增菜单
-    public function store(Request $request, Menus $menus){
+    public function store(Request $request){
         $data = $request->only([
             'name',
             'parent_id',
@@ -130,17 +128,17 @@ class MenusController extends Controller
             'is_default',
             'sort_field'
         ]);
-        $res = $menus->newQuery()->create($data);
+        $res = $this->M->newQuery()->create($data);
         if($res){
             return $this->success('新增菜单成功');
         }
-        return $this->error('新增菜单失败');
+        return $this->error(500, '新增菜单失败');
     }
 
 
     // 菜单详情
     public function show($id){
-        $menu = $this->model->newQuery()->find($id);
+        $menu = $this->M->newQuery()->find($id);
         return $this->success($menu);
     }
 
@@ -158,23 +156,23 @@ class MenusController extends Controller
             'is_default',
             'sort_field'
         ]);
-        $res = $this->model->newQuery()->where('id', $id)->update($data);
+        $res = $this->M->newQuery()->where('id', $id)->update($data);
         if($res){
             return $this->success('编辑菜单成功');
         }
-        return $this->error('编辑菜单失败');
+        return $this->error(500, '编辑菜单失败');
     }
 
     // 删除菜单
     public function destroy($id){
-        if($this->model->hasSubMenu($id)){
+        if($this->M->hasSubMenu($id)){
             return $this->success('含有子菜单,不允许删除');
         }
-        $res = $this->model->newQuery()->where('id', $id)->delete();
+        $res = $this->M->newQuery()->where('id', $id)->delete();
         if($res){
             return $this->success('删除菜单成功');
         }
-        return $this->error('删除菜单失败');
+        return $this->error(500, '删除菜单失败');
     }
 
 
@@ -184,7 +182,7 @@ class MenusController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function menuSelect(CategoryHandler $categoryHandler){
-        $menus = $this->model->newQuery()->select(['id', 'parent_id', 'name'])->get();
+        $menus = $this->M->newQuery()->select(['id', 'parent_id', 'name'])->get();
         return $this->success($categoryHandler->select($menus, 0));
     }
 }

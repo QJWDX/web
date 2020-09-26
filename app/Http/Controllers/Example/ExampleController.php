@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Example;
 
 
 use App\Exports\DataExport;
+use App\Handlers\GeoIpHandler;
 use App\Http\Controllers\Controller;
 use App\Jobs\sendEmail;
 use App\Models\User;
+use GeoIp2\Database\Reader;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;

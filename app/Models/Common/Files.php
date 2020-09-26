@@ -11,6 +11,45 @@ class Files extends BaseModel
     protected $table = 'files';
     protected $guarded = [];
 
+    public function getList($field = array()){
+        return $this->modifyPaginateForApi($this->builderQuery($field));
+    }
+
+
+    public function getRow($where = array()){
+        $builder = $this->builderQuery($where);
+        return $builder->first();
+    }
+
+    public function builderQuery($where = array(), $field = array()){
+        $builder = $this->newQuery();
+        if($field){
+            $builder = $builder->select($field);
+        }
+        $builder = $builder->when($where, function ($query) use($where){
+            $query->where('title', 'like', '%'. $where['title']. '%');
+        })->when($where, function ($query) use($where){
+            $query->where('type', 'like', '%'. $where['type']. '%');
+        });
+        return $builder;
+    }
+
+
+    /**
+     * 删除
+     * @param array $ids
+     * @return bool
+     */
+    public function del($ids = array()){
+        if(empty($ids)){
+            return false;
+        }
+        $instances = $this->newQuery()->whereIn('id', $ids)->get('id');
+        foreach ($instances as $instance){
+            $instance->delete();
+        }
+        return true;
+    }
 
     /**
      * 获取文件信息

@@ -93,3 +93,12 @@ Route::group(['prefix' => 'notifications', 'namespace' => 'Backend'], function (
     Route::get('getNotificationCountStatistics', 'NotificationsController@getNotificationCountStatistics');
 });
 
+// 文件管理
+Route::group(['prefix' => 'files', 'namespace' => 'Backend'], function (){
+    Route::get('list', 'FilesController@index');
+    Route::get('show/{id}', 'FilesController@show');
+    Route::post('store', 'FilesController@store');
+    Route::put('update/{id}', 'FilesController@update');
+    Route::get('typeSelect', 'FilesController@typeSelect');
+});
+

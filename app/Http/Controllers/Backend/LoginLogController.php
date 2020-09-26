@@ -11,26 +11,26 @@ use Illuminate\Http\Request;
 
 class LoginLogController extends Controller
 {
-    private $model;
+    private $M;
     public function __construct(LoginLog $loginLog)
     {
-        $this->model = $loginLog;
+        $this->M = $loginLog;
     }
 
     public function index(Request $request){
         $where = $request->all();
-        $list = $this->model->getList($where);
+        $list = $this->M->getList($where);
         return $this->success($list);
     }
 
     public function show($id){
-        $menu = $this->model->getRow(['id' => $id]);
+        $menu = $this->M->getRow(['id' => $id]);
         return $this->success($menu);
     }
 
     public function delLoginLog(DelRequest $request){
         $ids = $request->get('ids');
-        if($this->model->del($ids)){
+        if($this->M->del($ids)){
             return $this->success('删除日志成功');
         }
         return $this->error(500, '删除日志失败');

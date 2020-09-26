@@ -49,4 +49,5 @@ Route::group(['prefix' => 'example', 'namespace' => 'Example'], function (){
     Route::get('baseTable', 'ExampleController@baseTable');
     // 角色列表
     Route::get('getRoleList', 'ExampleController@getRoleList');
+
 });

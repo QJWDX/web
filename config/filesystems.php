@@ -82,6 +82,8 @@ return [
 
     'uploader' => [
 
+        'type' => ['image' => '图片', 'annex' => '附件', 'file' => '文件', 'audio' => '音频', 'video' => '视频'],
+
         'folder' => [
             'avatar'
         ],
