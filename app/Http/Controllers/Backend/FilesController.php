@@ -57,13 +57,15 @@ class FilesController extends Controller
     /**
      * 下载文件
      * @param $id
-     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function download($id){
         $file = $this->M->newQuery()->find($id);
         if(!Storage::disk($file['disks'])->exists($file['path'])){
-            return $this->error(500, '文件不存在');
+            return redirect(config('app.url').'#/404');
         }
+        $file->increment('downloads');
+        $file->save();
         $path = public_path($file['disks'].'/'.$file['path']);
         return response()->download($path);
     }

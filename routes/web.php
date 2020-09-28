@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return redirect('/view/index.html');
+    return redirect('/view/');
 });
 
 Route::get('/mqtt', function () {
@@ -26,6 +26,9 @@ Route::get('/home',function () {
     return view('home');
 });
 
+Route::group(['prefix' => 'files', 'namespace' => 'Backend'], function (){
+    Route::get('download/{id}', 'FilesController@download');
+});
 
 // 示例接口
 Route::group(['prefix' => 'example', 'namespace' => 'Example'], function (){

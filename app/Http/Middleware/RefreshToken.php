@@ -19,7 +19,9 @@ class RefreshToken extends BaseMiddleware
         CaptchaController::class
     ];
 
-    protected $exceptedActions = [];
+    protected $exceptedActions = [
+        'getSystemConfig'
+    ];
 
     /**
      * Handle an incoming request.

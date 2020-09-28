@@ -97,7 +97,7 @@ Route::group(['prefix' => 'notifications', 'namespace' => 'Backend'], function (
 Route::group(['prefix' => 'files', 'namespace' => 'Backend'], function (){
     Route::get('list', 'FilesController@index');
     Route::get('show/{id}', 'FilesController@show');
-    Route::get('download/{id}', 'FilesController@download');
+    Route::post('download/{id}', 'FilesController@download');
     Route::get('typeSelect', 'FilesController@typeSelect');
 });
 
