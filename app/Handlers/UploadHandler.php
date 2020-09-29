@@ -72,7 +72,7 @@ class UploadHandler
         if(!is_dir($dir)){
             mkdir($dir, 0777, true);
         }
-        $fileName = $this->getRandomFileName(24, $extension);
+        $fileName = $this->getRandomFileName(24, 1, 1, $extension);
          // 将图片移动到我们的目标存储路径中 或 云存储中
         if(!($path = $file->storeAs($folder_name, $fileName, $disks))){
             throw new ApiException('文件存储失败', 500);
@@ -152,16 +152,27 @@ class UploadHandler
 
     /**
      * 生成随机文件名
-     * @param $length
+     * @param int $randLength
+     * @param int $addtime
+     * @param int $includenumber
      * @param $extension
      * @return string
      */
-    function getRandomFileName($length, $extension){
-        $file_name = "";
-        $randomStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        $randomStr .= mt_srand(time());
-        for($i=0; $i<$length; $i++){
-            $file_name .= $randomStr[mt_rand(0,strlen($randomStr)-1)];
+    public function getRandomFileName($randLength = 6, $addtime = 1, $includenumber = 0, $extension)
+    {
+        if ($includenumber) {
+            $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHJKLMNPQEST123456789';
+        } else {
+            $chars = 'abcdefghijklmnopqrstuvwxyz';
+        }
+        $len = strlen($chars);
+        $randStr = '';
+        for ($i = 0; $i < $randLength; $i++) {
+            $randStr .= $chars[mt_rand(0, $len - 1)];
+        }
+        $file_name = $randStr;
+        if ($addtime) {
+            $file_name = $randStr . time();
         }
         return $file_name.'.'.$extension;
     }

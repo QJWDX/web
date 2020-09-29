@@ -99,5 +99,7 @@ Route::group(['prefix' => 'files', 'namespace' => 'Backend'], function (){
     Route::get('show/{id}', 'FilesController@show');
     Route::post('download/{id}', 'FilesController@download');
     Route::get('typeSelect', 'FilesController@typeSelect');
+    Route::get('folderSelect', 'FilesController@folderSelect');
+    Route::post('upload', 'FilesController@upload');
 });
 

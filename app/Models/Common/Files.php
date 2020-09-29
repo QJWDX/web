@@ -5,9 +5,11 @@ namespace App\Models\Common;
 
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Files extends BaseModel
 {
+    use SoftDeletes;
     protected $table = 'files';
     protected $guarded = [];
 
@@ -39,7 +41,7 @@ class Files extends BaseModel
     }
 
     public function builderQuery($where = array(), $field = array()){
-        $builder = $this->newQuery();
+        $builder = $this->newQuery()->withTrashed();
         if($field){
             $builder = $builder->select($field);
         }
