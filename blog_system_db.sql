@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 21/09/2020 22:30:13
+ Date: 29/09/2020 22:17:11
 */
 
 SET NAMES utf8mb4;
@@ -486,6 +486,89 @@ INSERT INTO `sys_bs_province` VALUES (33, '810000', '香港特别行政区', '�
 INSERT INTO `sys_bs_province` VALUES (34, '820000', '澳门特别行政区', '澳门', 113.5490880, 22.1989520, 33, NULL, NULL);
 
 -- ----------------------------
+-- Table structure for sys_files
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_files`;
+CREATE TABLE `sys_files`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件uid',
+  `type` enum('image','voice','video','annex','file') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件类型',
+  `disks` enum('local','public','s3','oss','azure','aliyun','qiniu','upyun','huawei','baidu','upload') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件类型',
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件路径',
+  `mime_type` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件mimeType',
+  `md5` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Md5',
+  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件标题',
+  `folder` char(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件对象类型',
+  `size` int(11) NOT NULL DEFAULT 0 COMMENT '文件大小',
+  `width` smallint(6) NOT NULL DEFAULT 0 COMMENT '宽度',
+  `height` smallint(6) NOT NULL DEFAULT 0 COMMENT '高度',
+  `downloads` mediumint(9) NOT NULL DEFAULT 0 COMMENT '下载次数',
+  `public` enum('0','1') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '1' COMMENT '是否公开',
+  `editor` enum('0','1') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0' COMMENT '富编辑器图片',
+  `status` enum('0','1') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0' COMMENT '附件状态',
+  `created_op` int(11) NOT NULL DEFAULT 0 COMMENT '创建人',
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  `deleted_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `md5_type_folder_unique`(`md5`, `type`, `folder`) USING BTREE,
+  INDEX `type_index`(`type`) USING BTREE,
+  INDEX `folder_index`(`folder`) USING BTREE,
+  INDEX `public_index`(`public`) USING BTREE,
+  INDEX `status_index`(`status`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_files
+-- ----------------------------
+INSERT INTO `sys_files` VALUES (13, 'F580E106-E978-2166-4FBE-CF4E9C7E1A76', 'image', 'upload', 'images/avatar/202009/23/XVVC9RHY0YDLRWMQP61EZHDJ.jpeg', 'image/jpeg', 'fa57da20bf35fff3b10406b0daebd059', 'u=3517629023,609603298&fm=26&gp=0.jpg', 'avatar', 19046, 400, 400, 1, '1', '0', '1', 0, '2020-09-23 23:58:20', '2020-09-29 19:02:23', NULL);
+INSERT INTO `sys_files` VALUES (12, '4A0FE425-9E81-CA91-CC9C-0D591FBA6F51', 'image', 'upload', 'images/avatar/202009/23/YUSLN1DV3FG1YE9IMTP09CW7.jpeg', 'image/jpeg', '35964208d1dfcb940c12b09552b1e893', '1-200Z21109251a.jpg', 'avatar', 27666, 430, 300, 0, '1', '0', '1', 0, '2020-09-23 22:40:03', '2020-09-23 22:40:03', NULL);
+INSERT INTO `sys_files` VALUES (14, '9B93F3B4-463B-EC6B-7D04-CCD0E4953B1F', 'image', 'upload', 'images/avatar/202009/24/B57X75SO98ATA3AK7CPG0HRW.jpeg', 'image/jpeg', 'b8e23fa33f6e01bdddcd7ff9f0a7e3a9', '200P6120930-2.jpg', 'avatar', 137620, 1920, 1200, 0, '1', '0', '1', 0, '2020-09-24 00:00:52', '2020-09-24 00:00:52', NULL);
+INSERT INTO `sys_files` VALUES (15, '3EAAF3D6-63DE-9EA1-F39E-58196EEDC636', 'image', 'upload', 'images/avatar/202009/24/8TC5HLBVLFEWFVJP4HU1W9F4.jpeg', 'image/jpeg', 'f6929ed88f4862be743dad0d6f5c438b', '06121555605337.jpg', 'avatar', 10055, 200, 200, 0, '1', '0', '1', 0, '2020-09-24 22:37:35', '2020-09-24 22:37:35', NULL);
+INSERT INTO `sys_files` VALUES (16, '79ED959D-CC82-D31B-5EB0-BBA183339561', 'image', 'upload', 'images/avatar/202009/26/DS9JM329QZLSBLZOFK3AIF75.jpeg', 'image/jpeg', 'adbffddc0438adf12077b49e478c36ee', '4de60102eaab40059869296b52e84f1d!400x400.jpeg', 'avatar', 49993, 400, 400, 1, '1', '0', '1', 0, '2020-09-26 19:48:29', '2020-09-29 19:32:26', NULL);
+INSERT INTO `sys_files` VALUES (17, '23861DAC-C9F7-FFDF-8476-E5495B1CEDBD', 'image', 'upload', 'images/avatar/202009/26/C3JX7JVI9836AX2S36UB3S3J.jpeg', 'image/jpeg', 'e370b7c546a65db55b658a6191a1cecd', 'f8052c91ea434e5095a155d44ddbf1bf!400x400.jpeg', 'avatar', 41394, 400, 400, 0, '1', '0', '1', 0, '2020-09-26 19:48:35', '2020-09-26 19:48:35', NULL);
+INSERT INTO `sys_files` VALUES (18, 'B1BE9D7E-A3FB-498F-780A-F5FB2C5EC5D7', 'image', 'upload', 'images/avatar/202009/26/TXKH2MJD7O2GMKHQ3YLLF5O4.jpeg', 'image/jpeg', '28a55263ee43e2c77b92ebeea426077d', 'd4c67376bdde46c88523fadf575254dd!400x400.jpeg', 'avatar', 73691, 400, 400, 0, '1', '0', '1', 0, '2020-09-26 19:48:38', '2020-09-26 19:48:38', NULL);
+INSERT INTO `sys_files` VALUES (19, '56535C92-23F5-D253-1FE6-9F43AB6A25AD', 'image', 'upload', 'images/avatar/202009/26/QQCT0ZOCJOEU5QMJVRT0CL57.jpeg', 'image/jpeg', '4dc683a9843537404a57f48633508c46', '38ee8e5eab3740be922b12d2a6d75ae0!400x400.jpeg', 'avatar', 29675, 400, 400, 0, '1', '0', '1', 0, '2020-09-26 19:48:43', '2020-09-26 19:48:43', NULL);
+INSERT INTO `sys_files` VALUES (20, 'FA9A7A23-F03A-4F9A-D135-28D66362DB18', 'annex', 'upload', 'annexs/public/202009/29/B52xF7xtDcmnb2vMMMfhrTyE1601382020.zip', 'application/x-zip-compressed', '254bddb058fe39f6a5bebc6ffb5591e9', 'Redis-x64-5.0.9.zip', 'public', 15152866, 0, 0, 1, '1', '0', '1', 0, '2020-09-29 20:20:20', '2020-09-29 20:20:38', NULL);
+
+-- ----------------------------
+-- Table structure for sys_login_log
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_login_log`;
+CREATE TABLE `sys_login_log`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NULL DEFAULT NULL,
+  `login_time` timestamp(0) NULL DEFAULT NULL,
+  `ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `login_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `is_success` tinyint(4) NULL DEFAULT NULL COMMENT '是否成功',
+  `created_at` timestamp(0) NULL DEFAULT NULL,
+  `updated_at` timestamp(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `login_time`(`login_time`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_login_log
+-- ----------------------------
+INSERT INTO `sys_login_log` VALUES (2, 1, '2020-09-24 23:17:33', '127.0.0.1', '', 1, '2020-09-24 23:17:33', '2020-09-24 23:17:33');
+INSERT INTO `sys_login_log` VALUES (3, 1, '2020-09-24 23:35:57', '127.0.0.1', '', 1, '2020-09-24 23:35:57', '2020-09-24 23:35:57');
+INSERT INTO `sys_login_log` VALUES (4, 1, '2020-09-24 23:36:45', '127.0.0.1', '', 1, '2020-09-24 23:36:45', '2020-09-24 23:36:45');
+INSERT INTO `sys_login_log` VALUES (5, 1, '2020-09-25 21:15:42', '127.0.0.1', '', 1, '2020-09-25 21:15:42', '2020-09-25 21:15:42');
+INSERT INTO `sys_login_log` VALUES (6, 1, '2020-09-25 21:37:49', '127.0.0.1', '', 1, '2020-09-25 21:37:49', '2020-09-25 21:37:49');
+INSERT INTO `sys_login_log` VALUES (7, 1, '2020-09-26 09:48:02', '127.0.0.1', '', 1, '2020-09-26 09:48:02', '2020-09-26 09:48:02');
+INSERT INTO `sys_login_log` VALUES (8, 1, '2020-09-26 14:31:07', '127.0.0.1', 'AsiaChinaGuangzhou', 1, '2020-09-26 14:31:07', '2020-09-26 14:31:07');
+INSERT INTO `sys_login_log` VALUES (9, 1, '2020-09-26 14:32:44', '127.0.0.1', 'AsiaChinaGuangzhou', 1, '2020-09-26 14:32:44', '2020-09-26 14:32:44');
+INSERT INTO `sys_login_log` VALUES (10, 1, '2020-09-26 14:41:28', '127.0.0.1', 'Asia;China;Guangzhou', 1, '2020-09-26 14:41:28', '2020-09-26 14:41:28');
+INSERT INTO `sys_login_log` VALUES (11, 1, '2020-09-26 15:32:56', '127.0.0.1', '', 1, '2020-09-26 15:32:56', '2020-09-26 15:32:56');
+INSERT INTO `sys_login_log` VALUES (12, 1, '2020-09-26 16:32:38', '127.0.0.1', '', 1, '2020-09-26 16:32:38', '2020-09-26 16:32:38');
+INSERT INTO `sys_login_log` VALUES (13, 1, '2020-09-26 19:38:58', '127.0.0.1', '', 1, '2020-09-26 19:38:58', '2020-09-26 19:38:58');
+INSERT INTO `sys_login_log` VALUES (14, 1, '2020-09-26 19:40:05', '127.0.0.1', '', 1, '2020-09-26 19:40:05', '2020-09-26 19:40:05');
+INSERT INTO `sys_login_log` VALUES (15, 1, '2020-09-26 19:42:24', '127.0.0.1', '', 1, '2020-09-26 19:42:24', '2020-09-26 19:42:24');
+INSERT INTO `sys_login_log` VALUES (16, 1, '2020-09-26 20:50:16', '127.0.0.1', '', 1, '2020-09-26 20:50:16', '2020-09-26 20:50:16');
+INSERT INTO `sys_login_log` VALUES (17, 1, '2020-09-29 18:55:15', '127.0.0.1', '', 1, '2020-09-29 18:55:15', '2020-09-29 18:55:15');
+
+-- ----------------------------
 -- Table structure for sys_menus
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_menus`;
@@ -503,7 +586,7 @@ CREATE TABLE `sys_menus`  (
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = MyISAM AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_menus
@@ -521,14 +604,17 @@ INSERT INTO `sys_menus` VALUES (10, 21, 'schart图表', 'el-icon-pie-chart', '/c
 INSERT INTO `sys_menus` VALUES (11, 21, '拖拽组件列表', 'el-icon-rank', '/drag', 'DragList', 1, 1, 0, 0, NULL, NULL);
 INSERT INTO `sys_menus` VALUES (12, 21, '国际化', 'el-icon-lx-global', '/i18n', 'I18n', 1, 1, 0, 0, NULL, NULL);
 INSERT INTO `sys_menus` VALUES (13, 21, '权限页面', 'el-icon-lx-warn', '/permission', 'Permission', 1, 1, 0, 0, NULL, NULL);
-INSERT INTO `sys_menus` VALUES (16, 22, 'MQTT', 'el-icon-chat-round', '/donate', 'Donate', 1, 1, 0, 0, NULL, '2020-09-21 11:39:17');
+INSERT INTO `sys_menus` VALUES (16, 22, 'MQTT消息', 'el-icon-chat-round', '/donate', 'Donate', 1, 1, 0, 0, NULL, '2020-09-26 20:50:05');
 INSERT INTO `sys_menus` VALUES (18, 21, '编辑器', 'el-icon-lx-rank', '/editor', 'VueEdito', 1, 1, 0, 0, NULL, NULL);
 INSERT INTO `sys_menus` VALUES (19, 20, '用户管理', 'el-icon-lx-people', '/user', 'User', 1, 1, 0, 0, NULL, NULL);
 INSERT INTO `sys_menus` VALUES (20, 0, '系统管理', 'el-icon-setting', '', '', 0, 1, 0, 0, NULL, NULL);
 INSERT INTO `sys_menus` VALUES (21, 0, '示例菜单', 'el-icon-tickets', '2', NULL, 0, 1, 0, 0, NULL, '2020-09-21 11:35:11');
 INSERT INTO `sys_menus` VALUES (22, 0, '内容管理', 'el-icon-monitor', '3', NULL, 0, 1, 0, 998, NULL, '2020-09-21 11:35:25');
 INSERT INTO `sys_menus` VALUES (23, 20, '菜单管理', 'el-icon-menu', '/menu', 'Menu', 1, 1, 0, 0, NULL, NULL);
-INSERT INTO `sys_menus` VALUES (24, 20, '参数配置', 'el-icon-s-tools', '/setting', 'Setting', 1, 1, 0, 0, NULL, NULL);
+INSERT INTO `sys_menus` VALUES (24, 20, '参数配置', 'el-icon-s-tools', '/systemConfig', 'SystemConfig', 1, 1, 0, 0, NULL, NULL);
+INSERT INTO `sys_menus` VALUES (26, 0, '用户中心', NULL, '/userInfo', 'UserInfo', 1, 0, 0, 1, '2020-09-24 19:19:21', '2020-09-24 22:14:06');
+INSERT INTO `sys_menus` VALUES (27, 22, '登录日志', NULL, '/loginLog', 'LoginLog', 1, 1, 0, 0, '2020-09-24 23:02:16', '2020-09-24 23:36:30');
+INSERT INTO `sys_menus` VALUES (28, 22, '文件管理', NULL, '/files', 'Files', 1, 1, 0, 0, '2020-09-26 15:30:01', '2020-09-26 15:30:01');
 
 -- ----------------------------
 -- Table structure for sys_migrations
@@ -583,17 +669,17 @@ INSERT INTO `sys_notifications` VALUES ('d07e7163-1e88-463a-9b63-997d3cd76059', 
 INSERT INTO `sys_notifications` VALUES ('2d13f2df-d964-4b55-a489-de5a821af669', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":74,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 03:46:35\",\"updated_at\":\"2020-06-22 03:46:35\"}', '2020-09-20 02:39:41', '2020-06-22 03:46:35', '2020-09-20 02:39:41');
 INSERT INTO `sys_notifications` VALUES ('857b9108-1a6f-473f-8443-e4d3f59c41df', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":84,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 06:49:59\",\"updated_at\":\"2020-06-22 06:49:59\"}', '2020-09-20 11:50:43', '2020-06-22 06:53:54', '2020-09-20 11:50:43');
 INSERT INTO `sys_notifications` VALUES ('9850e6ca-01a7-401c-add7-583b92f5d15f', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":85,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 06:50:22\",\"updated_at\":\"2020-06-22 06:50:22\"}', '2020-09-20 13:12:00', '2020-06-22 06:53:54', '2020-09-20 13:12:00');
-INSERT INTO `sys_notifications` VALUES ('2c51ff92-2d08-46f0-ab74-898f297392fa', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":86,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 06:51:05\",\"updated_at\":\"2020-06-22 06:51:05\"}', NULL, '2020-06-22 06:53:54', '2020-06-22 06:53:54');
-INSERT INTO `sys_notifications` VALUES ('71869151-6641-4a10-899a-5f8e9ab00da5', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":87,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 06:51:07\",\"updated_at\":\"2020-06-22 06:51:07\"}', NULL, '2020-06-22 06:53:54', '2020-06-22 06:53:54');
-INSERT INTO `sys_notifications` VALUES ('a50761c3-2222-42a7-857d-da91b207a456', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":88,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 06:55:18\",\"updated_at\":\"2020-06-22 06:55:18\"}', NULL, '2020-06-22 06:55:18', '2020-06-22 06:55:18');
-INSERT INTO `sys_notifications` VALUES ('c39a933c-804a-4ad1-a9ab-73ba5016bf0f', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":89,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:31:35\",\"updated_at\":\"2020-06-22 07:31:35\"}', NULL, '2020-06-22 07:31:35', '2020-06-22 07:31:35');
-INSERT INTO `sys_notifications` VALUES ('d584f527-9596-46cc-a205-16e7aff5e4ad', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":90,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:32:55\",\"updated_at\":\"2020-06-22 07:32:55\"}', NULL, '2020-06-22 07:32:56', '2020-06-22 07:32:56');
-INSERT INTO `sys_notifications` VALUES ('a738b53f-6f5c-490b-9110-95d65cbb5b0d', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":91,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:33:29\",\"updated_at\":\"2020-06-22 07:33:29\"}', NULL, '2020-06-22 07:33:32', '2020-06-22 07:33:32');
-INSERT INTO `sys_notifications` VALUES ('b935de70-a6bf-4c27-a4cf-5a335050a761', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":92,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:37:47\",\"updated_at\":\"2020-06-22 07:37:47\"}', NULL, '2020-06-22 07:37:47', '2020-06-22 07:37:47');
-INSERT INTO `sys_notifications` VALUES ('2ff6e828-0b09-4abd-8ca7-8db5bbb1c04b', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":93,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:55:36\",\"updated_at\":\"2020-06-22 07:55:36\"}', NULL, '2020-06-22 07:55:38', '2020-06-22 07:55:38');
-INSERT INTO `sys_notifications` VALUES ('0957d9a9-91fa-4df4-bd5c-771879786691', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":97,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:56:36\",\"updated_at\":\"2020-06-22 07:56:36\"}', NULL, '2020-06-22 07:56:38', '2020-06-22 07:56:38');
-INSERT INTO `sys_notifications` VALUES ('c51b2efc-6956-4262-b7de-8c44e4a3fede', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":98,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:57:07\",\"updated_at\":\"2020-06-22 07:57:07\"}', NULL, '2020-06-22 07:57:08', '2020-06-22 07:57:08');
-INSERT INTO `sys_notifications` VALUES ('36311051-f612-4f78-9957-f22e113edd4f', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":99,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:58:41\",\"updated_at\":\"2020-06-22 07:58:41\"}', NULL, '2020-06-22 07:58:41', '2020-06-22 07:58:41');
+INSERT INTO `sys_notifications` VALUES ('2c51ff92-2d08-46f0-ab74-898f297392fa', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":86,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 06:51:05\",\"updated_at\":\"2020-06-22 06:51:05\"}', '2020-09-22 19:43:17', '2020-06-22 06:53:54', '2020-09-22 19:43:17');
+INSERT INTO `sys_notifications` VALUES ('71869151-6641-4a10-899a-5f8e9ab00da5', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":87,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 06:51:07\",\"updated_at\":\"2020-06-22 06:51:07\"}', '2020-09-22 21:23:43', '2020-06-22 06:53:54', '2020-09-22 21:23:43');
+INSERT INTO `sys_notifications` VALUES ('a50761c3-2222-42a7-857d-da91b207a456', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":88,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 06:55:18\",\"updated_at\":\"2020-06-22 06:55:18\"}', '2020-09-22 21:23:46', '2020-06-22 06:55:18', '2020-09-22 21:23:46');
+INSERT INTO `sys_notifications` VALUES ('c39a933c-804a-4ad1-a9ab-73ba5016bf0f', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":89,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:31:35\",\"updated_at\":\"2020-06-22 07:31:35\"}', '2020-09-22 21:23:47', '2020-06-22 07:31:35', '2020-09-22 21:23:47');
+INSERT INTO `sys_notifications` VALUES ('d584f527-9596-46cc-a205-16e7aff5e4ad', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":90,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:32:55\",\"updated_at\":\"2020-06-22 07:32:55\"}', '2020-09-22 21:23:48', '2020-06-22 07:32:56', '2020-09-22 21:23:48');
+INSERT INTO `sys_notifications` VALUES ('a738b53f-6f5c-490b-9110-95d65cbb5b0d', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":91,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:33:29\",\"updated_at\":\"2020-06-22 07:33:29\"}', '2020-09-22 21:23:48', '2020-06-22 07:33:32', '2020-09-22 21:23:48');
+INSERT INTO `sys_notifications` VALUES ('b935de70-a6bf-4c27-a4cf-5a335050a761', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":92,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:37:47\",\"updated_at\":\"2020-06-22 07:37:47\"}', '2020-09-22 21:23:51', '2020-06-22 07:37:47', '2020-09-22 21:23:51');
+INSERT INTO `sys_notifications` VALUES ('2ff6e828-0b09-4abd-8ca7-8db5bbb1c04b', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":93,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:55:36\",\"updated_at\":\"2020-06-22 07:55:36\"}', '2020-09-22 22:28:06', '2020-06-22 07:55:38', '2020-09-22 22:28:06');
+INSERT INTO `sys_notifications` VALUES ('0957d9a9-91fa-4df4-bd5c-771879786691', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":97,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:56:36\",\"updated_at\":\"2020-06-22 07:56:36\"}', '2020-09-22 22:28:18', '2020-06-22 07:56:38', '2020-09-22 22:28:18');
+INSERT INTO `sys_notifications` VALUES ('c51b2efc-6956-4262-b7de-8c44e4a3fede', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":98,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:57:07\",\"updated_at\":\"2020-06-22 07:57:07\"}', '2020-09-22 22:28:20', '2020-06-22 07:57:08', '2020-09-22 22:28:20');
+INSERT INTO `sys_notifications` VALUES ('36311051-f612-4f78-9957-f22e113edd4f', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":99,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 07:58:41\",\"updated_at\":\"2020-06-22 07:58:41\"}', '2020-09-22 22:29:03', '2020-06-22 07:58:41', '2020-09-22 22:29:03');
 INSERT INTO `sys_notifications` VALUES ('1d9e5697-e2fe-419d-ab6e-dfbb4074d59d', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":100,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 08:02:45\",\"updated_at\":\"2020-06-22 08:02:45\"}', NULL, '2020-06-22 08:02:47', '2020-06-22 08:02:47');
 INSERT INTO `sys_notifications` VALUES ('ac834608-58e1-4266-8a5a-ce868def234d', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":101,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 08:03:42\",\"updated_at\":\"2020-06-22 08:03:42\"}', NULL, '2020-06-22 08:03:44', '2020-06-22 08:03:44');
 INSERT INTO `sys_notifications` VALUES ('233296cc-de2d-4e64-a646-80ce15ee80c9', 'App\\Notifications\\systemNotification', 'App\\Models\\User', 1, '{\"id\":102,\"title\":\"\\u6d4b\\u8bd5\\u6d88\\u606f\\u6807\\u9898\",\"content\":\"\\u6d88\\u606f\\u5185\\u5bb9\",\"created_at\":\"2020-06-22 08:05:38\",\"updated_at\":\"2020-06-22 08:05:38\"}', NULL, '2020-06-22 08:05:39', '2020-06-22 08:05:39');
@@ -738,17 +824,24 @@ CREATE TABLE `sys_role_permission`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_system_config`;
 CREATE TABLE `sys_system_config`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `variable` json NOT NULL,
-  `value` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp(0) NULL DEFAULT NULL,
-  `updated_at` timestamp(0) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+  `key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '系统参数键',
+  `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '系统参数值',
+  PRIMARY KEY (`key`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_system_config
 -- ----------------------------
+INSERT INTO `sys_system_config` VALUES ('copyright', '个人所有');
+INSERT INTO `sys_system_config` VALUES ('remarks', '正在开发中...');
+INSERT INTO `sys_system_config` VALUES ('site_icp', '赣1000');
+INSERT INTO `sys_system_config` VALUES ('site_name', '个人网站');
+INSERT INTO `sys_system_config` VALUES ('site_url', 'localhost');
+INSERT INTO `sys_system_config` VALUES ('system_logo', 'www.baidu.com');
+INSERT INTO `sys_system_config` VALUES ('system_name', '自定义管理系统');
+INSERT INTO `sys_system_config` VALUES ('system_version', 'v1.0');
+INSERT INTO `sys_system_config` VALUES ('technical_support', 'php搬砖工');
+INSERT INTO `sys_system_config` VALUES ('watermark', 'www.baidu.com');
 
 -- ----------------------------
 -- Table structure for sys_system_notifications
@@ -890,11 +983,9 @@ CREATE TABLE `sys_user`  (
   `id_card` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `sex` tinyint(4) NOT NULL DEFAULT 0,
   `address` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `head_img_url` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `login_time` timestamp(0) NULL DEFAULT NULL,
-  `login_ip` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `login_count` int(11) NOT NULL DEFAULT 0,
+  `avatar` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 0,
+  `login_count` int(11) NOT NULL DEFAULT 0,
   `is_super` tinyint(4) NULL DEFAULT 0,
   `created_at` timestamp(0) NULL DEFAULT NULL,
   `updated_at` timestamp(0) NULL DEFAULT NULL,
@@ -906,8 +997,8 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', 'admin', '$2y$10$g8hlyDPkhw0nuZBqaeCCUOWqQDXc3UBwUvcP590br7WaWDMC0L5bm', '824525612@qq.com', '18070573145', NULL, -1, NULL, NULL, '2020-09-21 22:23:49', '127.0.0.1', 22, 1, 1, '2020-09-08 16:58:47', '2020-09-21 22:23:49');
-INSERT INTO `sys_user` VALUES (4, '李志雄', 'lizhixiong', '$2y$10$JihXAUcx4g8mySli5mik3OPGTpDZAj./S7DiiA7Wx.0yNryKZGQsK', '1131941061@qq.com', '18070573144', NULL, 1, NULL, NULL, '2020-09-21 14:14:35', '127.0.0.1', 1, 1, 0, '2020-09-04 01:36:49', '2020-09-21 14:14:35');
+INSERT INTO `sys_user` VALUES (1, '李志雄', 'admin', '$2y$10$IlaNsRhXkqIeMiFU5nrKr.iOhxJhKLZ/iXbiTsLnqzgINS5nJtePm', '824525612@qq.com', '18070573145', '362329199501103539', 1, '江西省上饶市余干县', 'images/avatar/202009/24/8TC5HLBVLFEWFVJP4HU1W9F4.jpeg', 1, 63, 1, '2020-09-08 16:58:47', '2020-09-29 18:55:15');
+INSERT INTO `sys_user` VALUES (4, '李志雄', 'lizhixiong', '$2y$10$JihXAUcx4g8mySli5mik3OPGTpDZAj./S7DiiA7Wx.0yNryKZGQsK', '1131941061@qq.com', '18070573144', NULL, 1, NULL, NULL, 1, 1, 0, '2020-09-04 01:36:49', '2020-09-21 14:14:35');
 
 -- ----------------------------
 -- Table structure for sys_user_organization
