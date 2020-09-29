@@ -36,7 +36,10 @@ class UploadHandler
 
         // 检查文件后缀是否是规则允许后缀
         if (!in_array($extension, config('filesystems.uploader.'.$type.'.allowed_ext'))){
-            throw new ApiException('请检查文件后缀是否正确', 500);
+            throw new ApiException('文件格式错误，请检查文件后缀', 500);
+        }
+        if (!in_array($folder, config('filesystems.uploader.folder.'.$type))){
+            throw new ApiException('不允许上传到文件夹', 500);
         }
         // 原始文件名
         $title = $file->getClientOriginalName();

@@ -58,11 +58,16 @@ class FilesController extends Controller
     }
 
     /**
-     * 文件夹名称
+     * 获取格式下文件夹名称
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function folderSelect(){
-        $folders = config('filesystems.uploader.folder');
+    public function folderSelect(Request $request){
+        $type = $request->get('type');
+        if (!in_array($type, array_keys(config('filesystems.uploader.type')))){
+            return $this->error(500,'文件类型不存在');
+        }
+        $folders = config('filesystems.uploader.folder.'.$type);
         return $this->success($folders);
     }
 

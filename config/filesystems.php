@@ -82,7 +82,11 @@ return [
         'type' => ['image' => '图片', 'annex' => '附件', 'file' => '文件', 'audio' => '音频', 'video' => '视频'],
 
         'folder' => [
-            'avatar'
+            'image' => ['public', 'avatar'],
+            'annex' => ['public'],
+            'file' => ['public'],
+            'audio' => ['public'],
+            'video' => ['public'],
         ],
 
         // 图片
