@@ -27,7 +27,7 @@ class Articles extends BaseModel
      * @param array $field
      * @return bool|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
-    public function getRow($where = array(), $field = array()){
+    public function getRow($where = array(), $field = array('*')){
         $builder = $this->newQuery();
         if(!$where){
             return false;
@@ -37,7 +37,7 @@ class Articles extends BaseModel
     }
 
 
-    public function builderQuery($where = array(), $field = array()){
+    public function builderQuery($where = array(), $field = array('*')){
         $builder = $this->newQuery();
         $builder->when($where['title'], function ($query) use($where){
             $query->where('title', 'like', '%'. $where['title']. '%');

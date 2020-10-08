@@ -26,7 +26,7 @@ class Role extends BaseModel
      * @param array $field
      * @return bool|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      */
-    public function getRow($where = array(), $field = array()){
+    public function getRow($where = array(), $field = array('*')){
         $builder = $this->newQuery();
         if(!$where){
             return false;
@@ -36,7 +36,7 @@ class Role extends BaseModel
     }
 
 
-    public function builderQuery($where = array(), $field = array()){
+    public function builderQuery($where = array(), $field = array('*')){
         $builder = $this->newQuery();
         $builder->when($where['role_name'], function ($query) use($where){
             $query->where('role_name', 'like', '%'. $where['role_name']. '%');
