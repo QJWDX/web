@@ -92,7 +92,7 @@ class MenusController extends Controller
         if(is_array($menus)){
             $currentRole = $role->newQuery()->find($role_id);
             if($currentRole->getOriginal('is_super') == 1){
-                return $this->success('超级管理员拥有所有权限');
+                return $this->success('超级管理员拥有所有权限,不需要设置');
             }
             $roleMenus->newQuery()->where('role_id', $role_id)->delete();
             foreach ($menus as $menu){

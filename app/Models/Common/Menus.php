@@ -4,7 +4,6 @@
 namespace App\Models\Common;
 
 use App\Models\BaseModel;
-use Illuminate\Http\Request;
 
 class Menus extends BaseModel
 {
@@ -70,7 +69,7 @@ class Menus extends BaseModel
      * @return array
      */
     public function getElTree($is_super = 0){
-        $data = $this->newQuery()->orderBy('sort_field')->get();
+        $data = $this->newQuery()->where('is_show', 1)->orderBy('sort_field')->get();
         return $this->elTree($data, 0, $is_super);
     }
 
@@ -89,9 +88,6 @@ class Menus extends BaseModel
                     $subs = $this->elTree($item, $v['id'], $is_super);
                     $list_item['id'] = $v['id'];
                     $list_item['label'] = $v['name'];
-                    if($is_super){
-                        $list_item['disabled'] = true;
-                    }
                     if(!empty($subs)){
                         $list_item['children'] = $subs;
                     }

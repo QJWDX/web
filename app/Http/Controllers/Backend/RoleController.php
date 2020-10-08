@@ -15,8 +15,9 @@ class RoleController extends Controller
         $this->M = $role;
     }
 
-    public function index(){
-        $list = $this->M->getList();
+    public function index(Request $request){
+        $role_name = $request->get('role_name', false);
+        $list = $this->M->getList(compact('role_name'));
         return $this->success($list);
     }
 
