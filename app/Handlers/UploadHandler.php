@@ -3,10 +3,8 @@
 
 namespace App\Handlers;
 
-
 use App\Exceptions\ApiException;
 use App\Models\Common\Files;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 

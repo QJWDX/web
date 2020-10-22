@@ -1,5 +1,6 @@
 <?php
 
+use App\Handlers\MonoLogAmqpHandler;
 use Monolog\Handler\StreamHandler;
 
 return [
@@ -84,26 +85,18 @@ return [
             'level' => 'debug'
         ],
 
-        'mq' => [
-            'driver' => 'single',
-            'name' => 'mq',
-            'path' => storage_path('logs/mq.log'),
-            'level' => 'debug'
+        'sql_log' => [
+            'driver' => 'monolog',
+            'name' => 'sql_log',
+            'handler' => MonoLogAmqpHandler::class,
+            'formatter' => Monolog\Formatter\JsonFormatter::class,
+            'with' => [
+                'queueName' => config('amqp.sql_log.queue'),
+                'exchangeName' => config('amqp.sql_log.exchange'),
+                'exchangeType' => config('amqp.sql_log.exchange_type'),
+                'amqpConfig' => config('amqp.sql_log.config')
+            ],
         ],
-
-        'email' => [
-            'driver' => 'single',
-            'name' => 'email',
-            'path' => storage_path('logs/email.log'),
-            'level' => 'debug'
-        ],
-
-        'news' => [
-            'driver' => 'single',
-            'name' => 'alarm',
-            'path' => storage_path('logs/news.log'),
-            'level' => 'debug'
-        ]
     ],
 
 ];

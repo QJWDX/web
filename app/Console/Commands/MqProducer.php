@@ -7,74 +7,56 @@ use Illuminate\Support\Facades\Log;
 
 class mqProducer extends Command
 {
-    private $rabbit;
 
-    private $config;
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'mq:producer';
+    protected $signature = 'mq_producer_test';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'rabbitmq生产者';
+    protected $description = '消息队列生产者测试';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        $this->config = config('amqp');
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
+
     public function handle()
     {
-        $this->connect();
-        $data = array(
-            'username' => '小狐仙',
-            'password' => md5('123456')
-        );
-        $message = json_encode($data);
         try {
-            $n = 1;
-            while (true){
-                $this->sendMessage($message);
-                echo "生产了第".$n."条信息\n";
-                $n += 1;
+            $config = config('amqp');
+            $connectConfig = $config['config'];
+            $queue = $config['queue'];
+            $exchange = $config['exchange'];
+            $exchangeType = $config['exchange_type'];
+//            $exchange = 'amq.topic';
+//            $exchangeType = 'topic';
+            $routingKey = $config['routing_key'];
+            $connect = $this->connect($queue, $exchange, $exchangeType, $routingKey, $connectConfig);
+            $data = array(
+                'message' => '这是一条测试信息',
+                'date' => date('Y-m-d H:i:s')
+            );
+            $message = json_encode($data);
+            $n = 0;
+            while ($n < 10){
+                $connect->sendMessageToServer($message);
+                $n++;
+                print_r('发送了'.$n."条\n");
             }
         } catch (\Exception $exception){
-            $this->connect();
-            Log::channel('mq')->error($exception->getMessage());
+            print_r("error:" . $exception->getMessage() . "\n");
         }
     }
 
-    public function connect(){
-        $this->rabbit = new AMQPServer(
-            $this->config['host'],
-            $this->config['port'],
-            $this->config['user'],
-            $this->config['password'],
-            $this->config['vhost'],
-            $this->config['routing_key'],
-            $this->config['exchange'],
-            $this->config['queue']
+    public function connect($queue, $exchange, $exchangeType, $routingKey, $config = array()){
+        return new AMQPServer(
+            $config['host'],
+            $config['port'],
+            $config['user'],
+            $config['password'],
+            $config['vhost'],
+            $routingKey,
+            $exchange,
+            $queue,
+            $exchangeType
         );
-    }
-
-    public function sendMessage($message){
-        $this->rabbit->sendMessageToServer($message, $this->config['routing_key']);
     }
 }
