@@ -8,9 +8,9 @@ return [
         'password' => env('AMQP_PWD', 'admin123'),
         'vhost' => env('AMQP_VHOST', '/')
     ],
-    'queue' => env('AMQP_QUEUE', 'message'),
-    'exchange' => env('AMQP_EXCHANGE', 'message'),
+    'queue' => env('AMQP_QUEUE', 'sql_log'),
+    'exchange' => env('AMQP_EXCHANGE', 'logs'),
     'exchange_type' => 'direct',
-    'routing_key' => 'message',
+    'routing_key' => 'sql_log',
     'callback' => ['App\Http\Controllers\Queue\CallbackController', 'default']
 ];

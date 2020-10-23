@@ -24,17 +24,9 @@ class MonoLogAmqpHandler extends AbstractProcessingHandler
         if (!$this->channel) {
             $this->channel = $this->connection->channel();
         }
-        switch ($this->exchangeType) {
-            case AMQPExchangeType::DIRECT :
-                $this->channel->queue_declare($this->queueName, false, true, false, false);
-                $this->channel->exchange_declare($this->exchangeName, AMQPExchangeType::DIRECT, false, true, false);
-                $this->channel->queue_bind($this->queueName, $this->exchangeName, $this->routingKey);
-                break;
-            case AMQPExchangeType::TOPIC :
-                $this->channel->exchange_declare($this->exchangeName, AMQPExchangeType::TOPIC, false, true, false);
-                break;
-        }
-
+        $this->channel->queue_declare($this->queueName, false, true, false, false);
+        $this->channel->exchange_declare($this->exchangeName, AMQPExchangeType::DIRECT, false, true, false);
+        $this->channel->queue_bind($this->queueName, $this->exchangeName, $this->routingKey);
         return $this->channel;
     }
 

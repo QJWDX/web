@@ -85,18 +85,30 @@ return [
             'level' => 'debug'
         ],
 
-        'sql_log' => [
+        'slow_sql_log' => [
+            'driver' => 'single',
+            'name' => 'slow_sql_log',
+            'path' => storage_path('logs/slow_sql_log.log'),
+            'level' => 'debug'
+        ],
+
+        'operation_log' => [
             'driver' => 'monolog',
-            'name' => 'sql_log',
+            'name' => 'operation_log',
             'handler' => MonoLogAmqpHandler::class,
             'formatter' => Monolog\Formatter\JsonFormatter::class,
             'with' => [
-                'queueName' => config('amqp.sql_log.queue'),
-                'exchangeName' => config('amqp.sql_log.exchange'),
-                'exchangeType' => config('amqp.sql_log.exchange_type'),
-                'amqpConfig' => config('amqp.sql_log.config')
+                'queueName' => env('LOG_AMQP_QUEUE', 'operation_log'),
+                'exchangeName' => env('LOG_AMQP_EXCHANGE', 'logs'),
+                'exchangeType' => 'direct',
+                'amqpConfig' => [
+                    'host' => env('LOG_AMQP_HOST', 'localhost'),
+                    'port' => env('LOG_AMQP_PORT', 5672),
+                    'user' => env('LOG_AMQP_USER', 'admin'),
+                    'password' => env('LOG_AMQP_PWD', 'admin123'),
+                    'vhost' => env('LOG_AMQP_VHOST', '/')
+                ]
             ],
         ],
     ],
-
 ];

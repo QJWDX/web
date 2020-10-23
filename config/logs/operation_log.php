@@ -7,9 +7,9 @@ return [
         'password' => env('LOG_AMQP_PWD', 'admin123'),
         'vhost' => env('LOG_AMQP_VHOST', '/')
     ],
-    'queue' => 'sql_log',
+    'queue' => 'operation_log',
     'exchange' => env('LOG_AMQP_EXCHANGE', 'logs'),
     'exchange_type' => 'direct',
     'routing_key' => 'sql_log',
-    'callback' => ['App\Http\Controllers\Queue\CallbackController', 'handSqlLog']
+    'callback' => ['App\Http\Controllers\Queue\CallbackController', 'handOperationLog']
 ];

@@ -23,6 +23,8 @@ class mqConsumer extends Command
         $queue = $config['queue'];
         $exchange = $config['exchange'];
         $exchangeType = $config['exchange_type'];
+//        rabbitmq_web_mqtt 前端接受收时
+//        $queue = '';
 //        $exchange = 'amq.topic';
 //        $exchangeType = 'topic';
         $routingKey = $config['routing_key'];

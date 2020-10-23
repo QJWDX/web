@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AfterMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -42,7 +43,8 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
             'jwt.refresh.token',
-            'rsa'
+            'rsa',
+            'log'
         ],
     ];
 
@@ -65,6 +67,7 @@ class Kernel extends HttpKernel
 //        'auth.jwt' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
         'cross' => \App\Http\Middleware\EnableCrossRequestMiddleware::class,
         'jwt.refresh.token' => \App\Http\Middleware\RefreshToken::class,
-        'rsa' => \App\Http\Middleware\RsaBeforeMiddleware::class
+        'rsa' => \App\Http\Middleware\RsaBeforeMiddleware::class,
+        'log' => AfterMiddleware::class,
     ];
 }
