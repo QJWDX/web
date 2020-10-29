@@ -30,7 +30,7 @@ class UserLoginListener
     {
         $user_id = $event->user->id;
         $login_time = date('Y-m-d H:i:s');
-        $ip = last(request()->getClientIps());
+        $ip = request()->getClientIp();
         $login_address = GeoIpHandler::getAddress($ip);
         $is_success = 1;
         $event->user->increment('login_count');
