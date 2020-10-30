@@ -1,6 +1,8 @@
 <?php
-use Illuminate\Support\Facades\Route;
+
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,9 +15,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    $instance = \App\Handlers\BaiDuHandler::getInstance();
-    dd($instance::getLocationByIp('120.238.175.99'));
-//    return redirect('/view/');
+    return redirect('/view/');
 });
 
 Route::get('/mqtt', function () {
