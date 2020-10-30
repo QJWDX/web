@@ -8,7 +8,7 @@ use App\Models\Common\LoginLog;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class UserLoginListener
+class UserLoginListener implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -31,7 +31,9 @@ class UserLoginListener
         $user_id = $event->user->id;
         $login_time = date('Y-m-d H:i:s');
         $ip = request()->getClientIp();
-        $login_address = GeoIpHandler::getAddress($ip);
+//        $login_address = GeoIpHandler::getAddress($ip);
+        $instance = \App\Handlers\BaiDuHandler::getInstance();
+        $login_address = $instance::getLocationByIp($ip);
         $is_success = 1;
         $event->user->increment('login_count');
         LoginLog::query()->create(compact('user_id', 'ip', 'login_address', 'login_time', 'is_success'));

@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return redirect('/view/');
+    $instance = \App\Handlers\BaiDuHandler::getInstance();
+    dd($instance::getLocationByIp('120.238.175.99'));
+//    return redirect('/view/');
 });
 
 Route::get('/mqtt', function () {
