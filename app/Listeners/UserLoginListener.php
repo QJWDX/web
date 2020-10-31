@@ -29,7 +29,7 @@ class UserLoginListener implements ShouldQueue
     {
         $user_id = $event->user->id;
         $login_time = date('Y-m-d H:i:s');
-        $ip = request()->getClientIp();
+        $ip = request()->header('x-real-ip', request()->ip());
         $instance = \App\Handlers\BaiDuHandler::getInstance();
         $login_address = $instance::getLocationByIp($ip);
         $is_success = 1;
