@@ -30,8 +30,11 @@ class UserLoginListener implements ShouldQueue
         $user_id = $event->user->id;
         $login_time = date('Y-m-d H:i:s');
         $ip = request()->header('x-real-ip', request()->ip());
-        $instance = \App\Handlers\BaiDuHandler::getInstance();
-        $login_address = $instance::getLocationByIp($ip);
+        $login_address = '';
+        if($ip !== '127.0.0.1'){
+            $instance = \App\Handlers\BaiDuHandler::getInstance();
+            $login_address = $instance::getLocationByIp($ip);
+        }
         $is_success = 1;
         $event->user->increment('login_count');
         LoginLog::query()->create(compact('user_id', 'ip', 'login_address', 'login_time', 'is_success'));
