@@ -57,7 +57,7 @@ services:
           - ./dockerfile/redis.conf:/etc/redis.conf
           - /data/redis:/data
           - /etc/localtime:/etc/localtime
-      command: redis-server /etc/redis/redis.conf
+      command: redis-server /etc/redis.conf
       privileged: true
       restart: always
 

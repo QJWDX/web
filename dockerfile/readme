@@ -1,0 +1,10 @@
+自定义容器启动脚本报错：exec user process caused "no such file or directory"
+创建容器起不来，一直是restarting状态，查看容器的报错日志如下：
+standard_init_linux.go:178: exec user process caused "no such file or directory"
+standard_init_linux.go:178: exec user process caused "no such file or directory"
+standard_init_linux.go:178: exec user process caused "no such file or directory"
+
+原因是镜像的entrypoint设置的启动脚本格式是dos，在linux系统上用vi修改成unix格式即可
+# vi filename
+# :set ff  回车后看到当前文件的fileformat格式
+# :set ff=unix 回车后输入:wq保存文件，重新build镜像即可。
