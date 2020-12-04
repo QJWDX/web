@@ -54,9 +54,10 @@ services:
       ports:
           - 127.0.0.1:6379:6379
       volumes:
+          - ./dockerfile/redis.conf:/etc/redis.conf
           - /data/redis:/data
           - /etc/localtime:/etc/localtime
-      command: redis-server requirepass ${REDIS_PASSWORD} --appendonly yes
+      command: redis-server /etc/redis/redis.conf
       privileged: true
       restart: always
 
