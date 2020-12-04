@@ -60,6 +60,23 @@ services:
       privileged: true
       restart: always
 
+  rabbitmq:
+      hostname: rabbitmq
+      container_name: rabbitmq
+      image: rabbitmq:3.7-rc-management
+      network_mode: host
+      environment:
+          - "RABBITMQ_DEFAULT_USER=${RABBIT_MQ_USER}"
+          - "RABBITMQ_DEFAULT_PASS=${RABBIT_MQ_PASSWORD}"
+      volumes:
+          - ./docker-data/rabbitmq/lib/rabbitmq:/var/lib/rabbitmq
+          - ./docker-data/rabbitmq/log:/var/log/rabbitmq
+      restart: always
+      logging:
+          driver: "json-file"
+          options:
+              max-size: "5g"
+
   maxwell:
       hostname: maxwell
       network_mode: host
@@ -74,23 +91,9 @@ services:
       volumes:
           - ./dockerfile/maxwell.config.properties:/usr/local/maxwell/config.properties
       restart: always
-      logging:
-          driver: "json-file"
-          options:
-              max-size: "5g"
-
-  rabbitmq:
-      hostname: rabbitmq
-      container_name: rabbitmq
-      image: rabbitmq:3.7-rc-management
-      network_mode: host
-      environment:
-          - "RABBITMQ_DEFAULT_USER=${RABBIT_MQ_USER}"
-          - "RABBITMQ_DEFAULT_PASS=${RABBIT_MQ_PASSWORD}"
-      volumes:
-          - ./docker-data/rabbitmq/lib/rabbitmq:/var/lib/rabbitmq
-          - ./docker-data/rabbitmq/log:/var/log/rabbitmq
-      restart: always
+      depends_on:
+          - mysql
+          - rabbitmq
       logging:
           driver: "json-file"
           options:
