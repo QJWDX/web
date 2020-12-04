@@ -35,13 +35,14 @@ services:
         max-size: "5g"
 
   mysql:
+      hostname: mysql
       container_name: mysql
       image: mysql:8.0
       ports:
           - 127.0.0.1:3306:3306
       volumes:
           - /etc/localtime:/etc/localtime
-          - /data/mysql_data:/var/lib/mysql
+          - ./docker-data/mysql/var/lib/mysql:/var/lib/mysql
       command: --default-authentication-plugin=mysql_native_password
       environment:
           - "MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}"
@@ -55,7 +56,7 @@ services:
           - 127.0.0.1:6379:6379
       volumes:
           - ./dockerfile/redis.conf:/etc/redis.conf
-          - /data/redis:/data
+          - ./docker-data/redis:/data
           - /etc/localtime:/etc/localtime
       command: redis-server /etc/redis.conf
       privileged: true
