@@ -5,7 +5,6 @@ namespace App\Listeners;
 use App\Events\UserLogin;
 use App\Models\Common\LoginLog;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Log;
 
 class UserLoginListener implements ShouldQueue
 {
