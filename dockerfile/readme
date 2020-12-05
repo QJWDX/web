@@ -8,3 +8,7 @@ standard_init_linux.go:178: exec user process caused "no such file or directory"
 # vi filename
 # :set ff  回车后看到当前文件的fileformat格式
 # :set ff=unix 回车后输入:wq保存文件，重新build镜像即可。
+
+maxwell启动
+cd maxwell-1.23.2
+bin/maxwell --config=config.properties --daemon
