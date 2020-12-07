@@ -74,6 +74,7 @@ class OperationLog extends BaseModel
                 $table->string('method', 10);
                 $table->string('ip', 255);
                 $table->text('input');
+                $table->text('sql');
                 $table->timestamps();
             });
         }
