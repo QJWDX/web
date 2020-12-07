@@ -94,7 +94,7 @@ services:
       environment:
           - "MYSQL_USERNAME=root"
           - "MYSQL_PASSWORD=${DB_ROOT_PASSWORD}"
-          - "MYSQL_HOST=mysql"
+          - "MYSQL_HOST=localhost"
           - "MAXWELL_PRODUCER=rabbitmq"
       volumes:
           - ./dockerfile/maxwell.config.properties:/usr/local/maxwell/config.properties

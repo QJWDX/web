@@ -1,2 +1,2 @@
-# 月底最后一分钟创建操作日志表
-59 23 28-31 * * php /var/www/artisan autoCreateTable >> /var/www/storage/logs/autoCreateTable.log
+# 下个月十分钟前创建操作日志表
+50 23 28-31 * * php /var/www/artisan autoCreateTable >> /var/www/storage/logs/autoCreateTable.log
