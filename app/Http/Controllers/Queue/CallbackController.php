@@ -37,12 +37,12 @@ class CallbackController extends Controller
                 if(isset($body['context']) && !empty($body['context'])){
                     OperationLog::query()->create($body['context']);
                 }
+                /** @var AMQPChannel $channel*/
+                $channel = $message->delivery_info['channel'];
+                $channel->basic_ack($message->delivery_info['delivery_tag']);
             }catch (\Exception $exception){
                 print("error:".$exception->getMessage()."\r\n");
             }
         }
-        /** @var AMQPChannel $channel*/
-        $channel = $message->delivery_info['channel'];
-        $channel->basic_ack($message->delivery_info['delivery_tag']);
     }
 }
