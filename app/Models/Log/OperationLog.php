@@ -69,6 +69,7 @@ class OperationLog extends BaseModel
         if(!Schema::hasTable($tableName)){
             Schema::create($tableName, function (Blueprint $table) {
                 $table->increments('id');
+                $table->integer('user_id');
                 $table->string('path', 255);
                 $table->string('method', 10);
                 $table->string('ip', 255);
