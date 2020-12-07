@@ -65,8 +65,9 @@ class OperationLog extends BaseModel
     }
 
     public function createTable(){
-        if(!Schema::hasTable($this->table)){
-            Schema::create($this->table, function (Blueprint $table) {
+        $tableName = sprintf('%s_%s', $this->table, $this->getTableName());
+        if(!Schema::hasTable($tableName)){
+            Schema::create($tableName, function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('path', 255);
                 $table->string('method', 10);
