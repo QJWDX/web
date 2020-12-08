@@ -45,4 +45,23 @@ class CallbackController extends Controller
             }
         }
     }
+
+
+    /**
+     * maxwell同步数据
+     * @param $message
+     */
+    public function handleMaxwell($message){
+        if($message->body){
+            try {
+                $body = json_decode($message->body, true);
+                dd($body);
+                /** @var AMQPChannel $channel*/
+                $channel = $message->delivery_info['channel'];
+                $channel->basic_ack($message->delivery_info['delivery_tag']);
+            }catch (\Exception $exception){
+                print("error:".$exception->getMessage()."\r\n");
+            }
+        }
+    }
 }

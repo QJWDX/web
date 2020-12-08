@@ -24,7 +24,8 @@
         "tecnickcom/tcpdf": "^6.3",
         "textalk/websocket": "^1.2",
         "tymon/jwt-auth": "1.*@rc",
-        "workerman/workerman": "^3.5"
+        "workerman/workerman": "^3.5",
+        "bunny/bunny": "^0.4.1"
     },
     "require-dev": {
         "filp/whoops": "^2.0",
