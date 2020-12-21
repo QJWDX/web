@@ -92,6 +92,13 @@ return [
             'level' => 'debug'
         ],
 
+        'test_log' => [
+            'driver' => 'single',
+            'name' => 'test_log',
+            'path' => storage_path('logs/test_log.log'),
+            'level' => 'debug'
+        ],
+
         'operation_log' => [
             'driver' => 'monolog',
             'name' => 'operation_log',

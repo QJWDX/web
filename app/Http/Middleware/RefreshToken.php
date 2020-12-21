@@ -84,7 +84,6 @@ class RefreshToken extends BaseMiddleware
     {
         //去除某一些类
         list($class, $method) = explode('@', $request->route()->getActionName());
-
         if (in_array($class, $this->exceptedClass) or in_array($method, $this->exceptedActions)) {
             return true;
         }
