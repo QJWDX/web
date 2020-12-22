@@ -14,3 +14,7 @@ yarn-error.log
 /public/view
 composer.lock
 .env
+/public/upload/*
+/public/export/*
+/public/.rnd
+/public/nginx.htaccess
