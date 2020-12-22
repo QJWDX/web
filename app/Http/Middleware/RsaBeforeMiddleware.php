@@ -31,7 +31,6 @@ class RsaBeforeMiddleware
             if (!$key) throw new ApiException('encrypt_key错误', 500);
             //解密Post请求中的数据
             $encrypt_data = $request->input("encrypt_data");
-            Log::channel('test_log')->info($encrypt_data);
             if (!$encrypt_data) throw new  ApiException('密文不存在', 500);
             $dataJson = Rsa::rsaDecrypt($encrypt_data, $key);
             if (!$dataJson) throw new  ApiException('密文错误', 500);
