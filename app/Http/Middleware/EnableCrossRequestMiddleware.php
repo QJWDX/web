@@ -32,11 +32,13 @@ class EnableCrossRequestMiddleware
         } else {
             $response->header('Access-Control-Allow-Origin', "*");
         }
-        $response->header('Access-Control-Allow-Origin', "*");
+
+
         $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, X-XSRF-TOKEN, encryptKey');
         $response->header('Access-Control-Expose-Headers', 'Authorization, authenticated');
         $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE');
         $response->header('Access-Control-Allow-Credentials', 'true');
+
         return $response;
     }
 }

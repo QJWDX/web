@@ -79,7 +79,7 @@ class LoginController extends Controller
         if(!$user['status']){
             return $this->error(500, '该用户已禁用，请联系管理员');
         }
-        event(new UserLogin($user));
+        event(new UserLogin());
         $role_ids = $userRole->newQuery()->where('user_id', $user['id'])->pluck('role_id')->toArray();
         $user['role'] = implode(',',$role_ids);
         return $this->success([

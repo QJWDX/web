@@ -36,7 +36,6 @@ class RefreshToken extends BaseMiddleware
         if ($request->method() == 'OPTIONS') {
             return $next($request);
         }
-
         //去除对某些类与方法的验证
         if ($this->shouldPassThrough($request)) {
             return $next($request);

@@ -8,7 +8,6 @@ use App\Exceptions\ApiException;
 use App\Service\RedisRsa;
 use App\Service\Rsa;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class RsaBeforeMiddleware
 {

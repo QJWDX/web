@@ -15,6 +15,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
+        \App\Http\Middleware\RsaBeforeMiddleware::class,
         \App\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
@@ -43,7 +44,6 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
             'jwt.refresh.token',
-            'rsa',
             'log'
         ],
     ];
@@ -67,7 +67,6 @@ class Kernel extends HttpKernel
 //        'auth.jwt' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
         'cross' => \App\Http\Middleware\EnableCrossRequestMiddleware::class,
         'jwt.refresh.token' => \App\Http\Middleware\RefreshToken::class,
-        'rsa' => \App\Http\Middleware\RsaBeforeMiddleware::class,
         'log' => AfterMiddleware::class,
     ];
 }
