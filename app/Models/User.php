@@ -13,7 +13,7 @@ class User extends Authenticate implements JWTSubject
 {
     use Notifiable;
 
-    protected $table = 'user';
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.

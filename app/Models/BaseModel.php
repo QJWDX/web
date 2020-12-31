@@ -12,7 +12,7 @@ class BaseModel extends Model
      * @param Builder $builder
      * @return array
      */
-    public function modifyPaginateForApi(Builder $builder)
+    public function PaginateForApi(Builder $builder)
     {
         $request = request();
         $perPage = 10;

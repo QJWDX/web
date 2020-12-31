@@ -25,7 +25,8 @@
         "textalk/websocket": "^1.2",
         "tymon/jwt-auth": "1.*@rc",
         "workerman/workerman": "^3.5",
-        "bunny/bunny": "^0.4.1"
+        "bunny/bunny": "^0.4.1",
+        "dx/role_auth": "1.0.0"
     },
     "require-dev": {
         "filp/whoops": "^2.0",
@@ -73,10 +74,10 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "repositories": {
-        "packagist": {
-            "type": "composer",
-            "url": "https://packagist.phpcomposer.com"
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./packages/dx/role_auth"
         }
-    }
+    ]
 }

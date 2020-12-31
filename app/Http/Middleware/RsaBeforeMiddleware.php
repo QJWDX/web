@@ -2,8 +2,6 @@
 
 
 namespace App\Http\Middleware;
-
-
 use App\Exceptions\ApiException;
 use App\Service\RedisRsa;
 use App\Service\Rsa;
