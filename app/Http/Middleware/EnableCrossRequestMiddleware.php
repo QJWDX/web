@@ -26,19 +26,17 @@ class EnableCrossRequestMiddleware
             $host = substr($appUrl, strpos($appUrl, '://') + 3);
             $host = $schema . "://" . $host;
             $allow_origin = [
-                $host,//允许访问
+                $host,
             ];
             $response->header('Access-Control-Allow-Origin', $allow_origin);
         } else {
+
             $response->header('Access-Control-Allow-Origin', "*");
         }
-
-
         $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, X-XSRF-TOKEN, encryptKey');
         $response->header('Access-Control-Expose-Headers', 'Authorization, authenticated');
         $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE');
         $response->header('Access-Control-Allow-Credentials', 'true');
-
         return $response;
     }
 }

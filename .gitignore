@@ -19,3 +19,9 @@ composer.lock
 /public/.rnd
 /public/nginx.htaccess
 /packages
+/tests
+/public/view/*
+/public/mix-manifest.json
+/public/robots.txt
+/public/web.config
+/storage/*
