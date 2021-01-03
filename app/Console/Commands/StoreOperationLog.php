@@ -19,7 +19,7 @@ class StoreOperationLog extends Command
     public function handle()
     {
         print_r("操作日志记录开始 \n");
-        $config = config('logs.operation_log');
+        $config = config('operation_log');
         new AMQPConsumer(
             $config['config'],
             $config['queue'],

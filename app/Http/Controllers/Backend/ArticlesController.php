@@ -10,15 +10,9 @@ use Illuminate\Http\Request;
 
 class ArticlesController extends Controller
 {
-    private $M;
-    public function __construct(Articles $articles)
-    {
-        $this->M = $articles;
-    }
-
-    public function index(Request $request){
+    public function index(Request $request, Articles $articles){
         $title = $request->get('title', false);
-        $list = $this->M->getList(compact('title'));
+        $list = $articles->getList(compact('title'));
         return $this->success($list);
     }
 

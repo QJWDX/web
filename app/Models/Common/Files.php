@@ -31,7 +31,7 @@ class Files extends BaseModel
                 'downloads'
             ])->get();
         }
-        return $this->modifyPaginateForApi($builder);
+        return $this->PaginateForApi($builder);
     }
 
 

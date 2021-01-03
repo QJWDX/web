@@ -11,24 +11,17 @@ use App\Http\Requests\DelRequest;
 use App\Models\Common\Files;
 use App\Models\Common\Notifications;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class FilesController extends Controller
 {
-    private $M;
-    public function __construct(Files $files)
-    {
-        $this->M = $files;
-    }
-
-    public function index(Request $request, ExportHandler $exportHandler){
+    public function index(Request $request, Files $files, ExportHandler $exportHandler){
         $type = $request->get('type');
         $title = $request->get('title');
         $startTime = $request->get('startTime');
         $endTime = $request->get('endTime');
         $export = $request->get('export', 0);
-        $list = $this->M->getList(compact('type', 'title', 'startTime', 'endTime', 'export'));
+        $list = $files->getList(compact('type', 'title', 'startTime', 'endTime', 'export'));
         $data = $export ? $list : $list['items'];
         $data = collect($data)->transform(function ($item){
             $item['download_url'] = config('filesystems.disks.'.$item['disks'].'.url').$item['path'];
@@ -44,7 +37,8 @@ class FilesController extends Controller
 
 
     public function show($id){
-        $menu = $this->M->getRow(['id' => $id]);
+        $files = new Files();
+        $menu = $files->getRow(['id' => $id]);
         return $this->success($menu);
     }
 
@@ -104,7 +98,7 @@ class FilesController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function download($id){
-        $file = $this->M->newQuery()->find($id);
+        $file = Files::query()->find($id);
         if(!Storage::disk($file['disks'])->exists($file['path'])){
             return redirect(config('app.url').'#/404');
         }

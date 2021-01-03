@@ -29,7 +29,7 @@ class Notifications extends BaseModel
      * @return array
      */
     public function getNotifications($where = array()){
-        return $this->modifyPaginateForApi($this->builderQuery($where));
+        return $this->PaginateForApi($this->builderQuery($where));
     }
 
     /**
