@@ -1,9 +1,10 @@
 <?php
 
 
-namespace App\Models\Common;
+namespace App\Models\Notification;
 
 use App\Models\BaseModel;
+use Dx\Role\Models\User;
 
 class Notifications extends BaseModel
 {
@@ -15,7 +16,7 @@ class Notifications extends BaseModel
     ];
 
     public $notifiable_type = [
-        \App\Models\User::class
+        User::class
     ];
 
 

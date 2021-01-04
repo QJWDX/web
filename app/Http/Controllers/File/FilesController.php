@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\File;
 
 
 use App\Handlers\ExportHandler;

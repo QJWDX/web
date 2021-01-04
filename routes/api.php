@@ -18,7 +18,7 @@ Route::options('/{all}', function (\Illuminate\Http\Request $request) {
 
 
 // 系统参数配置
-Route::group(['prefix' => 'system', 'namespace' => 'Backend'], function (){
+Route::group(['prefix' => 'system', 'namespace' => 'System'], function (){
     Route::get('getSystemConfig', 'SystemConfigController@getSystemConfig');
     Route::put('setSystemConfig', 'SystemConfigController@setSystemConfig');
 });
@@ -26,8 +26,7 @@ Route::group(['prefix' => 'system', 'namespace' => 'Backend'], function (){
 
 
 // 消息通知
-Route::group(['prefix' => 'notifications', 'namespace' => 'Backend'], function (){
-    Route::get('createNotifications', 'NotificationsController@createNotifications');
+Route::group(['prefix' => 'notifications', 'namespace' => 'Notification'], function (){
     Route::get('getNotifications', 'NotificationsController@getNotifications');
     Route::get('makeRead', 'NotificationsController@makeRead');
     Route::delete('delNotifications', 'NotificationsController@delNotifications');

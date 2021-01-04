@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Log;
 
 class EnableCrossRequestMiddleware
 {
@@ -30,7 +31,6 @@ class EnableCrossRequestMiddleware
             ];
             $response->header('Access-Control-Allow-Origin', $allow_origin);
         } else {
-
             $response->header('Access-Control-Allow-Origin', "*");
         }
         $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, X-XSRF-TOKEN, encryptKey');
