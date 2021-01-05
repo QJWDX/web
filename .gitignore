@@ -16,6 +16,7 @@ composer.lock
 .env
 /public/upload/*
 /public/export/*
+/public/images/avatars/*
 /public/.rnd
 /public/nginx.htaccess
 /packages

@@ -34,7 +34,7 @@ Route::group(['prefix' => 'notifications', 'namespace' => 'Notification'], funct
 });
 
 // 文件管理
-Route::group(['prefix' => 'files', 'namespace' => 'Backend'], function (){
+Route::group(['prefix' => 'files', 'namespace' => 'File'], function (){
     Route::get('list', 'FilesController@index');
     Route::get('show/{id}', 'FilesController@show');
     Route::post('download/{id}', 'FilesController@download');
