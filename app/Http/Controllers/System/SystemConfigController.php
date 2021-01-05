@@ -49,4 +49,24 @@ class SystemConfigController extends Controller
          }
          return $this->success('系统参数设置成功');
     }
+
+    /**
+     * 系统配置相关图片上传
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function upload(Request $request){
+        $file = $request->file('file');
+        //处理图片
+        if ($file) {
+            $disk_path = $file->store('', 'system');
+            //去除根节点
+            $path = str_replace(public_path(), '', config("filesystems.disks.system.root")) . '/' . $disk_path;
+            return $this->success([
+                'path' => $path,
+                'full_path' => env("app.url") . $path
+            ], 200, '上传成功');
+        }
+        return $this->error('上传失败');
+    }
 }

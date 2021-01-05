@@ -26,3 +26,4 @@ composer.lock
 /public/robots.txt
 /public/web.config
 /storage/*
+/public/images/*

@@ -21,6 +21,7 @@ Route::options('/{all}', function (\Illuminate\Http\Request $request) {
 Route::group(['prefix' => 'system', 'namespace' => 'System'], function (){
     Route::get('getSystemConfig', 'SystemConfigController@getSystemConfig');
     Route::put('setSystemConfig', 'SystemConfigController@setSystemConfig');
+    Route::post('systemConfig/upload', 'SystemConfigController@upload');
 });
 
 
