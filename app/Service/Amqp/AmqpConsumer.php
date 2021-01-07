@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Service\AMQP;
+namespace App\Service\Amqp;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
 
-class AMQPConsumer
+class AmqpConsumer
 {
     /**
      * AMQPStreamConnection 构造参数

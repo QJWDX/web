@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Service\AMQP\AMQPConsumer;
+use App\Service\Amqp\AmqpConsumer;
 use Illuminate\Console\Command;
 
-class StoreOperationLog extends Command
+class storeOperationLog extends Command
 {
     protected $signature = 'store_op_log';
 
@@ -20,7 +20,7 @@ class StoreOperationLog extends Command
     {
         print_r("操作日志记录开始 \n");
         $config = config('operation_log');
-        new AMQPConsumer(
+        new AmqpConsumer(
             $config['config'],
             $config['queue'],
             $config['exchange'],

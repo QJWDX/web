@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Console\Commands;
-use App\Service\AMQP\AMQPServer;
+use App\Service\Amqp\AmqpServer;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class mqProducer extends Command
 {
@@ -49,7 +48,7 @@ class mqProducer extends Command
     }
 
     public function connect($queue, $exchange, $exchangeType, $routingKey, $config = array()){
-        return new AMQPServer(
+        return new AmqpServer(
             $config['host'],
             $config['port'],
             $config['user'],

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\AMQP;
+namespace App\Service\Amqp;
 use Illuminate\Support\Facades\Log;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -8,7 +8,7 @@ use PhpAmqpLib\Exception\AMQPHeartbeatMissedException;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
 use PhpAmqpLib\Message\AMQPMessage;
 
-class AMQPServer
+class AmqpServer
 {
     /** @var AMQPStreamConnection $connect */
     protected $connect;

@@ -7,7 +7,7 @@ use App\Service\AsyncProcess\Process;
 use Illuminate\Console\Command;
 use Workerman\Lib\Timer;
 use Workerman\Worker;
-class ConnectionDiagnostics extends Command
+class connectionDiagnostics extends Command
 {
     use WKCommandTrait;
     /**

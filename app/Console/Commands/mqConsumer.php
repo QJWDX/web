@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Console\Commands;
-use App\Service\AMQP\AMQPConsumer;
+use App\Service\Amqp\AmqpConsumer;
 use Illuminate\Console\Command;
 
 class mqConsumer extends Command
@@ -29,7 +29,7 @@ class mqConsumer extends Command
 //        $exchangeType = 'topic';
         $routingKey = $config['routing_key'];
         $callback = $config['callback'];
-        new AMQPConsumer(
+        new AmqpConsumer(
             $connectConfig,
             $queue,
             $exchange,
