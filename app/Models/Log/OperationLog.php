@@ -2,10 +2,9 @@
 
 namespace App\Models\Log;
 
-use App\Models\Common\User;
 use Carbon\Carbon;
 use App\Models\BaseModel;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Dx\Role\Models\User;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -47,21 +46,45 @@ class OperationLog extends BaseModel
         return $this;
     }
 
-    /**
-     * Log belongs to users.
-     *
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id', 'id')->select(['id','username']);
     }
 
-    public function logList(): array
-    {
-        $builder = $this->newQuery()->with('user');
+    public function getLogList($params = []){
+        return $this->paginateForApi($this->builderQuery($params));
+    }
 
-        return $this->modifyPaginateForApi($builder);
+    public function getLogInfo($where = array()){
+        $builder = $this->newQuery();
+        if(!$where){
+            return false;
+        }
+        return $builder->where($where)->first();
+    }
+
+
+    public function builderQuery($params = [], $field = ['*']){
+        $builder = $this->newQuery()->with('user')->select($field);
+        $builder = $builder->when($params['user_id'], function ($query) use($params){
+            $query->whereIn('user_id', $params['user_id']);
+        })->when($params['startTime'], function ($query) use($params){
+            $query->where('login_time', '>', $params['startTime']);
+        })->when($params['endTime'], function ($query) use($params){
+            $query->where('login_time', '<', $params['endTime']);
+        });
+        return $builder;
+    }
+
+
+    public function del($ids = []){
+        if(empty($ids)){
+            return false;
+        }
+        $instances = $this->newQuery()->whereIn('id', $ids)->get('id');
+        foreach ($instances as $instance){
+            $instance->delete();
+        }
+        return true;
     }
 
     public function createTable(){

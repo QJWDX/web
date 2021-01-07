@@ -24,7 +24,12 @@ Route::group(['prefix' => 'system', 'namespace' => 'System'], function (){
     Route::post('systemConfig/upload', 'SystemConfigController@upload');
 });
 
-
+Route::group(['prefix' => 'log', 'namespace' => 'Log'], function (){
+    // 操作日志
+    Route::apiResource('operationLog', 'OperationLogController')->only(['index','show','destroy']);
+    // 批量删除操作日志
+    Route::delete('delOperationLog', 'OperationLogController@delLoginLog');
+});
 
 // 消息通知
 Route::group(['prefix' => 'notifications', 'namespace' => 'Notification'], function (){

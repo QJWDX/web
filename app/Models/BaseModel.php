@@ -12,28 +12,30 @@ class BaseModel extends Model
      * @param Builder $builder
      * @return array
      */
-    public function PaginateForApi(Builder $builder)
+    public function paginateForApi(Builder $builder)
     {
         $request = request();
         $perPage = 10;
         if ($request->has("perPage")) {
             $perPage = $request->get("perPage");
         }
-        $paginate = $builder->paginate($perPage);
-        $api = [
-            'currentPage' => 0,
-            'totalPage' => 0,
-            'lastPage' => 0,
-            'perPage' => 0,
-            'items' => []
-        ];
-
-        $api['currentPage'] = $paginate->currentPage();
-        $api['totalPage'] = $paginate->total();
-        $api['lastPage'] = $paginate->lastPage();
-        $api['items'] = $paginate->items();
-        $api['perPage'] = intval($paginate->perPage());
-
+        if ($request->get("export", 0)) {
+            $api = $builder->get();
+        } else {
+            $paginate = $builder->paginate($perPage);
+            $api = [
+                'current_page' => 0,
+                'total' => 0,
+                'last_page' => 0,
+                'per_page' => 0,
+                'items' => []
+            ];
+            $api['current_page'] = $paginate->currentPage();
+            $api['total'] = $paginate->total();
+            $api['last_page'] = $paginate->lastPage();
+            $api['items'] = $paginate->items();
+            $api['per_page'] = intval($paginate->perPage());
+        }
         return $api;
     }
 
