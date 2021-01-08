@@ -49,9 +49,3 @@ Route::group(['prefix' => 'files', 'namespace' => 'File'], function (){
     Route::post('upload', 'FilesController@upload');
 });
 
-// 文章管理
-Route::group(['prefix' => 'articles', 'namespace' => 'Backend'], function (){
-    Route::get('list', 'ArticlesController@index');
-    Route::get('show/{id}', 'ArticlesController@show');
-});
-

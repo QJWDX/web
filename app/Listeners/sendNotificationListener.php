@@ -3,11 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\sendNotification;
-use App\Models\User;
 use App\Notifications\systemNotification;
-use Illuminate\Notifications\Notification;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Dx\Role\Models\User;
 
 class sendNotificationListener
 {

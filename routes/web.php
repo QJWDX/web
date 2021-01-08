@@ -28,7 +28,7 @@ Route::get('/home',function () {
     return view('home');
 });
 
-Route::group(['prefix' => 'files', 'namespace' => 'Backend'], function (){
+Route::group(['prefix' => 'files', 'namespace' => 'File'], function (){
     Route::get('download/{id}', 'FilesController@download');
 });
 
