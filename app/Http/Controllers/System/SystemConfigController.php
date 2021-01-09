@@ -43,6 +43,8 @@ class SystemConfigController extends Controller
              'technical_support',
              'system_remark'
          ]);
+        $params['system_logo'] = str_replace(config('app.url'), '', $params['system_logo']);
+        $params['system_watermark'] = str_replace(config('app.url'), '', $params['system_watermark']);
          $result = $systemConfig->setConfig($params);
          if(!$result){
              return $this->error('系统参数设置失败');
@@ -68,5 +70,17 @@ class SystemConfigController extends Controller
             ], 200, '上传成功');
         }
         return $this->error('上传失败');
+    }
+
+    // 水印图片
+    public function getSystemWatermarkAttribute($val)
+    {
+        return config('app.url').'/'.$val;
+    }
+
+    // logo
+    public function getSystemLogoAttribute($val)
+    {
+        return config('app.url').'/'.$val;
     }
 }
