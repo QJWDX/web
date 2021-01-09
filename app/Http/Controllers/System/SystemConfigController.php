@@ -71,16 +71,4 @@ class SystemConfigController extends Controller
         }
         return $this->error('上传失败');
     }
-
-    // 水印图片
-    public function getSystemWatermarkAttribute($val)
-    {
-        return config('app.url').'/'.$val;
-    }
-
-    // logo
-    public function getSystemLogoAttribute($val)
-    {
-        return config('app.url').'/'.$val;
-    }
 }

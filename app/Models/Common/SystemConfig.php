@@ -30,4 +30,17 @@ class SystemConfig extends BaseModel
         if(!$config) return false;
         return $this->newQuery()->where('id', $config['id'])->update($params);
     }
+
+    // 水印图片
+    public function getSystemWatermarkAttribute($val)
+    {
+        return $val;
+    }
+
+    // logo
+    public function getSystemLogoAttribute($val)
+    {
+        return $val;
+    }
+
 }
