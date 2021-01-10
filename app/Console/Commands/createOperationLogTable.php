@@ -7,17 +7,16 @@ namespace App\Console\Commands;
 use App\Models\Log\OperationLog;
 use Illuminate\Console\Command;
 
-class autoCreateTable extends Command
+class createOperationLogTable extends Command
 {
-    protected $signature = 'autoCreateTable';
+    protected $signature = 'createOperationLogTable';
 
-    protected $description = '每个月最后一天自动创建操作日志表';
+    protected $description = '自动创建操作日志表';
 
     public function __construct()
     {
         parent::__construct();
     }
-
 
     public function handle(){
         $log = new OperationLog();

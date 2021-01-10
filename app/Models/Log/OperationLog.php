@@ -55,7 +55,7 @@ class OperationLog extends BaseModel
     }
 
     public function getLogInfo($where = array()){
-        $builder = $this->newQuery();
+        $builder = $this->setMonthTable()->newQuery();
         if(!$where){
             return false;
         }
@@ -64,7 +64,7 @@ class OperationLog extends BaseModel
 
 
     public function builderQuery($params = [], $field = ['*']){
-        $builder = $this->newQuery()->with('user')->select($field);
+        $builder = $this->setMonthTable()->newQuery()->with('user')->select($field);
         $builder = $builder->when($params['user_id'], function ($query) use($params){
             $query->whereIn('user_id', $params['user_id']);
         })->when($params['startTime'], function ($query) use($params){
