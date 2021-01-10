@@ -107,7 +107,6 @@ return [
     'redis' => [
         'client' => 'predis',
         'cluster' => env('REDIS_CLUSTER', false),
-
         'default' => [
             'scheme' => env('REDIS_SCHEME', 'tcp'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
