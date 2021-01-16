@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\Notification;
+namespace App\Http\Controllers\Notifications;
 
 
 use App\Http\Controllers\Controller;

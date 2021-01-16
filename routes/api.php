@@ -32,7 +32,7 @@ Route::group(['prefix' => 'log', 'namespace' => 'Log'], function (){
 });
 
 // 消息通知
-Route::group(['prefix' => 'notifications', 'namespace' => 'Notification'], function (){
+Route::group(['prefix' => 'Notification', 'namespace' => 'Notifications'], function (){
     Route::get('getNotifications', 'NotificationsController@getNotifications');
     Route::get('makeRead', 'NotificationsController@makeRead');
     Route::delete('delNotifications', 'NotificationsController@delNotifications');
@@ -40,12 +40,10 @@ Route::group(['prefix' => 'notifications', 'namespace' => 'Notification'], funct
 });
 
 // 文件管理
-Route::group(['prefix' => 'files', 'namespace' => 'File'], function (){
-    Route::get('list', 'FilesController@index');
-    Route::get('show/{id}', 'FilesController@show');
-    Route::post('download/{id}', 'FilesController@download');
-    Route::get('typeSelect', 'FilesController@typeSelect');
-    Route::get('folderSelect', 'FilesController@folderSelect');
+Route::group(['prefix' => '/File', 'namespace' => 'Files'], function (){
+    Route::resource('files', 'FilesController')->only(['index', 'show']);
+    Route::get('typeSelector', 'FilesController@typeSelector');
+    Route::get('folderSelector', 'FilesController@folderSelector');
     Route::post('upload', 'FilesController@upload');
 });
 

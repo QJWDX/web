@@ -5,86 +5,39 @@ namespace App\Models\Common;
 
 
 use App\Models\BaseModel;
+use App\Traits\Curd;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Files extends BaseModel
 {
-    use SoftDeletes;
+    use SoftDeletes, Curd;
     protected $table = 'files';
     protected $guarded = [];
 
-    public function getList($where = array()){
+    public function getFileList($where = array()){
         $builder = $this->builderQuery($where);
-        if($where['export'] == 1){
-            return $builder->select([
-                'uid',
-                'title',
-                'type',
-                'disks',
-                'folder',
-                'path',
-                'mime_type',
-                'size',
-                'width',
-                'height',
-                'created_at',
-                'downloads'
-            ])->get();
+        if($where['export']){
+            return $builder->get();
         }
         return $this->PaginateForApi($builder);
     }
 
-
-    public function getRow($where = array()){
-        $builder = $this->builderQuery($where);
-        return $builder->first();
-    }
-
-    public function builderQuery($where = array(), $field = array()){
-        $builder = $this->newQuery()->withTrashed();
-        if($field){
-            $builder = $builder->select($field);
-        }
-        $builder = $builder->when($where, function ($query) use($where){
-            $query->where('title', 'like', '%'. $where['title']. '%');
-        })->when($where, function ($query) use($where){
-            $query->where('type', 'like', '%'. $where['type']. '%');
-        });
-        return $builder;
-    }
-
-
-    /**
-     * 删除
-     * @param array $ids
-     * @return bool
-     */
-    public function del($ids = array()){
-        if(empty($ids)){
-            return false;
-        }
-        $instances = $this->newQuery()->whereIn('id', $ids)->get('id');
-        foreach ($instances as $instance){
-            $instance->delete();
-        }
-        return true;
-    }
-
-    /**
-     * 获取文件信息
-     * @param array $where
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
-     */
-    public function getFile($where = array()){
+    public function getFile($where = []){
         return $this->newQuery()->where($where)->first();
     }
 
-    /**
-     * 新增文件
-     * @param array $params
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
-     */
-    public function add($params = array()){
-        return $this->newQuery()->create($params);
+    public function builderQuery($where = array(), $field = array('*')){
+        $builder = $this->newQuery();
+        $builder->when(isset($where['title']) && $where['title'], function ($query) use($where){
+            $query->where('title', 'like', '%'. $where['title']. '%');
+        })->when(isset($where['type']) && $where['type'], function ($query) use($where){
+            $query->where('type', 'like', '%'. $where['type']. '%');
+        })->when(isset($where['startTime']) && $where['startTime'], function ($query) use($where){
+            $query->where('created_at', '>', $where['startTime']);
+        })->when(isset($where['endTime']) && $where['endTime'], function ($query) use($where){
+            $query->where('created_at', '<',$where['endTime']);
+        });
+        $builder->select($field);
+        return $builder;
     }
 }
