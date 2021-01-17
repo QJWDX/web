@@ -8,15 +8,15 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class systemNotification extends Notification implements ShouldQueue
+class systemNotification extends Notification
 {
     use Queueable;
 
-    protected $data;
+    protected $msg;
 
-    public function __construct($data)
+    public function __construct($message)
     {
-        $this->data = $data;
+        $this->msg = $message;
     }
 
     /**
@@ -60,11 +60,8 @@ class systemNotification extends Notification implements ShouldQueue
     public function toDatabase($notifiable)
     {
         return [
-            'id' => $this->data->id,
-            'title' => $this->data->title,
-            'content' => $this->data->content,
-            'created_at' => date('Y-m-d H:i:s', strtotime($this->data->created_at)),
-            'updated_at' => date('Y-m-d H:i:s', strtotime($this->data->updated_at))
+            'title' => $this->msg['title'],
+            'content' => $this->msg['content'],
         ];
     }
 
@@ -72,11 +69,8 @@ class systemNotification extends Notification implements ShouldQueue
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'id' => $this->data->id,
-            'title' => $this->data->title,
-            'content' => $this->data->content,
-            'created_at' => date('Y-m-d H:i:s', strtotime($this->data->created_at)),
-            'updated_at' => date('Y-m-d H:i:s', strtotime($this->data->updated_at))
+            'title' => $this->msg['title'],
+            'content' => $this->msg['content'],
         ]);
     }
 }

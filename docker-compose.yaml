@@ -60,9 +60,7 @@ services:
       container_name: redis
       image: redis:6.0.9
       ports:
-          - 127.0.0.1:6379:6379
-      environment:
-          REDIS_PORT: 6379
+          - 6379:6379
       volumes:
           - ./dockerfile/redis.conf:/etc/redis.conf
           - ./docker-data/redis:/data

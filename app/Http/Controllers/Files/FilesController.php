@@ -26,7 +26,20 @@ class FilesController extends Controller
             return $item;
         });
         if($export){
-            $url = $exportHandler->filesDataExport($data->toArray());
+            $eData = collect($data)->transform(function ($item){
+                return [
+                    'uid' => $item['uid'],
+                    'title' => $item['title'],
+                    'type' => $item['type'],
+                    'disks' => $item['disks'],
+                    'folder' => $item['folder'],
+                    'size' => $item['size'],
+                    'width_height' => $item['width'] ."*". $item['height'],
+                    'created_at' => $item['created_at'],
+                    'download_url' => config('filesystems.disks.'.$item['disks'].'.url').$item['path']
+                ];
+            });
+            $url = $exportHandler->filesDataExport($eData->toArray());
             return $this->success(['download_url' => $url]);
         }
         $list['items'] = $data;

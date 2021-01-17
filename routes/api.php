@@ -36,12 +36,14 @@ Route::group(['prefix' => 'Notification', 'namespace' => 'Notifications'], funct
     Route::get('getNotifications', 'NotificationsController@getNotifications');
     Route::get('makeRead', 'NotificationsController@makeRead');
     Route::delete('delNotifications', 'NotificationsController@delNotifications');
-    Route::get('getNotificationCountStatistics', 'NotificationsController@getNotificationCountStatistics');
+    Route::get('getNotificationCount', 'NotificationsController@getNotificationCount');
+    Route::get('sendNotification', 'NotificationsController@sendNotification');
 });
 
 // 文件管理
 Route::group(['prefix' => '/File', 'namespace' => 'Files'], function (){
     Route::resource('files', 'FilesController')->only(['index', 'show']);
+    Route::delete('delFiles', 'FilesController@del');
     Route::get('typeSelector', 'FilesController@typeSelector');
     Route::get('folderSelector', 'FilesController@folderSelector');
     Route::post('upload', 'FilesController@upload');

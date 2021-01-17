@@ -77,7 +77,7 @@ class UploadHandler
         if(!is_dir($dir)){
             mkdir($dir, 0777, true);
         }
-        $fileName = $this->createRandomCode(24) . $extension;
+        $fileName = $this->createRandomCode(24) . '.' . $extension;
          // 将图片移动到我们的目标存储路径中 或 云存储中
         if(!($path = $file->storeAs($folder_name, $fileName, $disks))){
             throw new ApiException('文件存储失败', 500);

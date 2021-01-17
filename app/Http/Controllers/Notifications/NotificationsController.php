@@ -7,7 +7,10 @@ namespace App\Http\Controllers\Notifications;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DelRequest;
 use App\Models\Notification\Notifications;
+use App\Notifications\systemNotification;
+use Dx\Role\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationsController extends Controller
 {
@@ -19,31 +22,28 @@ class NotificationsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function getNotifications(Request $request, Notifications $notifications){
-        $notifiable_id = $request->get('notifiable_id', 0);
-        $type = $request->get('type', 0);
-        $notifiable_type = $request->get('notifiable_type', 0);
+        $user = Auth::guard('api')->user();
+        if(!$user){
+            return $this->error(403, '用户未登录');
+        }
+        $notifiable_id = $user['id'];
         $read_at = $request->get('read_at', 0);
-        if(!array_key_exists($type, $notifications->type)){
-            return $this->error(500, '通知所属类型参数错误');
-        }
-        if(!array_key_exists($notifiable_type, $notifications->notifiable_type)){
-            return $this->error(500, '通知对象类型错误');
-        }
         if(!$notifiable_id){
             return $this->error(500, '通知对象id参数错误');
         }
-        $notice = new $notifications->notifiable_type[$notifiable_type]();
-        if(!$notice->newQuery()->find($notifiable_id)){
-            return $this->error(500, '通知对象不存在');
-        }
-        $type = $notifications->type[$type];
-        $notifiable_type = $notifications->notifiable_type[$notifiable_type];
         $startTime = $request->get('startTime', false);
         $endTime = $request->get('endTime', false);
-        $where = compact('type', 'notifiable_id', 'notifiable_type', 'read_at', 'startTime', 'endTime');
+        $where = compact('notifiable_id', 'read_at', 'startTime', 'endTime');
         $data = $notifications->getNotifications($where);
+        $data['items'] = collect($data['items'] )->transform(function ($item){
+            $message = json_decode($item['data'], true);
+            $item['title'] = $message['title'];
+            $item['content'] = $message['content'];
+            unset($item['data']);
+            return $item;
+        });
         if(!$data){
-            return $this->error(500, '获取通知列表失败');
+            return $this->error('获取通知列表失败');
         }
         return $this->success($data);
     }
@@ -55,14 +55,11 @@ class NotificationsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function makeRead(Request $request, Notifications $notifications){
-        $id = $request->get('id', 0);
-        if(!$id || !$notifications->isExits($id)) {
-            return $this->error(500, '通知id错误');
-        }
-        if($notifications->makeRead($id)){
+        $ids = $request->get('ids', []);
+        if($notifications->makeRead($ids)){
             return $this->success('标记已读成功');
         }
-        return $this->error(500, '标记已读失败');
+        return $this->error('标记已读失败');
     }
 
 
@@ -81,29 +78,29 @@ class NotificationsController extends Controller
     }
 
     /**
-     * 未读已读数
+     * 未读已读数量
      * @param Request $request
      * @param Notifications $notifications
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getNotificationCountStatistics(Request $request, Notifications $notifications){
-        $notifiable_id = $request->get('notifiable_id', 0);
-        $type = $request->get('type', 0);
-        $notifiable_type = $request->get('notifiable_type', 0);
-        if(!array_key_exists($type, $notifications->type)){
-            return $this->error(500, '通知所属类型参数错误');
+    public function getNotificationCount(Request $request, Notifications $notifications){
+        $user = Auth::guard('api')->user();
+        if(!$user){
+            return $this->error(403, '用户未登录');
         }
-        if(!array_key_exists($notifiable_type, $notifications->notifiable_type)){
-            return $this->error(500, '通知对象类型错误');
-        }
-        if(!$notifiable_id){
-            return $this->error(500, '通知对象id参数错误');
-        }
-        $notice = new $notifications->notifiable_type[$notifiable_type]();
-        if(!$notice->newQuery()->find($notifiable_id)){
-            return $this->error(500, '通知对象不存在');
-        }
-        $data = $notifications->notificationCountStatistics($notifiable_id, $type, $notifiable_type);
+        $notifiable_id = $user['id'];
+        $data = $notifications->notificationCount($notifiable_id);
         return $this->success($data);
+    }
+
+    /**
+     * 发送系统通知
+     * @param Request $request
+     * @param User $user
+     */
+    public function sendNotification(Request $request, User $user){
+        $message = $request->only(['title', 'content']);
+        $user->notify(new systemNotification($message));
+        $this->success('发送成功');
     }
 }

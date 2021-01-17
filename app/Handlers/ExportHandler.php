@@ -22,15 +22,15 @@ class ExportHandler
     {
         $excel = app(Excel::class);
         $excel->store(new DataExport($exportData, $exportHeader), $file_name, $disk);
-        return config('app.url') . "/" . config('filesystems.disks.'.$disk) . "/" . $file_name;
+        return config('filesystems.disks.'.$disk.'.url') . "/" . $file_name;
     }
 
     public function filesDataExport($data){
         $header = [
-            'title' => ['UID', '标题', '类型', '磁盘','文件夹','地址','mime_type','大小','宽','高','上传时间','下载次数','下载地址'],
-            'width' => [50, 60, 25, 25, 25, 60, 25, 25, 25, 25, 40, 30, 100]
+            'title' => ['文件编号', '文件标题', '文件类型', '文件磁盘','存储文件夹','文件大小','文件宽高','上传时间','下载地址'],
+            'width' => [50, 60, 25, 25, 25, 25, 40, 40, 100]
         ];
         $file_name = '文件列表'. date('Ymd') . '.xlsx';
-        return $this->saveExcelFile($data, $header, $file_name, 'upload');
+        return $this->saveExcelFile($data, $header, $file_name, 'xlsx');
     }
 }
