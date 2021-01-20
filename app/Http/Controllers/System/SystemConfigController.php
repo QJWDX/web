@@ -21,7 +21,8 @@ class SystemConfigController extends Controller
         if(!$config){
             return $this->error('系统参数获取失败');
         }
-        return $this->success($config);
+        $params = ['bd_code' => config('baiDuTj.bd_code')];
+        return $this->success(array_merge($config, $params));
     }
 
 

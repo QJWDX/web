@@ -21,7 +21,7 @@ class SystemConfig extends BaseModel
 
 
     public function getConfig(){
-        return $this->newQuery()->first();
+        return $this->newQuery()->first()->toArray();
     }
 
 
