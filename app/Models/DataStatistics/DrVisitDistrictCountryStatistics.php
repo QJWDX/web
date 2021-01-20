@@ -3,6 +3,8 @@
 namespace App\Models\DataStatistics;
 
 use App\Models\BaseModel;
+use Illuminate\Support\Facades\DB;
+
 class DrVisitDistrictCountryStatistics extends BaseModel
 {
     //
@@ -55,12 +57,7 @@ class DrVisitDistrictCountryStatistics extends BaseModel
     {
         $fields_1 = $target.'_count';
         $fields_2 = $target.'_ratio';
-      //  $where_not_exists = "country_name from vc_$this->table b where b.country_name = vc_$this->table.country_name and b.id > vc_$this->table.id";
-
         $lists = $this->newQuery()
-            /*->whereNotExists(function ($query) use ($where_not_exists,$time) {
-                $query->select(DB::raw($where_not_exists));
-            })*/
             ->whereDate('created_at', '>=', $time[0])
             ->whereDate('created_at', '<=', $time[1])
             ->select(
@@ -78,7 +75,7 @@ class DrVisitDistrictCountryStatistics extends BaseModel
         $fields_1 = $target.'_count';
         $fields_2 = $target.'_ratio';
         return $this->newQuery()
-            ->whereIn('statistics_id',DrVisitDistrictTotalStatistics::select('id')->where('statistics_time', '>=', $time[0])
+            ->whereIn('statistics_id', DrVisitDistrictTotalStatistics::select('id')->where('statistics_time', '>=', $time[0])
             ->where('statistics_time', '<=', $time[1])->where('type',$type))->select(
             DB::raw("sum($fields_1) as count"),
             DB::raw("sum($fields_2) as percent"),

@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class DrVisitDistrictProvinceStatistics extends BaseModel
 {
-    //
     protected $table = 'dr_visit_district_province_statistics';
     protected $fillable = [
         'province_name',
