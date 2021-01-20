@@ -19,6 +19,7 @@ Route::options('/{all}', function (\Illuminate\Http\Request $request) {
 
 // 系统参数配置
 Route::group(['prefix' => 'system', 'namespace' => 'System'], function (){
+    Route::get('system', 'SystemController@system');
     Route::get('getSystemConfig', 'SystemConfigController@getSystemConfig');
     Route::put('setSystemConfig', 'SystemConfigController@setSystemConfig');
     Route::post('systemConfig/upload', 'SystemConfigController@upload');

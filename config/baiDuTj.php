@@ -6,4 +6,5 @@ return [
     'site_id' => 16219323,
     'code' => '7ebaee80d010c896e5c04f0277199bf4',
     'refresh_diff_time' => 7200,
+    'bd_code' => 'cb3a56fb52a8b32058fc988489a66154'
 ];

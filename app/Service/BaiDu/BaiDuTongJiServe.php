@@ -87,7 +87,7 @@ class BaiDuTongJiServe
 
     public function setConfig()
     {
-        $config = config("baiduTj");
+        $config = config("baiDuTj");
         $this->client_id = $config['client_id'];
         $this->client_secret = $config['client_secret'];
         $this->redirect_uri = $config['redirect_uri'];
