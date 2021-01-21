@@ -38,7 +38,7 @@ class BaiDuStatistics extends Command
     public function handle()
     {
         $check_type = $this->argument('check_type');
-        $config = config('baiduTj');
+        $config = config('baiDuTj');
         $this->site_id = $config['site_id'];
         $this->server = new BaiDuTongJiServe();
         $date = $check_type ? Carbon::yesterday()->toDateString() : $date = Carbon::today()->toDateString();

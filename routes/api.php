@@ -49,3 +49,16 @@ Route::group(['prefix' => '/File', 'namespace' => 'Files'], function (){
     Route::post('upload', 'FilesController@upload');
 });
 
+// 数据分析
+Route::group(['prefix' => '/Statistics', 'namespace' => 'DataStatistics'], function (){
+    //访问分析
+    Route::get('/visitData','VisitStatisticsController@visitData');
+    //地域分析(总数)
+    Route::get('/districtTotalData','VisitDistrictController@districtTotalData');
+    //地域分析（国家）
+    Route::get('/countryListData','VisitDistrictController@countryListData');
+    //地域分析（省份）
+    Route::get('/provinceListData','VisitDistrictController@provinceListData');
+});
+
+
