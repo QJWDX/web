@@ -80,7 +80,7 @@ class DrVisitDistrictTotalStatistics extends BaseModel
     {
         return $this->newQuery()->where('statistics_time', '>=', $time)
             ->where('statistics_time', '<=', $end_time)
-            ->whereIn('type', array(3, 4))
+            ->whereIn('type', [1,2,3])
             ->orderBy('statistics_time')
             ->get(['pv_count', 'visitor_count', 'type', 'statistics_time as date_time']);
     }
@@ -91,7 +91,7 @@ class DrVisitDistrictTotalStatistics extends BaseModel
             $query->select('statistics_id', 'hour as date_time', 'pv_count', 'visitor_count');
             $query->orderBy('hour');
         }])->where('statistics_time', '=', $time)
-            ->whereIn('type', [3, 4])
+            ->whereIn('type', [1,2,3])
             ->get(['pv_count', 'visitor_count', 'type', 'id']);
 
     }

@@ -17,7 +17,8 @@ class VisitStatisticsController extends Controller
         $end_time = $request->get('end_time', date('Y-m-d'));
         $day = Carbon::parse($time)->diffInDays(Carbon::parse($end_time));
 
-        if ($day == 0) {//一天的数据
+        if ($day == 0) {
+            //一天的数据
             $data = $drVisitDistrictTotalStatistics->getHourList($time);
         } else {
             $data = $drVisitDistrictTotalStatistics->getDayList($time, $end_time);
