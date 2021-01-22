@@ -70,6 +70,8 @@ class DrVisitDistrictCountryStatistics extends BaseModel
         return $list ? $list->toArray() : [];
     }
 
+
+
     public function targetList($time, $target, $type)
     {
         $fields_1 = $target.'_count';

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Statistics;
+namespace App\Http\Controllers\DataStatistics;
 
 use App\Models\DataStatistics\DrVisitDistrictProvinceStatistics;
 use App\Models\DataStatistics\DrVisitDistrictCountryStatistics;
@@ -47,10 +47,13 @@ class VisitDistrictController extends Controller
         $platform_type = $request->get('platform_type','pc');
         switch ($platform_type) {
             case 'pc':
-                $type = 1;
+                $type = 3;
+                break;
+            case 'wx':
+                $type = 4;
                 break;
             default:
-                $type = 1;
+                $type = 3;
         }
         $time = explode('/', $time);
         $data = $drVisitDistrictCountryStatistics->targetList($time, $target, $type);
@@ -81,25 +84,25 @@ class VisitDistrictController extends Controller
         $target = $request->get('target', 'pv'); //target的参数：pv,visit,visitor,new_visitor,trans
         $time = $request->get('time', '');
         $time = explode('/', $time);
-        $platform_type = $request->get('platform_type','wx'); //wx；微信端 pc:pc端
+        $platform_type = $request->get('platform_type', 'pc'); //wx；微信端 pc:pc端
         switch ($platform_type) {
-            case 'wx':
-                $type = 5;
-                break;
             case 'pc':
-                $type=1;
+                $type = 2;
+                break;
+            case 'wx':
+                $type = 4;
                 break;
             default:
-                $type=5;
+                $type = 2;
         }
-        $data = $drVisitDistrictProvinceStatistics->targetList($time, $target,$type);
+        $data = $drVisitDistrictProvinceStatistics->targetList($time, $target, $type);
         //查询时间超过一天重新算占比
         if ($time[0] != $time[1]) {
             $filed = $target . '_count';
             $sum = $drVisitDistrictTotalStatistics->newQuery()->where('statistics_time', '>=', $time[0])
                 ->where('statistics_time', '<=', $time[1])->where('type', $type)->select(DB::raw("ifnull(sum($filed),0) as sum"))->first();
             foreach ($data as &$value) {
-                $value['percent'] = ($value['count'] == 0)?0.00:round(($value['count'] / $sum->sum) * 100, 2);
+                $value['percent'] = ($value['count'] == 0) ? 0.00 : round(($value['count'] / $sum->sum) * 100, 2);
             }
         }
         return $this->success($data);
