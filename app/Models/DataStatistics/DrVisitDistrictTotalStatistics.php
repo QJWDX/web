@@ -77,11 +77,12 @@ class DrVisitDistrictTotalStatistics extends BaseModel
 
     public function getDayList($time, $end_time)
     {
-        return $this->newQuery()->where('statistics_time', '>=', $time)
+        $data =  $this->newQuery()->where('statistics_time', '>=', $time)
             ->where('statistics_time', '<=', $end_time)
             ->where('type', 1)
             ->orderBy('statistics_time')
             ->get(['pv_count', 'visitor_count', 'type', 'statistics_time as date_time']);
+        return $data ? $data->toArray() : [];
     }
 
     public function getHourList($time)

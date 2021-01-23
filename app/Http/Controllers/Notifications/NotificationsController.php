@@ -99,8 +99,28 @@ class NotificationsController extends Controller
      * @param User $user
      */
     public function sendNotification(Request $request, User $user){
-        $message = $request->only(['title', 'content']);
-        $user->notify(new systemNotification($message));
-        $this->success('发送成功');
+        $type = $request->get('type', 1);
+        try {
+            $message = $request->only(['title', 'content']);
+            $class = null;
+            switch ($type){
+                case 1:
+                    $class = new systemNotification($message);
+                    break;
+            }
+            $user->notify($class);
+            $config = config('notification');
+            $connectConfig = $config['config'];
+            $queue = $config['queue'];
+            $exchange = $config['exchange'];
+            $exchangeType = $config['exchange_type'];
+            $routingKey = $config['routing_key'];
+            $connect = $this->connect($queue, $exchange, $exchangeType, $routingKey, $connectConfig);
+            $message = json_encode($message);
+            $connect->sendMessageToServer($message);
+            $this->success('发送成功');
+        }catch (\Exception $exception){
+            $this->error('发送失败：'.$exception->getMessage());
+        }
     }
 }

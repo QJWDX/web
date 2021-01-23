@@ -15,7 +15,6 @@ class VisitStatisticsController extends Controller
         $time = $request->get('time', date('Y-m-d'));
         $end_time = $request->get('end_time', date('Y-m-d'));
         $day = Carbon::parse($time)->diffInDays(Carbon::parse($end_time));
-
         if ($day == 0) {
             //一天的数据
             $data = $drVisitDistrictTotalStatistics->getHourList($time);
@@ -93,13 +92,7 @@ class VisitStatisticsController extends Controller
         return collect($data[$relation])->pluck($fields)->toArray();
     }
 
-    /**
-     * 组装天的数据
-     * @param $data
-     * @param $fields_1
-     * @param $fields_2
-     * @return array
-     */
+
     public function DayData($data, $fields_1, $fields_2)
     {
         $data = collect($data)->sortKeys();

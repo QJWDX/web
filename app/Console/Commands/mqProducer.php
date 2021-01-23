@@ -20,7 +20,7 @@ class mqProducer extends Command
     public function handle()
     {
         try {
-            $config = config('amqp');
+            $config = config('notification');
             $connectConfig = $config['config'];
             $queue = $config['queue'];
             $exchange = $config['exchange'];
@@ -32,14 +32,17 @@ class mqProducer extends Command
             $routingKey = $config['routing_key'];
             $connect = $this->connect($queue, $exchange, $exchangeType, $routingKey, $connectConfig);
             $data = array(
-                'message' => '这是一条测试信息',
-                'date' => date('Y-m-d H:i:s')
+                'title' => '测试信息',
+                'content' => '<strong>这是 <i>HTML</i> 片段</strong>',
+                'is_html' => 1
             );
+
             $message = json_encode($data);
             $n = 0;
             while ($n < 10){
                 $connect->sendMessageToServer($message);
                 $n++;
+                sleep(10);
                 print_r('发送了'.$n."条\n");
             }
         } catch (\Exception $exception){

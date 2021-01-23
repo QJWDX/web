@@ -64,7 +64,7 @@ class DrVisitDistrictCountryStatistics extends BaseModel
                 DB::raw("sum($fields_1) as count"),
                 DB::raw("sum($fields_2) as percent"),
                 'country_name'
-                )
+            )
             ->groupBy('country_name')
             ->get();
         return $list ? $list->toArray() : [];
@@ -78,7 +78,7 @@ class DrVisitDistrictCountryStatistics extends BaseModel
         $fields_2 = $target.'_ratio';
         $list = $this->newQuery()
             ->whereIn('statistics_id', DrVisitDistrictTotalStatistics::query()->select('id')->where('statistics_time', '>=', $time[0])
-            ->where('statistics_time', '<=', $time[1])->where('type',$type))->select([
+                ->where('statistics_time', '<=', $time[1])->where('type',$type))->select([
                 DB::raw("sum($fields_1) as count"),
                 DB::raw("sum($fields_2) as percent"),
                 'country_name'
