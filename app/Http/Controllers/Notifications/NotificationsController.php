@@ -8,9 +8,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DelRequest;
 use App\Models\Notification\Notifications;
 use App\Notifications\systemNotification;
+use App\Service\Amqp\AmqpServer;
 use Dx\Role\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class NotificationsController extends Controller
 {
@@ -33,7 +35,8 @@ class NotificationsController extends Controller
         }
         $startTime = $request->get('startTime', false);
         $endTime = $request->get('endTime', false);
-        $where = compact('notifiable_id', 'read_at', 'startTime', 'endTime');
+        $type = $request->get('type', '');
+        $where = compact('notifiable_id', 'read_at', 'startTime', 'endTime', 'type');
         $data = $notifications->getNotifications($where);
         $data['items'] = collect($data['items'] )->transform(function ($item){
             $message = json_decode($item['data'], true);
@@ -94,33 +97,72 @@ class NotificationsController extends Controller
     }
 
     /**
+     * 消息通知类型
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function notificationType(){
+        $config = config('notification');
+        $notificationTypes = $config['type'];
+        if(count($notificationTypes) == 0){
+            return $this->error('消息类型还未配置！');
+        }
+        $type = [];
+        foreach ($notificationTypes as $key => $val){
+            $type[] = [
+                'id' => $key,
+                'name' => $val['name'],
+                'type' => $val['class'],
+            ];
+        }
+        return $this->success($type);
+    }
+
+    /**
      * 发送系统通知
      * @param Request $request
-     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function sendNotification(Request $request, User $user){
-        $type = $request->get('type', 1);
+    public function sendNotification(Request $request){
+        $type = $request->get('type', 0);
         try {
-            $message = $request->only(['title', 'content']);
-            $class = null;
-            switch ($type){
-                case 1:
-                    $class = new systemNotification($message);
-                    break;
-            }
-            $user->notify($class);
             $config = config('notification');
+            $message = $request->only(['title', 'content']);
+            $notificationTypes = $config['type'];
+            if(!isset($notificationTypes[$type])){
+                return $this->error('消息类型还未配置,请联系管理员！');
+            }
+            $notificationTypeName = $notificationTypes[$type]['name'];
+            $notificationClass = $notificationTypes[$type]['class'];
+            $mqMsg = [
+                'title' => $notificationTypeName,
+                'message' => $message['title']
+            ];
+            Notification::send(User::all(), new $notificationClass($message));
             $connectConfig = $config['config'];
             $queue = $config['queue'];
             $exchange = $config['exchange'];
             $exchangeType = $config['exchange_type'];
             $routingKey = $config['routing_key'];
             $connect = $this->connect($queue, $exchange, $exchangeType, $routingKey, $connectConfig);
-            $message = json_encode($message);
-            $connect->sendMessageToServer($message);
-            $this->success('发送成功');
+            $mqMsg = json_encode($mqMsg);
+            $connect->sendMessageToServer($mqMsg);
+            return $this->success('发送成功');
         }catch (\Exception $exception){
-            $this->error('发送失败：'.$exception->getMessage());
+            return $this->error('发送失败：'.$exception->getMessage());
         }
+    }
+
+    public function connect($queue, $exchange, $exchangeType, $routingKey, $config = array()){
+        return new AmqpServer(
+            $config['host'],
+            $config['port'],
+            $config['user'],
+            $config['password'],
+            $config['vhost'],
+            $routingKey,
+            $exchange,
+            $queue,
+            $exchangeType
+        );
     }
 }

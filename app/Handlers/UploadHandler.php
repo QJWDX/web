@@ -29,13 +29,9 @@ class UploadHandler
      * @throws ApiException
      */
     public function storeFile($file, $type, $folder, $title = '', $disks = 'upload'){
-
         $folder_name = $type."/$folder/" . date("Ym", time()) . '/'.date("d", time());
-
         // 获取文件的后缀名，因图片从剪贴板里黏贴时后缀名为空，所以此处确保后缀一直存在
-
         $extension = strtolower($file->extension()) ? : 'png';
-
         // 检查文件后缀是否是规则允许后缀
         if (!in_array($extension, config('filesystems.uploader.'.$type.'.allowed_ext'))){
             throw new ApiException('文件格式错误，请检查文件后缀', 500);

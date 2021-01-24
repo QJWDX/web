@@ -29,7 +29,9 @@ class Notifications extends BaseModel
             $query->where('notifiable_id', $params['notifiable_id']);
         })->when(isset($params['startTime']) && $params['startTime'], function ($query) use ($params){
             $query->where('created_at', '>', $params['startTime']);
-        })->when(isset($where['endTime']) && $where['endTime'], function ($query) use ($params){
+        })->when(isset($where['endTime']) && $where['type'], function ($query) use ($params){
+            $query->where('type', $params['type']);
+        })->when(isset($where['type']) && $where['endTime'], function ($query) use ($params){
             $query->where('created_at', '<', $params['endTime']);
         })->when(isset($params['read_at']) && $params['read_at'], function ($query) use ($params){
             if($params['read_at'] == 1){
@@ -40,6 +42,20 @@ class Notifications extends BaseModel
             }
         });
         return $builder->select(['*']);
+    }
+
+    public function getTypeAttribute($type){
+        $config = config('notification');
+        $notificationTypes = $config['type'];
+        if(count($notificationTypes)){
+            foreach ($notificationTypes as $val){
+                if($type == $val['class']){
+                    $type = $val['name'];
+                    break;
+                }
+            }
+        }
+        return '【'.$type.'】';
     }
 
 

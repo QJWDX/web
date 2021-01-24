@@ -32,9 +32,8 @@ class mqProducer extends Command
             $routingKey = $config['routing_key'];
             $connect = $this->connect($queue, $exchange, $exchangeType, $routingKey, $connectConfig);
             $data = array(
-                'title' => '测试信息',
-                'content' => '<strong>这是 <i>HTML</i> 片段</strong>',
-                'is_html' => 1
+                'title' => '系统信息',
+                'content' => '<strong>这是 <i>HTML</i> 片段</strong>'
             );
 
             $message = json_encode($data);

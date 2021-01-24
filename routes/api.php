@@ -37,7 +37,8 @@ Route::group(['prefix' => 'Notification', 'namespace' => 'Notifications'], funct
     Route::get('makeRead', 'NotificationsController@makeRead');
     Route::delete('delNotifications', 'NotificationsController@delNotifications');
     Route::get('getNotificationCount', 'NotificationsController@getNotificationCount');
-    Route::get('sendNotification', 'NotificationsController@sendNotification');
+    Route::post('sendNotification', 'NotificationsController@sendNotification');
+    Route::get('notificationType', 'NotificationsController@notificationType');
 });
 
 // 文件管理
