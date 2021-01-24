@@ -31,14 +31,13 @@ class mqProducer extends Command
 //            $exchangeType = 'topic';
             $routingKey = $config['routing_key'];
             $connect = $this->connect($queue, $exchange, $exchangeType, $routingKey, $connectConfig);
-            $data = array(
-                'title' => '系统信息',
-                'content' => '<strong>这是 <i>HTML</i> 片段</strong>'
-            );
-
-            $message = json_encode($data);
             $n = 0;
             while ($n < 10){
+                $data = array(
+                    'title' => '系统信息',
+                    'message' => '这是一条测试消息！'.$n
+                );
+                $message = json_encode($data);
                 $connect->sendMessageToServer($message);
                 $n++;
                 sleep(10);

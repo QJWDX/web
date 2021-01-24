@@ -7,7 +7,7 @@ return [
         'password' => env('AMQP_PWD', 'admin123'),
         'vhost' => env('AMQP_VHOST', '/')
     ],
-    'queue' => 'notification',
+    'queue' => '',
     'exchange' => 'amq.topic',
     'exchange_type' => 'topic',
     'routing_key' => 'notification',
