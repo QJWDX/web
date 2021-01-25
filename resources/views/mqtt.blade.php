@@ -32,7 +32,7 @@
                         <div class="control-group">
                             <label>WebSocket URL</label>
                             <div class="controls">
-                                <input name=url id='ws_hostname' value='120.79.71.105' type="text">
+                                <input name=url id='ws_hostname' value='127.0.0.1' type="text">
                             </div>
                         </div>
                         <div class="control-group">
@@ -50,7 +50,7 @@
                         <div class="control-group">
                             <label>Password</label>
                             <div class="controls">
-                                <input id='connect_passcode' placeholder="User Password" value="admin123456" type="password">
+                                <input id='connect_passcode' placeholder="User Password" value="admin123" type="password">
                             </div>
                         </div>
                         <div class="control-group">
@@ -92,9 +92,11 @@
                 var destination = $("#destination").val();
                 var text = $("#text").val();
                 // Create a client instance
-                var client = new Paho.MQTT.Client(host_name, Number(port),"/ws",
+                var client = new Paho.MQTT.Client(
+                    host_name,
+                    Number(port),
+                    "/ws",
                     "myclientid_" + parseInt(Math.random() * 100, 10));
-
                 // set callback handlers
                 client.onConnectionLost = onConnectionLost;
                 client.onMessageArrived = onMessageArrived;
@@ -112,12 +114,11 @@
                 }
 
                 client.connect(options);
-
                 // called when the client connects
                 function onSuccess() {
                     // Once a connection has been made, make a subscription and send a message.
                     console.log("onConnect");
-                    client.subscribe("World",{qos: 1});
+                    client.subscribe("notification",{qos: 1});
                     message = new Paho.MQTT.Message("Hello");
                     message.destinationName = "World";
                     client.send(message);

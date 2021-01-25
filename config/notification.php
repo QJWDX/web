@@ -7,10 +7,11 @@ return [
         'password' => env('AMQP_PWD', 'admin123'),
         'vhost' => env('AMQP_VHOST', '/')
     ],
-    'queue' => '',
+    'queue' => 'notification',
     'exchange' => 'amq.topic',
     'exchange_type' => 'topic',
     'routing_key' => 'notification',
+    'callback' => ['App\Http\Controllers\Queue\CallbackController', 'default'],
     'type' => [
         [
             'name' => '系统消息',

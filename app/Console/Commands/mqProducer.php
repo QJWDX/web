@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 class mqProducer extends Command
 {
 
-    protected $signature = 'mq_producer_test';
+    protected $signature = 'mq_p';
 
     protected $description = '消息队列生产者测试';
 
@@ -25,10 +25,6 @@ class mqProducer extends Command
             $queue = $config['queue'];
             $exchange = $config['exchange'];
             $exchangeType = $config['exchange_type'];
-            // rabbitmq_web_mqtt 前端接受收时
-//            $queue = '';
-//            $exchange = 'amq.topic';
-//            $exchangeType = 'topic';
             $routingKey = $config['routing_key'];
             $connect = $this->connect($queue, $exchange, $exchangeType, $routingKey, $connectConfig);
             $n = 0;
