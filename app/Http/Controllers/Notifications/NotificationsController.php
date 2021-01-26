@@ -137,15 +137,20 @@ class NotificationsController extends Controller
                 'title' => $notificationTypeName,
                 'message' => $message['title']
             ];
-            Notification::send(User::all(), new $notificationClass($message));
+            $users = User::all(['id']);
+            Notification::send($users, new $notificationClass($message));
             $connectConfig = $config['config'];
             $queue = $config['queue'];
             $exchange = $config['exchange'];
             $exchangeType = $config['exchange_type'];
             $routingKey = $config['routing_key'];
-            $connect = $this->connect($queue, $exchange, $exchangeType, $routingKey, $connectConfig);
-            $mqMsg = json_encode($mqMsg);
-            $connect->sendMessageToServer($mqMsg);
+            foreach ($users as $user){
+                $user_queue = '';
+                $rk = $routingKey.'_user_id_'.$user['id'];
+                $connect = $this->connect($user_queue, $exchange, $exchangeType, $rk, $connectConfig);
+                $mqMsg = json_encode($mqMsg);
+                $connect->sendMessageToServer($mqMsg);
+            }
             return $this->success('发送成功');
         }catch (\Exception $exception){
             return $this->error('发送失败：'.$exception->getMessage());

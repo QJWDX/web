@@ -80,6 +80,7 @@ services:
       volumes:
           - ./docker-data/rabbitmq/lib/rabbitmq:/var/lib/rabbitmq
           - ./docker-data/rabbitmq/log:/var/log/rabbitmq
+          - ./dockerfile/rabbitmq-ssl-cert:/etc/rabbitmq/ssl-cert
       restart: always
       logging:
           driver: "json-file"
