@@ -48,6 +48,7 @@ Route::group(['prefix' => '/File', 'namespace' => 'Files'], function (){
     Route::get('typeSelector', 'FilesController@typeSelector');
     Route::get('folderSelector', 'FilesController@folderSelector');
     Route::post('upload', 'FilesController@upload');
+    Route::post('download', 'FilesController@download');
 });
 
 // 数据分析

@@ -134,8 +134,8 @@ class NotificationsController extends Controller
             $notificationTypeName = $notificationTypes[$type]['name'];
             $notificationClass = $notificationTypes[$type]['class'];
             $mqMsg = [
-                'title' => $notificationTypeName,
-                'message' => $message['title']
+                "title" => trim($notificationTypeName),
+                "message" => date('Y-m-d H:i:s')."</br>".trim($message['title'])."</br>"
             ];
             $users = User::all(['id']);
             Notification::send($users, new $notificationClass($message));
@@ -144,11 +144,10 @@ class NotificationsController extends Controller
             $exchange = $config['exchange'];
             $exchangeType = $config['exchange_type'];
             $routingKey = $config['routing_key'];
+            $mqMsg = json_encode($mqMsg);
             foreach ($users as $user){
-                $user_queue = '';
-                $rk = $routingKey.'_user_id_'.$user['id'];
-                $connect = $this->connect($user_queue, $exchange, $exchangeType, $rk, $connectConfig);
-                $mqMsg = json_encode($mqMsg);
+                $rk = $routingKey."_user_id_".$user['id'];
+                $connect = $this->connect($queue, $exchange, $exchangeType, $rk, $connectConfig);
                 $connect->sendMessageToServer($mqMsg);
             }
             return $this->success('发送成功');

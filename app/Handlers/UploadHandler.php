@@ -40,7 +40,7 @@ class UploadHandler
             throw new ApiException('文件夹错误', 500);
         }
         // 原始文件名
-        $title = $title ?? $file->getClientOriginalName();
+        $title = $title ? $title.'.'.$extension : $file->getClientOriginalName();
 
         // 获取文件的 Mime
         $mimeType = $file->getClientMimeType();

@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DelRequest;
 use App\Models\Common\Files;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FilesController extends Controller
 {
@@ -114,5 +115,11 @@ class FilesController extends Controller
             $uploadHandler->storeFile($file, $type, $folder,$title);
         }
         return $this->success('上传成功');
+    }
+
+
+    public function download(Request $request, Files $files){
+        $file = $files->row($request->get('id'));
+        return response()->download(public_path($file['disks'] .DIRECTORY_SEPARATOR. $file['path']));
     }
 }

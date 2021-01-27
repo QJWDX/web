@@ -25,7 +25,7 @@ class mqProducer extends Command
             $queue = $config['queue'];
             $exchange = $config['exchange'];
             $exchangeType = $config['exchange_type'];
-            $routingKey = $config['routing_key'];
+            $routingKey = $config['routing_key'].'_user_id_1';
             $connect = $this->connect($queue, $exchange, $exchangeType, $routingKey, $connectConfig);
             $n = 0;
             while ($n < 10){
@@ -36,7 +36,7 @@ class mqProducer extends Command
                 $message = json_encode($data);
                 $connect->sendMessageToServer($message);
                 $n++;
-                sleep(10);
+                sleep(1);
                 print_r('发送了'.$n."条\n");
             }
         } catch (\Exception $exception){
