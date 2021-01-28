@@ -8,9 +8,8 @@ use App\Handlers\ExportHandler;
 use App\Handlers\UploadHandler;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DelRequest;
-use App\Models\Common\Files;
+use App\Models\Files\Files;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class FilesController extends Controller
 {

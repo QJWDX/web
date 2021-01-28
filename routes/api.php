@@ -49,6 +49,8 @@ Route::group(['prefix' => '/File', 'namespace' => 'Files'], function (){
     Route::get('folderSelector', 'FilesController@folderSelector');
     Route::post('upload', 'FilesController@upload');
     Route::post('download', 'FilesController@download');
+    Route::get("getShareLink", "FileShareController@getShareLink");
+    Route::put("refreshShareLink", "FileShareController@refreshShareLink");
 });
 
 // 数据分析

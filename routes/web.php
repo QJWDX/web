@@ -28,8 +28,9 @@ Route::get('/home',function () {
     return view('home');
 });
 
-Route::group(['prefix' => 'files', 'namespace' => 'File'], function (){
-    Route::get('download/{id}', 'FilesController@download');
+Route::group(['namespace' => 'Files'], function () {
+    // 分享文件列表
+    Route::get("files/{share_code}", "FileShareController@shareFilesIndex");
 });
 
 // 示例接口

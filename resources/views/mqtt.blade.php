@@ -118,7 +118,7 @@
                 function onSuccess() {
                     // Once a connection has been made, make a subscription and send a message.
                     console.log("onConnect");
-                    client.subscribe("notification",{qos: 1});
+                    client.subscribe("notification_user_id_1",{qos: 1});
                     message = new Paho.MQTT.Message("Hello");
                     message.destinationName = "World";
                     client.send(message);

@@ -4,7 +4,7 @@
 namespace App\Handlers;
 
 use App\Exceptions\ApiException;
-use App\Models\Common\Files;
+use App\Models\Files\Files;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
