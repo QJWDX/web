@@ -37,8 +37,8 @@ class OperationLogController extends Controller
         return $this->error('删除日志失败');
     }
 
-    public function delLoginLog(DelRequest $request, OperationLog $operationLog){
-        $ids = $request->get('ids');
+    public function delOperationLog(DelRequest $request, OperationLog $operationLog){
+        $ids = $request->get('ids', []);
         if($operationLog->del($ids)){
             return $this->success('删除日志成功');
         }

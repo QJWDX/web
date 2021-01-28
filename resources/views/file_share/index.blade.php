@@ -88,7 +88,7 @@
         @endphp
         <div class="wrap_log"><img src="/assets/img/logo.png" alt=""></div>
         <div class="wrap_all">
-            <div class="share_head">文件分享</div>
+            <div class="share_head">后台系统文件文件分享</div>
             <div class="download_tips">{{ $shareContent['title'] }}</div>
             <div class="download_list"></div>
             <div class="download_warn">*备注：该链接仅打开一次有效；请不要重新刷新页面，重新刷新后页面失效；</div>
@@ -109,9 +109,13 @@
                 'txt':'../../assets/img/txt.png'
             };
             data.forEach(item=>{
-                var arr = item.path.split('.').reverse()
+                var arr = item.path.split('.').reverse();
+                var icon = fileIcon[arr[0]];
+                if(!icon){
+                    icon = fileIcon['doc'];
+                }
                 temp += '<div class="list_item">'+
-                    '<img src="'+fileIcon[arr[0]]+'" alt="">'+
+                    '<img src="'+icon+'" alt="">'+
                     '<div class="wrap_links">'+item.name+'</div>'+
                     '<div class="download" link="'+item.path+'" fileName="'+item.name+'" fileType="'+fileIcon[arr[0]]+'">下载</div></div>'
             })

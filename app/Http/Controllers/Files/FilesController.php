@@ -115,10 +115,4 @@ class FilesController extends Controller
         }
         return $this->success('上传成功');
     }
-
-
-    public function download(Request $request, Files $files){
-        $file = $files->row($request->get('id'));
-        return response()->download(public_path($file['disks'] .DIRECTORY_SEPARATOR. $file['path']));
-    }
 }

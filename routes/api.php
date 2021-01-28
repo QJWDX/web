@@ -28,7 +28,7 @@ Route::group(['prefix' => 'log', 'namespace' => 'Log'], function (){
     // 操作日志
     Route::apiResource('operationLog', 'OperationLogController')->only(['index','show','destroy']);
     // 批量删除操作日志
-    Route::delete('delOperationLog', 'OperationLogController@delLoginLog');
+    Route::delete('delOperationLog', 'OperationLogController@delOperationLog');
 });
 
 // 消息通知
@@ -48,7 +48,6 @@ Route::group(['prefix' => '/File', 'namespace' => 'Files'], function (){
     Route::get('typeSelector', 'FilesController@typeSelector');
     Route::get('folderSelector', 'FilesController@folderSelector');
     Route::post('upload', 'FilesController@upload');
-    Route::post('download', 'FilesController@download');
     Route::get("getShareLink", "FileShareController@getShareLink");
     Route::put("refreshShareLink", "FileShareController@refreshShareLink");
 });

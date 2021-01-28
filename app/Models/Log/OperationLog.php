@@ -80,11 +80,7 @@ class OperationLog extends BaseModel
         if(empty($ids)){
             return false;
         }
-        $instances = $this->newQuery()->whereIn('id', $ids)->get('id');
-        foreach ($instances as $instance){
-            $instance->delete();
-        }
-        return true;
+        return $this->setMonthTable()->newQuery()->whereIn('id', $ids)->delete();
     }
 
     public function createTable(){
