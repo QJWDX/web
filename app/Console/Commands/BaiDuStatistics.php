@@ -41,7 +41,14 @@ class BaiDuStatistics extends Command
         $config = config('baiDuTj');
         $this->site_id = $config['site_id'];
         $this->server = new BaiDuTongJiServe();
-        $date = $check_type ? Carbon::yesterday()->toDateString() : $date = Carbon::today()->toDateString();
+        switch ($check_type){
+            case 1:
+                $date = Carbon::yesterday()->toDateString();
+                break;
+            default:
+                $date = Carbon::today()->toDateString();
+                break;
+        }
         DB::beginTransaction();
         try {
             $this->getTimeTrendRpt($date, 1);
