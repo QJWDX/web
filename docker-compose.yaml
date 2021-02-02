@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  openresty:
+  my_openresty:
     image: openresty/openresty:buster-fat
     network_mode: host
     volumes:
@@ -14,7 +14,7 @@ services:
       options:
         max-size: "5g"
 
-  php:
+  my_php:
     hostname: php
     network_mode: host
     privileged: true
@@ -35,9 +35,9 @@ services:
       options:
         max-size: "5g"
 
-  mysql:
+  my_mysql:
       hostname: mysql
-      container_name: mysql
+      container_name: my_mysql
       image: mysql:8.0
       ports:
           - 3306:3306
@@ -56,58 +56,58 @@ services:
       privileged: true
       restart: always
 
-  redis:
-      container_name: redis
-      image: redis:6.0.9
-      ports:
-          - 6379:6379
-      volumes:
-          - ./dockerfile/redis.conf:/etc/redis.conf
-          - ./docker-data/redis:/data
-          - /etc/localtime:/etc/localtime
-      command: redis-server /etc/redis.conf
-      privileged: true
-      restart: always
+#  redis:
+#      container_name: redis
+#      image: redis:6.0.9
+#      ports:
+#          - 6379:6379
+#      volumes:
+#          - ./dockerfile/redis.conf:/etc/redis.conf
+#          - ./docker-data/redis:/data
+#          - /etc/localtime:/etc/localtime
+#      command: redis-server /etc/redis.conf
+#      privileged: true
+#      restart: always
 
-  rabbitmq:
-      hostname: rabbitmq
-      container_name: rabbitmq
-      image: rabbitmq:3.7-rc-management
-      network_mode: host
-      environment:
-          - "RABBITMQ_DEFAULT_USER=${RABBIT_MQ_USER}"
-          - "RABBITMQ_DEFAULT_PASS=${RABBIT_MQ_PASSWORD}"
-      volumes:
-          - ./docker-data/rabbitmq/lib/rabbitmq:/var/lib/rabbitmq
-          - ./docker-data/rabbitmq/log:/var/log/rabbitmq
-          - ./dockerfile/rabbitmq-ssl-cert:/etc/rabbitmq/ssl-cert
-      restart: always
-      logging:
-          driver: "json-file"
-          options:
-              max-size: "5g"
+#  rabbitmq:
+#      hostname: rabbitmq
+#      container_name: rabbitmq
+#      image: rabbitmq:3.7-rc-management
+#      network_mode: host
+#      environment:
+#          - "RABBITMQ_DEFAULT_USER=${RABBIT_MQ_USER}"
+#          - "RABBITMQ_DEFAULT_PASS=${RABBIT_MQ_PASSWORD}"
+#      volumes:
+#          - ./docker-data/rabbitmq/lib/rabbitmq:/var/lib/rabbitmq
+#          - ./docker-data/rabbitmq/log:/var/log/rabbitmq
+#          - ./dockerfile/rabbitmq-ssl-cert:/etc/rabbitmq/ssl-cert
+#      restart: always
+#      logging:
+#          driver: "json-file"
+#          options:
+#              max-size: "5g"
 
-  maxwell:
-      hostname: maxwell
-      network_mode: host
-      build:
-          context: ./dockerfile
-          dockerfile: ./maxwell.Dockerfile
-      environment:
-          - "MYSQL_USERNAME=root"
-          - "MYSQL_PASSWORD=${DB_ROOT_PASSWORD}"
-          - "MYSQL_HOST=localhost"
-          - "MAXWELL_PRODUCER=rabbitmq"
-      volumes:
-          - ./dockerfile/maxwell.config.properties:/usr/local/maxwell/config.properties
-      restart: always
-      depends_on:
-          - mysql
-          - rabbitmq
-      logging:
-          driver: "json-file"
-          options:
-              max-size: "5g"
+#  maxwell:
+#      hostname: maxwell
+#      network_mode: host
+#      build:
+#          context: ./dockerfile
+#          dockerfile: ./maxwell.Dockerfile
+#      environment:
+#          - "MYSQL_USERNAME=root"
+#          - "MYSQL_PASSWORD=${DB_ROOT_PASSWORD}"
+#          - "MYSQL_HOST=localhost"
+#          - "MAXWELL_PRODUCER=rabbitmq"
+#      volumes:
+#          - ./dockerfile/maxwell.config.properties:/usr/local/maxwell/config.properties
+#      restart: always
+#      depends_on:
+#          - mysql
+#          - rabbitmq
+#      logging:
+#          driver: "json-file"
+#          options:
+#              max-size: "5g"
 
 
 
