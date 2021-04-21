@@ -18,9 +18,6 @@ class SystemConfigController extends Controller
      */
     public function getSystemConfig(SystemConfig $systemConfig){
         $config = $systemConfig->getConfig();
-        if(!$config){
-            return $this->error('系统参数获取失败');
-        }
         $params = ['bd_code' => config('baiDuTj.bd_code')];
         return $this->success(array_merge($config, $params));
     }
