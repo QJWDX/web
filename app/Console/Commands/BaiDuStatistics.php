@@ -55,9 +55,11 @@ class BaiDuStatistics extends Command
             $this->getVisitDistrict($date, 2);
             $this->getVisitWorld($date, 3);
             DB::commit();
-        } catch (\Error $error) {
+            print_r("执行成功\n");
+        } catch (\Exception $error) {
             Log::debug("[statistics:bd_tj ".$check_type."]执行出错:", [$error]);
             DB::rollBack();
+            print_r("执行失败".$error->getMessage()."\n");
         }
     }
 
