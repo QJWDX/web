@@ -1,6 +1,6 @@
 # 每小时统计百度统计地域和访问统计实时数据
-0 */1 * * * php /var/www/artisan statistics:bd_tj 2
+0 */1 * * * php /var/www/artisan statistics:bd_tj 2 2>&1 >> /var/www/storage/logs/baidu_statistics.log
 # 每天12点05分统计统计地域和访问统计昨日数据
-5 0 * * * php /var/www/artisan statistics:bd_tj 1
+5 0 * * * php /var/www/artisan statistics:bd_tj 1 2>&1 >> /var/www/storage/logs/baidu_statistics.log
 # 每月第一天创建操作日志表
-0 0 1 * * php /var/www/artisan createOperationLogTable
+0 0 1 * * php /var/www/artisan createOperationLogTable 2>&1 >> /var/www/storage/logs/create_op_log.log
