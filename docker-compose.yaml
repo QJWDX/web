@@ -23,6 +23,7 @@ services:
       dockerfile: ./php.Dockerfile
     volumes:
       - ./dockerfile/vc-php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./dockerfile/vc-zz-docker.conf:/usr/local/etc/php-fpm.d/zz-docker.conf
       - ./dockerfile/vc-php.ini:/usr/local/etc/php/php.ini
       - ./:/var/www
       - ./dockerfile/supervisor.conf.d:/etc/supervisor/conf.d
